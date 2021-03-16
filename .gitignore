@@ -1,4 +1,9 @@
 # Logs
+.idea
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode
 logs
 *.log
 npm-debug.log*
