@@ -1,4 +1,5 @@
 # Logs
+.husky
 .idea
 .DS_Store
 .AppleDouble
