@@ -5,6 +5,10 @@ export default class CanvasObjects {
 
   canvas: CanvasRenderingContext2D | undefined = undefined;
 
+  canvasWidth: number = 0;
+
+  canvasHeight: number = 0;
+
   constructor() {
     this.data = [];
   }
@@ -13,6 +17,8 @@ export default class CanvasObjects {
     if (!this.data) {
       return false;
     }
+    co.canvasWidth = this.canvasWidth;
+    co.canvasHeight = this.canvasHeight;
     this.data.push(co);
     return true;
   }
@@ -29,6 +35,11 @@ export default class CanvasObjects {
 
   setCanvas(canvas: CanvasRenderingContext2D): void {
     this.canvas = canvas;
+  }
+
+  setCanvasSize(width: number, height: number):void {
+    this.canvasWidth = width;
+    this.canvasHeight = height;
   }
 
   render(): void {

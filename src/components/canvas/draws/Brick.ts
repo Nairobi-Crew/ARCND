@@ -1,65 +1,31 @@
 import CanvasObject, { ICanvasObject } from './CanvasObject';
 
-export interface BrickProp extends ICanvasObject{
-  x: number
-  y: number
+export interface IBrickProps extends ICanvasObject {
   width: number
   height: number
-  style?: string
-  context?: CanvasRenderingContext2D | null;
 }
 
+export type BrickProps = IBrickProps;
+
 export class Brick extends CanvasObject {
-  get context(): CanvasRenderingContext2D | null {
-    return this.canvasContext;
-  }
+  width: number;
 
-  set context(value: CanvasRenderingContext2D | null) {
-    this.canvasContext = value;
-  }
+  height: number;
 
-  private readonly width: number;
-
-  private readonly height: number;
-
-  private canvasContext: CanvasRenderingContext2D | null = null;
-
-  private readonly style: string = '';
-
-  constructor(prop: BrickProp) {
+  constructor(prop: BrickProps) {
     super(prop);
     this.x = prop.x;
     this.y = prop.y;
     this.width = prop.width;
     this.height = prop.height;
-    this.canvasContext = prop.context;
-    this.style = prop.style;
     this.render();
-  }
-
-  setContext(context: CanvasRenderingContext2D): void {
-    this.canvasContext = context;
-    this.render();
-  }
-
-  setCoords(x: number, y: number, draw = false): void {
-    this.x = x;
-    this.y = y;
-    if (draw) {
-      this.render();
-    }
   }
 
   render(canvas: CanvasRenderingContext2D | null = null): void {
+    super.render(canvas);
     if (canvas) {
-      this.canvasContext = canvas;
+      this.canvas.fillStyle = this.style;
+      this.canvas.fillRect(this.x, this.y, this.width, this.height);
     }
-    if (!this.canvasContext) {
-      return;
-    }
-    if (this.style) {
-      this.canvasContext.fillStyle = this.style;
-    }
-    this.canvasContext.fillRect(this.x, this.y, this.width, this.height);
   }
 }
