@@ -5,7 +5,7 @@ export interface ICanvasObject {
   style?: string
 }
 
-export default class CanvasObject {
+export default class DrawObject {
   canvas: CanvasRenderingContext2D;
 
   style: string;

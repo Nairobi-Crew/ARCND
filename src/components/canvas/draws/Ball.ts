@@ -1,4 +1,7 @@
-import CanvasObject, { ICanvasObject } from './CanvasObject';
+import DrawObject, { ICanvasObject } from './DrawObject';
+import { rocket } from './Rocket';
+import { globalBus } from '../../../util/EventBus';
+import { EVENTS, ROCKET_HEIGHT } from '../settings';
 
 export interface IBallSpeed {
   x: number
@@ -13,7 +16,7 @@ export interface IBallProps extends ICanvasObject {
 
 type BallProps = IBallProps;
 
-export class Ball extends CanvasObject {
+export class Ball extends DrawObject {
   radius: number;
 
   moving: boolean;
@@ -36,6 +39,25 @@ export class Ball extends CanvasObject {
     let needInvert = false;
     if (!this.moving) {
       return;
+    }
+
+    if (this.ballSpeed.y > 0) {
+      const half = Math.round(rocket.width / 2);
+      const rocketStart = rocket.position - half - this.radius;
+      const rocketEnd = rocket.position + half + this.radius;
+      if (this.ballSpeed.y + this.y + this.radius > this.canvasHeight - ROCKET_HEIGHT) {
+        // this.moving = false;
+        if (this.x < rocketStart || this.x > rocketEnd) {
+          globalBus.emit(EVENTS.GOAL);
+          this.y = this.canvasHeight - this.radius;
+          this.ballSpeed.y = -this.ballSpeed.y;
+          return;
+        }
+        this.y = this.canvasHeight - ROCKET_HEIGHT - this.radius;
+        globalBus.emit(EVENTS.BALL_RETURN, this.ballSpeed.x, this.y);
+        this.ballSpeed.y = -this.ballSpeed.y;
+        return;
+      }
     }
 
     this.x += this.ballSpeed.x;
@@ -75,8 +97,21 @@ export class Ball extends CanvasObject {
     if (this.canvas) {
       this.canvas.beginPath();
       this.canvas.strokeStyle = this.style;
+      this.canvas.fillStyle = this.style;
       this.canvas.ellipse(this.x, this.y, this.radius, this.radius, Math.PI / 4, 0, 2 * Math.PI);
       this.canvas.fill();
     }
+  }
+
+  changeXSpeed(speed: number): void {
+    const newSpeed = Math.abs(speed) * (this.ballSpeed.x < 0 ? -1 : 1);
+    console.log('X Speed = ', newSpeed);
+    this.ballSpeed.x = newSpeed;
+  }
+
+  changeYSpeed(speed: number): void {
+    const newSpeed = Math.abs(speed) * (this.ballSpeed.y < 0 ? -1 : 1);
+    this.ballSpeed.y = newSpeed;
+    console.log('Y Speed = ', newSpeed);
   }
 }

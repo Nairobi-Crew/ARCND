@@ -1,7 +1,12 @@
-import CanvasObject from './CanvasObject';
+import DrawObject from './DrawObject';
+
+export interface CanvasObjectItem {
+  object: DrawObject;
+  type: string
+}
 
 export default class CanvasObjects {
-  data: CanvasObject[];
+  data: CanvasObjectItem[];
 
   canvas: CanvasRenderingContext2D | undefined = undefined;
 
@@ -13,19 +18,19 @@ export default class CanvasObjects {
     this.data = [];
   }
 
-  addObject(co : CanvasObject): boolean {
+  addObject(co : DrawObject, type: string): boolean {
     if (!this.data) {
       return false;
     }
     co.canvasWidth = this.canvasWidth;
     co.canvasHeight = this.canvasHeight;
-    this.data.push(co);
+    this.data.push({ object: co, type });
     return true;
   }
 
-  removeObject(co: CanvasObject): boolean {
+  removeObject(co: DrawObject): boolean {
     const count = this.data.length;
-    this.data = this.data.filter((x: CanvasObject) => x === co);
+    this.data = this.data.filter((x: CanvasObjectItem) => x.object === co);
     return this.data.length === count;
   }
 
@@ -43,8 +48,10 @@ export default class CanvasObjects {
   }
 
   render(): void {
+    this.canvas.beginPath();
     this.data.forEach((x) => {
-      x.render(this.canvas);
+      x.object.render(this.canvas);
     });
+    // this.canvas.
   }
 }
