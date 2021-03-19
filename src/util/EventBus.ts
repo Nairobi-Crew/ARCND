@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 export type TCallBack<T extends unknown = unknown> = (...args: T[]) => void;
 type TSubscriptions = Record<string, TCallBack[]>;
 
@@ -44,6 +45,7 @@ export class EventBus {
    */
   emit(event: string, ...args: unknown[]): void {
     if (BUS_EMIT_LOG) {
+      // eslint-disable-next-line no-console
       console.log(`Emit event ${event}`, { ...args });
     }
     if (!this.subscriptions[event]) {

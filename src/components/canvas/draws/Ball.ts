@@ -104,14 +104,20 @@ export class Ball extends DrawObject {
   }
 
   changeXSpeed(speed: number): void {
-    const newSpeed = Math.abs(speed) * (this.ballSpeed.x < 0 ? -1 : 1);
-    console.log('X Speed = ', newSpeed);
-    this.ballSpeed.x = newSpeed;
+    this.ballSpeed.x = Math.abs(speed) * (this.ballSpeed.x < 0 ? -1 : 1);
   }
 
   changeYSpeed(speed: number): void {
-    const newSpeed = Math.abs(speed) * (this.ballSpeed.y < 0 ? -1 : 1);
-    this.ballSpeed.y = newSpeed;
-    console.log('Y Speed = ', newSpeed);
+    this.ballSpeed.y = Math.abs(speed) * (this.ballSpeed.y < 0 ? -1 : 1);
+  }
+
+  changeXDirection(): void {
+    this.ballSpeed.x = -this.ballSpeed.x;
+  }
+
+  changeYDirection(): void {
+    const was = { ...this.ballSpeed };
+    this.ballSpeed.y = -this.ballSpeed.y;
+    console.log('Change Y Direction', { ballSpeed: this.ballSpeed, was });
   }
 }

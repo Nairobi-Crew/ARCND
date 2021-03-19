@@ -47,25 +47,29 @@ export class Brick extends DrawObject {
       || ball.y + ball.radius < this.y) {
       return;
     }
+    // debugger;
+
     if (ball.ballSpeed.x < 0) {
-      if (this.x + this.width - ball.x < ball.radius) {
-        globalBus.emit(EVENTS.BRICK, 'LEFT', this);
-        ball.ballSpeed.x = -ball.ballSpeed.x;
+      if (Math.abs(this.x + this.width - ball.x) < ball.radius) {
+        // globalBus.emit(EVENTS.BRICK, 'LEFT', this);
+        ball.changeXDirection();
         return;
       }
-    } else if (this.x - ball.x < ball.radius) {
-      globalBus.emit(EVENTS.BRICK, 'RIGHT', this);
-      ball.ballSpeed.x = -ball.ballSpeed.x;
+    } else if (Math.abs(this.x - ball.x) < ball.radius) {
+      // globalBus.emit(EVENTS.BRICK, 'RIGHT', this);
+      ball.changeXDirection();
       return;
     }
     if (ball.ballSpeed.y < 0) {
-      if (this.y + this.height - ball.y < ball.radius) {
-        globalBus.emit(EVENTS.BRICK, 'BOTTOM', this);
-        ball.ballSpeed.y = -ball.ballSpeed.y;
+      if (Math.abs(this.y + this.height - ball.y) < ball.radius) {
+        // globalBus.emit(EVENTS.BRICK, 'BOTTOM', this);
+        ball.changeYDirection();
       }
-    } else if (this.y - ball.y < ball.radius) {
-      globalBus.emit(EVENTS.BRICK, 'TOP', this);
-      ball.ballSpeed.y = -ball.ballSpeed.y;
+    } else if (Math.abs(this.y - ball.y) < ball.radius) {
+      globalBus.emit(EVENTS.BRICK, 'TOP', this, ball.x, ball.y);
+      console.log('TOP', { x: ball.x, y: ball.y });
+      ball.changeYDirection();
+      // ball.ballSpeed.x = -ball.ballSpeed.x;
     }
   }
 }
