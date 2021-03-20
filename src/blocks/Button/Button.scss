@@ -1,0 +1,28 @@
+@import '../../common/styles/common.scss';
+
+.button {
+  font-size: 14px;
+  line-height: 16px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  &_type_rounded {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  &_type_rect {
+    padding: 10px 16px;
+    border-radius: 4px;
+  }
+
+  &_color_aqua {
+    background-color: $aqua;
+  }
+
+  &_color_violet {
+    background-color: $violet;
+  }
+}
+
