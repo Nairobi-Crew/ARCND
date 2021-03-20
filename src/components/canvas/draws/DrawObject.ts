@@ -1,9 +1,13 @@
-export interface ICanvasObject {
+export interface IDrawObjectProps {
   x?: number
   y?: number
+  canvasWidth?: number
+  canvasHeight?: number
   canvas?: CanvasRenderingContext2D;
   style?: string
 }
+
+export type DrawObjectProps = IDrawObjectProps;
 
 export default class DrawObject {
   canvas: CanvasRenderingContext2D;
@@ -18,11 +22,17 @@ export default class DrawObject {
 
   y: number;
 
-  constructor(props: ICanvasObject) {
+  constructor(props: DrawObjectProps) {
     this.x = props.x ? props.x : 0;
     this.y = props.y ? props.y : 0;
     this.canvas = props.canvas;
     this.style = props.style ? props.style : '';
+    if (props.canvasHeight) {
+      this.canvasHeight = props.canvasHeight;
+    }
+    if (props.canvasWidth) {
+      this.canvasWidth = props.canvasWidth;
+    }
   }
 
   render(canvas: CanvasRenderingContext2D | undefined = undefined): void {

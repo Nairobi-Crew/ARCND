@@ -1,4 +1,4 @@
-import DrawObject, { ICanvasObject } from './DrawObject';
+import DrawObject, { IDrawObjectProps } from './DrawObject';
 import { rocket } from './Rocket';
 import { globalBus } from '../../../util/EventBus';
 import { EVENTS, ROCKET_HEIGHT } from '../settings';
@@ -8,7 +8,7 @@ export interface IBallSpeed {
   y: number
 }
 
-export interface IBallProps extends ICanvasObject {
+export interface IBallProps extends IDrawObjectProps {
   radius: number
   ballSpeed: IBallSpeed
   moving?: boolean

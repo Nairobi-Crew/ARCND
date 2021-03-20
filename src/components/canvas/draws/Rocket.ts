@@ -1,7 +1,7 @@
-import DrawObject, { ICanvasObject } from './DrawObject';
+import DrawObject, { IDrawObjectProps } from './DrawObject';
 import { CANVAS_MARGIN, ROCKET_HEIGHT, ROCKET_WIDTH } from '../settings';
 
-export interface IRocketProps extends ICanvasObject {
+export interface IRocketProps extends IDrawObjectProps {
   width: number
   height: number
   position: number

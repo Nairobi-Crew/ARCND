@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
-import Canvas from './components/canvas/Canvas';
+// import Arcanoid from './components/canvas/Arcanoid';
+import { FlyBirds } from './components/canvas/FlyBirds';
 
 class App extends PureComponent {
   render() {
     return (
-      <Canvas />
+      // <Arcanoid />
+      <FlyBirds />
     );
   }
 }

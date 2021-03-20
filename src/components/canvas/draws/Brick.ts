@@ -1,9 +1,9 @@
-import DrawObject, { ICanvasObject } from './DrawObject';
+import DrawObject, { IDrawObjectProps } from './DrawObject';
 import { Ball } from './Ball';
 import { globalBus } from '../../../util/EventBus';
 import { EVENTS } from '../settings';
 
-export interface IBrickProps extends ICanvasObject {
+export interface IBrickProps extends IDrawObjectProps {
   width: number
   height: number
 }

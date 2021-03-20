@@ -18,7 +18,7 @@ interface CanvasProps {
 
 type Props = CanvasProps;
 
-const Canvas: React.FC<Props> = ({
+const Arcanoid: React.FC<Props> = ({
   width, height, left, top,
 }: Props) => {
   let leftPressed = false;
@@ -151,11 +151,11 @@ const Canvas: React.FC<Props> = ({
   return <canvas ref={canvasRef} width={width} height={height} style={{ left, top }} />;
 };
 
-Canvas.defaultProps = {
+Arcanoid.defaultProps = {
   width: window.innerWidth - (CANVAS_MARGIN * 2),
   height: window.innerHeight - (CANVAS_MARGIN * 2),
   left: CANVAS_MARGIN,
   top: CANVAS_MARGIN,
 };
 
-export default Canvas;
+export default Arcanoid;
