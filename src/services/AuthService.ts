@@ -12,8 +12,8 @@ export type AuthServiceOptions = {
 }
 
 export type AuthServiceSignup = { // поля для регистрации
-    firstName: string
-    secondName: string
+    first_name: string
+    second_name: string
     login: string
     email: string
     password: string
@@ -22,9 +22,9 @@ export type AuthServiceSignup = { // поля для регистрации
 
 export type UserInfo = {
     id?: number
-    firstName: string
-    secondName: string
-    displayName: string
+    first_name: string
+    second_name: string
+    display_name: string
     login: string
     email: string
     phone: string
@@ -106,14 +106,7 @@ export class AuthService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          first_name: params.firstName,
-          second_name: params.secondName,
-          login: params.login,
-          email: params.email,
-          password: params.password,
-          phone: params.phone,
-        }),
+        body: JSON.stringify(params),
       }).then((response) => {
         response.json().then((data) => {
           const event = response.status === 200
@@ -159,12 +152,21 @@ export class AuthService {
           : AUTH_SERVICE_EVENTS.GET_INFO_ERROR;
         response.json().then((data) => {
           globalBus.emit(event, { data, status: response.status });
+        }).catch((error) => {
+          globalBus.emit(
+            AUTH_SERVICE_EVENTS.GET_INFO_ERROR,
+            {
+              data: error,
+              status: response.status,
+            },
+          );
         });
       }).catch((error) => {
         globalBus.emit(AUTH_SERVICE_EVENTS.GET_INFO_ERROR, { data: error, status: 0 });
       });
     }
 
+    // eslint-disable-next-line class-methods-use-this
     dummy(): void {
       // do nothing
     }

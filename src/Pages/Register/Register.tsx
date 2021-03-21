@@ -25,8 +25,8 @@ const Register: RegisterProps = ({ caption }) => {
     }
     const params: AuthServiceSignup = {
       phone,
-      secondName,
-      firstName,
+      second_name: secondName,
+      first_name: firstName,
       login,
       email,
       password: password1,

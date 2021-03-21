@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { InputProps } from 'UI/Input/types';
 import './Input.scss';
 
@@ -6,6 +6,9 @@ const Input: InputProps = ({
   id, label, type, value, labelClasses, inputClasses, onValueChanged,
 }) => {
   const [inputValue, setInputValue] = useState(value || '');
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
   const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     if (e.target) {
       const v = (e.target as HTMLInputElement).value;
