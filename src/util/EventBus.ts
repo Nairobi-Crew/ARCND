@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-unused-vars
-export type TCallBack<T extends unknown = unknown> = (...args: T[]) => void;
+import { TCallBack } from 'Config/types';
+
 type TSubscriptions = Record<string, TCallBack[]>;
 
 const BUS_EMIT_LOG = true;

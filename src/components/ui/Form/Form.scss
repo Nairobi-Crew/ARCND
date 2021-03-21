@@ -1,0 +1,29 @@
+@import "src/styles/default";
+@import "src/styles/settings";
+
+.form {
+  &__container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    align-items: center;
+  }
+
+  &__empty_column {
+    flex: 1;
+  }
+
+  &__form_column {
+    align-items: center;
+    align-content: center;
+    background-color: $form-background-color;
+    border-radius: $form-border-radius;
+    flex: 1;
+    // height: 100vh;
+    padding: 2em;
+
+    @media only screen and (max-width: 768px) {
+      flex: 5;
+    }
+  }
+}

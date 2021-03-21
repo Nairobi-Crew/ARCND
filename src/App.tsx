@@ -1,13 +1,16 @@
-import React, { PureComponent } from 'react';
-// import Arcanoid from './components/canvas/Arcanoid';
-import { FlyBirds } from './components/canvas/FlyBirds';
+import React from 'react';
+import './styles/default.css';
+import Profile from 'Pages/Profile/Profile';
+import { authService } from './services/AuthService';
+import { userService } from './services/UserService';
 
-class App extends PureComponent {
-  render() {
-    return (
-      // <Arcanoid />
-      <FlyBirds />
-    );
-  }
-}
+authService.dummy();
+userService.dummy();
+
+const App = () => (
+  <>
+    <Profile caption="Profile form" />
+  </>
+);
+
 export default App;

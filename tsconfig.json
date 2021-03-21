@@ -16,6 +16,9 @@
         "paths": { // Указываем ссылки до директорий в проекте, чтобы каждый раз в импортах не писать относительные пути
             "App": ["src/App"],
             "Pages/*": ["src/Pages/*"],
+            "Components/*": ["src/components/*"],
+            "UI/*": ["src/components/ui/*"],
+            "Config/*": ["src/config/*"],
         }
     },
     "noImplicitAny": true,
