@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles/default.css';
-import Profile from 'Pages/Profile/Profile';
+import ChangePassword from 'Pages/ChangePassword/ChangePassword';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
 
@@ -9,7 +9,7 @@ userService.dummy();
 
 const App = () => (
   <>
-    <Profile caption="Profile form" />
+    <ChangePassword caption="Change password" />
   </>
 );
 

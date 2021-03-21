@@ -123,14 +123,13 @@ export class UserService {
           },
         })
         .then((response) => {
-          try {
-            globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_DONE, response);
-          } catch (e) {
-            globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_ERROR, e);
-          }
+          const event = response.status === 200
+            ? USER_SERVICE_EVENTS.PASSWORD_DONE
+            : USER_SERVICE_EVENTS.PASSWORD_ERROR;
+          globalBus.emit(event, { data: response, status: response.status });
         })
         .catch((error) => {
-          globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_ERROR, error);
+          globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_ERROR, { data: error, status: 0 });
         });
     }
 
@@ -196,4 +195,7 @@ export class UserService {
 export const userService = new UserService();
 globalBus.on(USER_SERVICE_EVENTS.DO_PROFILE_CHANGE, (params: UserInfo) => {
   userService.changeProfile(params);
+});
+globalBus.on(USER_SERVICE_EVENTS.DO_PASSWORD_CHANGE, (oldPassword, newPassword) => {
+  userService.changePassword(oldPassword as string, newPassword as string);
 });

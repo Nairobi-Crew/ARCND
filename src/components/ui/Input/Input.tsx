@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputProps } from 'UI/Input/types';
 import './Input.scss';
 
