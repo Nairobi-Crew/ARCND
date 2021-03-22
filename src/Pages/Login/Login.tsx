@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoginProps } from 'Pages/Login/types';
 import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { AUTH_SERVICE_EVENTS } from 'Config/types';
+import { AUTH_SERVICE_EVENTS } from '../../services/types';
 import { globalBus } from '../../util/EventBus';
 
 const Login: LoginProps = ({ caption }) => {

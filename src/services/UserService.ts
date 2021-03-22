@@ -1,5 +1,5 @@
 import { API_URL } from 'Config/config';
-import { METHODS, USER_SERVICE_EVENTS } from 'Config/types';
+import { METHODS, USER_SERVICE_EVENTS } from './types';
 import { UserInfo } from './AuthService';
 import { globalBus } from '../util/EventBus';
 
@@ -88,19 +88,30 @@ export class UserService {
           fetch(`${this.options.apiUrl}${this.options.avatarPath}`,
             {
               method,
+              credentials: 'include',
               body: JSON.stringify(a),
               headers: { Accept: 'application/json' },
             })
             .then((response) => {
-              globalBus.emit(USER_SERVICE_EVENTS.AVATAR_DONE, response.json());
+              const event = response.status === 200
+                ? USER_SERVICE_EVENTS.AVATAR_DONE
+                : USER_SERVICE_EVENTS.AVATAR_ERROR;
+              response.json().then((data) => {
+                globalBus.emit(event, { data, status: response.status });
+              }).catch((error) => {
+                globalBus.emit(
+                  USER_SERVICE_EVENTS.AVATAR_ERROR,
+                  { data: error, status: response.status },
+                );
+              });
             })
             .catch((error) => {
-              globalBus.emit(USER_SERVICE_EVENTS.AVATAR_ERROR, error);
+              globalBus.emit(USER_SERVICE_EVENTS.AVATAR_ERROR, { data: error, status: 0 });
             });
         };
         fileReader.readAsDataURL(avatar as Blob);// загружаем
       } catch (e) {
-        globalBus.emit(USER_SERVICE_EVENTS.AVATAR_ERROR, e);
+        globalBus.emit(USER_SERVICE_EVENTS.AVATAR_ERROR, { data: e, status: 0 });
       }
     }
 
@@ -187,6 +198,7 @@ export class UserService {
     /**
    * Dummy method
    */
+    // eslint-disable-next-line class-methods-use-this
     dummy(): void {
       // doNothing
     }
@@ -198,4 +210,7 @@ globalBus.on(USER_SERVICE_EVENTS.DO_PROFILE_CHANGE, (params: UserInfo) => {
 });
 globalBus.on(USER_SERVICE_EVENTS.DO_PASSWORD_CHANGE, (oldPassword, newPassword) => {
   userService.changePassword(oldPassword as string, newPassword as string);
+});
+globalBus.on(USER_SERVICE_EVENTS.DO_AVATAR_CHANGE, (avatar: string | Blob) => {
+  userService.changeAvatar(avatar);
 });

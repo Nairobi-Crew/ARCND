@@ -12,7 +12,7 @@ const Form: FormProps = ({ children, onSubmit, caption }) => {
     <div className="form__container">
       <div className="form__empty_column" />
       <div className="form__form_column">
-        <h1>{caption}</h1>
+        <h1 className="form__form_column caption">{caption}</h1>
         <form onSubmit={onSubmitHandler}>
           {children}
         </form>

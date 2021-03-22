@@ -1,4 +1,4 @@
-import { TCallBack } from 'Config/types';
+import { TCallBack } from '../services/types';
 
 type TSubscriptions = Record<string, TCallBack[]>;
 

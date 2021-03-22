@@ -10,6 +10,7 @@
   },
   "rules": {
     "camelcase": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-param-reassign": "off",
     "react/jsx-filename-extension": [

@@ -1,4 +1,4 @@
-import { AUTH_SERVICE_EVENTS, METHODS } from 'Config/types';
+import { AUTH_SERVICE_EVENTS, METHODS } from './types';
 import { API_URL } from 'Config/config';
 import { globalBus } from '../util/EventBus';
 

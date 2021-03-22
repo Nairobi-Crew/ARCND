@@ -1,6 +1,73 @@
-@import "src/styles/default";
-@import "src/styles/settings";
+@import 'src/common/common';
 
-.input__field_wrapper {
+.input {
+  font-weight: 400;
+  height: 56px;
   width: 100%;
+  background-color: inherit;
+  color: #e2e0e0;
+
+  &__label {
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 100%;
+    background-color: inherit;
+  }
+
+  &__input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #464545;
+    background-color: inherit;
+    color: #e2e0e0;
+  }
+
+  &__input:focus {
+    border-color: $violet;
+  }
+
+  &__input:invalid,
+  &__input._error {
+    border-color: $red;
+  }
+
+  &__input:valid:not(:placeholder-shown):not(:focus):not(._error) {
+    border-color: $aqua;
+  }
+
+  &__input::placeholder {
+    opacity: 0;
+  }
+
+  &__label-text {
+    position: absolute;
+    font-size: 14px;
+    top: 50%;
+    left: 0;
+    padding: 2px 8px 2px 2px;
+    background-color: inherit;
+    transform: translateY(-50%);
+    transition: all 0.3s;
+  }
+
+  &__label-text > sup {
+    position: absolute;
+    bottom: 5px;
+    right: 2px;
+    color: $red;
+  }
+
+  &__input:not(:placeholder-shown) + &__label-text,
+  &__input:focus + &__label-text {
+    top: 0;
+    font-size: 9px;
+  }
+
+  &__error-message {
+    font-size: 12px;
+    color: $red;
+  }
 }

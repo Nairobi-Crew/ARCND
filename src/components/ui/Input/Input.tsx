@@ -3,7 +3,7 @@ import { InputProps } from 'UI/Input/types';
 import './Input.scss';
 
 const Input: InputProps = ({
-  id, label, type, value, labelClasses, inputClasses, onValueChanged,
+  label, value, onValueChanged, errorMessage, ...restProps
 }) => {
   const [inputValue, setInputValue] = useState(value || '');
   useEffect(() => {
@@ -20,9 +20,18 @@ const Input: InputProps = ({
   };
 
   return (
-    <div>
-      <label htmlFor={id} className={labelClasses ? labelClasses.join(' ') : ''}>{label}</label>
-      <input type={type} value={inputValue} onChange={onInputHandler} className={inputClasses ? inputClasses.join(' ') : ''} />
+    <div className="input">
+      <label className="input__label">
+        <input
+          className="input__input"
+          value={inputValue}
+          placeholder={label}
+          onInput={onInputHandler}
+          {...restProps}
+        />
+        <span className="input__label-text">{label}</span>
+      </label>
+      <span className="input__error-message">{errorMessage}</span>
     </div>
   );
 };

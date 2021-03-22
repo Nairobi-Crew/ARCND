@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles/default.css';
-import ChangePassword from 'Pages/ChangePassword/ChangePassword';
+import Register from 'Pages/Register/Register';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
 
@@ -9,7 +9,7 @@ userService.dummy();
 
 const App = () => (
   <>
-    <ChangePassword caption="Change password" />
+    <Register caption="Register" />
   </>
 );
 

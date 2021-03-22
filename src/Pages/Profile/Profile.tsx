@@ -2,10 +2,13 @@ import { ProfileProps } from 'Pages/Profile/types';
 import React, { useEffect, useState } from 'react';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { AUTH_SERVICE_EVENTS, USER_SERVICE_EVENTS } from 'Config/types';
+import { AUTH_SERVICE_EVENTS, USER_SERVICE_EVENTS } from '../../services/types';
 import Form from 'UI/Form/Form';
 import { globalBus } from '../../util/EventBus';
 import { UserInfo } from '../../services/AuthService';
+import emailIsValid from '../../util/emailValidator';
+import phoneIsValid from '../../util/phoneValidator';
+import loginIsValid from '../../util/loginValidator';
 
 const Profile: ProfileProps = ({ caption }) => {
   const [firstNameField, setFirstName] = useState('');
@@ -15,6 +18,12 @@ const Profile: ProfileProps = ({ caption }) => {
   const [emailField, setEmail] = useState('');
   const [phoneField, setPhone] = useState('');
   const [avatarField, setAvatar] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [phoneMessage, setPhoneMessage] = useState('');
+  const [loginMessage, setLoginMessage] = useState('');
+  const [firstNameMessage, setFirstNameMessage] = useState('');
+  const [secondNameMessage, setSecondNameMessage] = useState('');
+  const [formValid, setFormValid] = useState(true);
 
   const saveProfileButtonHandler = () => {
     const params: UserInfo = {
@@ -53,19 +62,37 @@ const Profile: ProfileProps = ({ caption }) => {
       console.log('Get user error', { data, status });
     });
   }, []);
+  useEffect(() => {
+    setEmailMessage(emailIsValid(emailField) ? '' : 'Неверный email');
+  }, [emailField]);
+  useEffect(() => {
+    setPhoneMessage(phoneIsValid(phoneField) ? '' : 'Неверный номер телефона');
+  }, [phoneField]);
+  useEffect(() => {
+    setLoginMessage(loginIsValid(loginField) ? '' : 'Неверный логин');
+  });
+  useEffect(() => {
+    setFirstNameMessage(firstNameField.trim().length === 0 ? 'Поле должно быть заполнено' : '');
+  }, [firstNameField]);
+  useEffect(() => {
+    setSecondNameMessage(secondNameField.trim().length === 0 ? 'Поле должно быть заполнено' : '');
+  }, [secondNameField]);
+  useEffect(() => {
+    setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${secondNameMessage}${firstNameMessage}`.length === 0);
+  }, [phoneMessage, emailMessage, loginMessage, firstNameMessage, secondNameMessage]);
 
   return (
-    <Form>
-      <h1>{caption}</h1>
-      <Input id="firstName" value={firstNameField} onValueChanged={(val) => setFirstName(val)} label="Имя" />
-      <Input id="secondName" value={secondNameField} onValueChanged={(val) => setSecondName(val)} label="Фамилия" />
+    <Form caption={caption}>
+      <img src={avatarField} width="50" height="50" alt="Avatar" />
+      <Input id="firstName" value={firstNameField} onValueChanged={(val) => setFirstName(val)} label="Имя" errorMessage={firstNameMessage} />
+      <Input id="secondName" value={secondNameField} onValueChanged={(val) => setSecondName(val)} label="Фамилия" errorMessage={secondNameMessage} />
       <Input id="displayName" value={displayNameField} onValueChanged={(val) => setDisplayName(val)} label="Имя в чате" />
-      <Input id="login" value={loginField} onValueChanged={(val) => setLogin(val)} label="Логин" type="login" />
-      <Input id="email" value={emailField} onValueChanged={(val) => setEmail(val)} label="Email" type="email" />
-      <Input id="phone" value={phoneField} onValueChanged={(val) => setPhone(val)} label="Phone" type="phone" />
+      <Input id="login" value={loginField} onValueChanged={(val) => setLogin(val)} label="Логин" type="login" errorMessage={loginMessage} />
+      <Input id="email" value={emailField} onValueChanged={(val) => setEmail(val)} label="Email" type="email" errorMessage={emailMessage} />
+      <Input id="phone" value={phoneField} onValueChanged={(val) => setPhone(val)} label="Phone" type="phone" errorMessage={phoneMessage} />
       <Input id="avatar" value={avatarField} onValueChanged={(val) => setAvatar(val)} label="Avatar" type="file" accept="image/png, image/jpeg, image/svg+xml, image/svg" />
 
-      <Button onClick={saveProfileButtonHandler}>Сохранить</Button>
+      <Button onClick={saveProfileButtonHandler} disabled={!formValid}>Сохранить</Button>
     </Form>
   );
 };
