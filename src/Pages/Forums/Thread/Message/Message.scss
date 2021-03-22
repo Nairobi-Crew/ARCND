@@ -1,0 +1,48 @@
+@import "src/common/common";
+@import "src/common/vars";
+
+.message {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    color: $forum-message-color;
+    background-color: $forum-message-background;
+    width: 100%;
+    border: $forum-message-header-border;
+    display: flex;
+    flex-direction: row;
+
+    &_author {
+      flex: 1;
+      color: inherit;
+      background-color: inherit;
+    }
+
+    &_time {
+      flex: 1;
+      color: inherit;
+      background-color: inherit;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: row;
+    color: $forum-message-color;
+    background-color: $forum-message-background;
+
+    &_header {
+      width: 100%;
+      color: inherit;
+      background-color: inherit;
+    }
+
+    &_text {
+      color: inherit;
+      background-color: inherit;
+      width: 100%;
+    }
+  }
+}

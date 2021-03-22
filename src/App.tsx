@@ -1,15 +1,16 @@
 import React from 'react';
 import './styles/default.css';
-import Register from 'Pages/Register/Register';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
+import Thread from 'Pages/Forums/Thread/Thread';
+import {messages} from 'Pages/Forums/sampleData';
 
 authService.dummy();
 userService.dummy();
 
 const App = () => (
   <>
-    <Register caption="Register" />
+    <Thread messages={messages.filter((item) => item.topic === '1')} />
   </>
 );
 

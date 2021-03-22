@@ -21,10 +21,10 @@ const Login: LoginProps = ({ caption }) => {
 
   useEffect(() => {
     globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_DONE, (params) => {
-      console.log('Login OK', params);
+      // console.log('Login OK', params);
     });
     globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, (e) => {
-      console.log('Login error', e);
+      // console.log('Login error', e);
     });
   }, []);
   return (

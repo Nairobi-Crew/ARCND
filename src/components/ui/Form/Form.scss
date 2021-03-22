@@ -1,3 +1,4 @@
+@import "src/common/vars";
 @import "src/styles/default";
 @import "src/styles/settings";
 
@@ -26,7 +27,7 @@
     border-radius: $form-border-radius;
     flex: 1;
     // height: 100vh;
-    padding: 2em;
+    //padding: 2em;
 
     @media only screen and (max-width: 768px) {
       flex: 5;

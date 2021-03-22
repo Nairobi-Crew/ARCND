@@ -30,6 +30,7 @@ module.exports = {
       Components: resolve('src/components/'),
       UI: resolve('src/components/ui/'),
       Config: resolve('src/config/'),
+      Util: resolve('src/util/'),
     },
 
   },

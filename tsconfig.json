@@ -19,6 +19,7 @@
             "Components/*": ["src/components/*"],
             "UI/*": ["src/components/ui/*"],
             "Config/*": ["src/config/*"],
+          "Util/*": ["src/util/*"]
         }
     },
     "noImplicitAny": true,
