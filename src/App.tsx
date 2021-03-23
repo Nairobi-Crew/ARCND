@@ -4,7 +4,7 @@ import './styles/default';
 import Arcanoid from 'Components/Arcanoid/Arcanoid';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
-
+import Login from 'Pages/Login/Login'
 authService.dummy();
 userService.dummy();
 
@@ -12,14 +12,11 @@ const App = () => (
   <>
     <BrowserRouter>
       <Switch>
-        <Route path="/home">
-          <h1>HOMEEEE</h1>
+        <Route path="/signin">
+          <Login />
         </Route>
-        <Route path="/about">
-          <p>kek</p>
-        </Route>
-        <Route path="/topics">
-          <Link to="/game">Home</Link>
+        <Route path="/signup">
+          <p>Registration</p>
         </Route>
         <Route path="/">
           <Arcanoid />

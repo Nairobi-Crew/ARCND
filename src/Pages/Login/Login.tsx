@@ -5,6 +5,7 @@ import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import { AUTH_SERVICE_EVENTS } from '../../services/types';
 import { globalBus } from '../../util/EventBus';
+import './Login.scss';
 
 const Login: LoginProps = ({ caption }) => {
   const [login, setLogin] = useState('');
@@ -30,8 +31,9 @@ const Login: LoginProps = ({ caption }) => {
 
   return (
     <>
-      <Form caption={caption}>
+      <Form className={'login'} caption={'SING IN'}>
         <Input
+          className='login__input input__input'
           id="login_login"
           label="Имя пользователя"
           value={login}
@@ -42,10 +44,14 @@ const Login: LoginProps = ({ caption }) => {
           label="Пароль"
           value={password}
           type="password"
+          className='login__input input__input'
           onValueChanged={onPasswordChangedHandler}
         />
-        <Button onClick={loginButtonHandle}>Логин</Button>
-        <a href="/register">Нет аккаунта</a>
+        <Button
+          onClick={loginButtonHandle}
+          className={'login__submit button button_type_rounded'}
+        >login</Button>
+        <a className='login__link' href="/register">Sign up</a>
       </Form>
     </>
   );

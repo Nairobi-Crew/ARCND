@@ -1,7 +1,13 @@
 @import "settings";
+@import "../blocks/header";
 
 html, body {
-  color: beige;
+  color: $fc;
   margin: 0;
-  background-color: $background-color;
+  background: $background-color;
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }

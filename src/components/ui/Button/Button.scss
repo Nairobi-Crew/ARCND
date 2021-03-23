@@ -1,11 +1,16 @@
 @import 'src/common/common';
+@import '@/styles/settings';
 
 .button {
-  font-size: 14px;
+  font-size: $f-s;
+  font-family: $ff;
   line-height: 16px;
   border: none;
   outline: none;
   cursor: pointer;
+  color: $fc;
+  background: $background-color;
+  box-shadow: $shadow-small;
 
   &_type_rounded {
     padding: 16px;

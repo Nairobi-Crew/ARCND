@@ -3,6 +3,7 @@
 @import "src/styles/settings";
 
 .form {
+
   &__container {
     display: flex;
     flex-direction: row;
@@ -16,18 +17,22 @@
 
   &__form_column {
     .caption {
-      font-size: large;
+      font-size: $f-xl;
+      font-family: $ff;
       text-align: center;
-      padding: 0;
+      padding: 15px 30px;
+      box-shadow: $shadow-small;
+      text-transform: uppercase;
+      margin: 0 0 30px;
     }
 
     align-items: center;
     align-content: center;
-    background-color: $form-background-color;
+    background: $form-background-color;
     border-radius: $form-border-radius;
+    box-shadow: $shadow;
     flex: 1;
-    // height: 100vh;
-    //padding: 2em;
+    padding: 40px;
 
     @media only screen and (max-width: 768px) {
       flex: 5;
