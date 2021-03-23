@@ -3,9 +3,8 @@ import { RegisterProps } from 'Pages/Register/types';
 import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { AUTH_SERVICE_EVENTS } from '../../services/types';
-import { globalBus } from '../../util/EventBus';
-import { AuthServiceSignup } from '../../services/AuthService';
+import { globalBus } from 'Util/EventBus';
+import { AUTH_SERVICE_EVENTS, AuthServiceSignup } from '../../services/types';
 
 const Register: RegisterProps = ({ caption }) => {
   const [secondName, setSecondName] = useState('');

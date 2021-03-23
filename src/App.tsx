@@ -1,16 +1,15 @@
 import React from 'react';
 import './styles/default.css';
+import Arcanoid from 'Components/Arcanoid/Arcanoid';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
-import Thread from 'Pages/Forums/Thread/Thread';
-import {messages} from 'Pages/Forums/sampleData';
 
 authService.dummy();
 userService.dummy();
 
 const App = () => (
   <>
-    <Thread messages={messages.filter((item) => item.topic === '1')} />
+    <Arcanoid />
   </>
 );
 

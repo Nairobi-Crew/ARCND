@@ -1,13 +1,14 @@
 import React, { useRef, useEffect } from 'react';
+import { globalBus } from 'Util/EventBus';
 import {
-  CANVAS_MARGIN, EVENTS, RENDER_TIME, ROCKET_MOVE_STEP,
+  BALL_SPEED_UNIT,
+  CANVAS_MARGIN, EVENTS, ROCKET_MOVE_STEP,
 } from './settings';
-import CanvasObjects from './draws/CanvasObjects';
-import { Brick } from './draws/Brick';
-import DrawObject from './draws/DrawObject';
-import { Ball } from './draws/Ball';
-import { rocket } from './draws/Rocket';
-import { globalBus } from '../../util/EventBus';
+import CanvasObjects from './objects/CanvasObjects';
+import { Brick } from './objects/Brick';
+import DrawObject from './objects/DrawObject';
+import { Ball } from './objects/Ball';
+import { rocket } from './objects/Rocket';
 
 interface CanvasProps {
   width?: number
@@ -30,53 +31,41 @@ const Arcanoid: React.FC<Props> = ({
   let ballsReturn = 0;
 
   globalBus.on(EVENTS.BALL_RETURN, () => {
-    // eslint-disable-next-line no-plusplus
-    ballsReturn++;
+    ballsReturn += 1;
   });
 
   globalBus.on(EVENTS.GOAL, () => {
-    // eslint-disable-next-line no-plusplus
-    goals++;
+    goals += 1;
   });
 
   const objects = new CanvasObjects();
   objects.setCanvasSize(width, height);
   const ball = new Ball({
-    x: Math.round(width / 2),
+    x: Math.round(width / 2) - 1,
     // y: 300,
-    y: 200,
+    y: 800,
     radius: 10,
     style: 'rgba(20, 220, 110, 0.9)',
-    ballSpeed: { x: -2, y: 2 },
+    ballSpeed: { x: -BALL_SPEED_UNIT, y: BALL_SPEED_UNIT },
   });
 
   ball.moving = true;
 
   window.addEventListener('keydown', (e: KeyboardEvent) => {
     const { key } = e;
-    switch (key) {
-      case ' ':
-        // ball.changeXSpeed(random(6) - 3);
-        // ball.changeYSpeed(random(6) - 3);
-        ball.moving = !ball.moving;
-        break;
-      case 'ArrowLeft':
-        leftPressed = true;
-        break;
-      case 'ArrowRight':
-        rightPressed = true;
-        break;
+    if (key === ' ') {
+      ball.moving = !ball.moving;
     }
+    leftPressed = (key === 'ArrowLeft');
+    rightPressed = (key === 'ArrowRight');
   });
+
   window.addEventListener('keyup', (e: KeyboardEvent) => {
     const { key } = e;
-    switch (key) {
-      case 'ArrowLeft':
-        leftPressed = false;
-        break;
-      case 'ArrowRight':
-        rightPressed = false;
-        break;
+    if (key === 'ArrowLeft') {
+      leftPressed = false;
+    } else if (key === 'ArrowRight') {
+      rightPressed = false;
     }
   });
 
@@ -97,11 +86,11 @@ const Arcanoid: React.FC<Props> = ({
 
   brick.push(new Brick({
     x: 400, y: 50, width: 100, height: 30, style: 'rgba(200, 200, 100, 1)',
-  }).move(0, 40));
+  }));
 
   brick.push(new Brick({
     x: 400, y: 200, width: 100, height: 30, style: 'rgba(200, 200, 100, 1)',
-  }).move(0, 40));
+  }));
 
   brick.forEach((b: DrawObject) => {
     objects.addObject(b, 'brick');
@@ -112,18 +101,7 @@ const Arcanoid: React.FC<Props> = ({
 
   let ctx;
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      canvasCtxRef.current = canvasRef.current.getContext('2d');
-      ctx = canvasCtxRef.current;
-      if (ctx) {
-        objects.setCanvas(ctx);
-        ctx.clearRect(0, 0, width, height);
-        objects.render();
-      }
-    }
-  }, []);
-  setInterval(() => {
+  const draw = () => {
     if (ctx) {
       ctx.clearRect(0, 0, width, height);
       ctx.rect(0, 0, width, height);
@@ -136,17 +114,37 @@ const Arcanoid: React.FC<Props> = ({
       rocket.moveRocket(ROCKET_MOVE_STEP);
     }
     objects.data.filter(
-      (x) => x.type === 'brick',
+      (x) => x.type === 'brick' && (x.object as Brick).level > 0,
     )
       .forEach(
         (x) => (x.object as Brick).intersect(ball),
       );
     ball.nextMove();
-    objects.render();
-    ctx.fillStyle = '#000';
-    ctx.fillText(`Goals: ${goals}`, 50, 100);
-    ctx.fillText(`Success: ${ballsReturn}`, 50, 140);
-  }, RENDER_TIME);
+    objects.render().then(() => {
+      ctx.beginPath();
+      ctx.fillStyle = '#ff0';
+      ctx.strokeStyle = '#fff';
+      ctx.font = '30px arial';
+      ctx.fillText(`Goals: ${goals}`, 50, 100);
+      ctx.fillText(`Success: ${ballsReturn}`, 50, 140);
+    });
+  };
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasCtxRef.current = canvasRef.current.getContext('2d');
+      ctx = canvasCtxRef.current;
+      if (ctx) {
+        objects.setCanvas(ctx);
+        ctx.clearRect(0, 0, width, height);
+        objects.render();
+      }
+    }
+    (function loop() {
+      draw();
+      requestAnimationFrame(loop);
+    }());
+  }, []);
 
   return <canvas ref={canvasRef} width={width} height={height} style={{ left, top }} />;
 };

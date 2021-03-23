@@ -1,4 +1,5 @@
 import DrawObject from './DrawObject';
+import {Brick} from 'Components/Arcanoid/objects/Brick';
 
 export interface CanvasObjectItem {
   object: DrawObject;
@@ -47,11 +48,15 @@ export default class CanvasObjects {
     this.canvasHeight = height;
   }
 
-  render(): void {
-    this.canvas.beginPath();
-    this.data.forEach((x) => {
-      x.object.render(this.canvas);
+  render(): Promise<unknown> {
+    return new Promise<void>((resolve) => {
+      this.canvas.beginPath();
+      this.data.forEach((x) => {
+        if ((x.type === 'brick' && (x.object as Brick).level > 0) || x.type !== 'brick') {
+          x.object.render(this.canvas);
+        }
+      });
+      resolve();
     });
-    // this.canvas.
   }
 }

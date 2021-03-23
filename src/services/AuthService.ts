@@ -1,35 +1,8 @@
-import { AUTH_SERVICE_EVENTS, METHODS } from './types';
 import { API_URL } from 'Config/config';
-import { globalBus } from '../util/EventBus';
-
-export type AuthServiceOptions = {
-    apiUrl?: string
-    signin?: string
-    signup?: string
-    user?: string
-    logout?: string
-    avatar?: string
-}
-
-export type AuthServiceSignup = { // поля для регистрации
-    first_name: string
-    second_name: string
-    login: string
-    email: string
-    password: string
-    phone: string
-}
-
-export type UserInfo = {
-    id?: number
-    first_name: string
-    second_name: string
-    display_name: string
-    login: string
-    email: string
-    phone: string
-    avatar?: string
-}
+import { globalBus } from 'Util/EventBus';
+import {
+  AUTH_SERVICE_EVENTS, AuthServiceOptions, AuthServiceSignup, METHODS,
+} from './types';
 
 /**
  * синглтон для Auth operations
@@ -37,7 +10,7 @@ export type UserInfo = {
 export class AuthService {
     private static instance: AuthService
 
-    private options: AuthServiceOptions
+    private options: AuthServiceOptions;
 
     /**
      * @param {AuthServiceOptions} options
@@ -62,7 +35,6 @@ export class AuthService {
      * @param {string} login
      * @param {string} password
      * @param {string} method - POST по умолчанию
-     * @return {Promise}
      */
     signin(
       login: string,
@@ -94,7 +66,6 @@ export class AuthService {
      * Регистрация
      * @param {AuthServiceSignup} params
      * @param {string} method - POST по умолчанию
-     * @return {Promise}
      */
     signup(
       params: AuthServiceSignup,
@@ -124,7 +95,6 @@ export class AuthService {
     /**
      * Логаут
      * @param {string} method
-     * @return {Promise}
      */
     logout(method: string = METHODS.POST): void {
       fetch(`${this.options.apiUrl}${this.options.logout}`, {
@@ -140,7 +110,6 @@ export class AuthService {
     /**
      * Данные профиля текущего пользователя
      * @param {string} method
-     * @return {Promise}
      */
     getInfo(method: string = METHODS.GET): void {
       fetch(`${this.options.apiUrl}${this.options.user}`, {

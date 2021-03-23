@@ -1,7 +1,6 @@
 import { API_URL } from 'Config/config';
-import { METHODS, USER_SERVICE_EVENTS } from './types';
-import { UserInfo } from './AuthService';
-import { globalBus } from '../util/EventBus';
+import { globalBus } from 'Util/EventBus';
+import { METHODS, USER_SERVICE_EVENTS, UserInfo } from './types';
 
 export type UserServiceOptions = {
     apiUrl?: string

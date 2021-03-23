@@ -1,7 +1,13 @@
+import { globalBus } from 'Util/EventBus';
 import DrawObject, { IDrawObjectProps } from './DrawObject';
 import { rocket } from './Rocket';
-import { globalBus } from '../../../util/EventBus';
-import { EVENTS, ROCKET_HEIGHT } from '../settings';
+import {
+  EVENTS,
+  ROCKET_HEIGHT,
+  ROCKET_PART_SPEED_CHANGER,
+  ROCKET_PART_SPEED_MULT,
+  ROCKET_PARTS,
+} from '../settings';
 
 export interface IBallSpeed {
   x: number
@@ -51,7 +57,25 @@ export class Ball extends DrawObject {
           globalBus.emit(EVENTS.GOAL);
           this.y = this.canvasHeight - this.radius;
           this.ballSpeed.y = -this.ballSpeed.y;
+          // this.moving = false;
           return;
+        }
+        const ballOnRocketPosition = this.x - rocketStart;
+        const partSize = (rocket.width - 1) / ROCKET_PARTS;
+        let onPart = Math.round(ballOnRocketPosition / partSize);
+        if (onPart === 0) {
+          onPart = 1;
+        }
+
+        if (onPart < ROCKET_PART_SPEED_CHANGER) {
+          const changeSpeed = ((ROCKET_PART_SPEED_CHANGER + 1) - onPart) * ROCKET_PART_SPEED_MULT;
+          this.ballSpeed.x -= changeSpeed;
+        } else if (onPart > ROCKET_PARTS - ROCKET_PART_SPEED_CHANGER) {
+          const partNum = ROCKET_PARTS - onPart;
+          const changeSpeed = partNum * ROCKET_PART_SPEED_MULT;
+          this.ballSpeed.x += changeSpeed;
+        } else {
+          this.changeXSpeed(this.ballSpeed.y);
         }
         this.y = this.canvasHeight - ROCKET_HEIGHT - this.radius;
         globalBus.emit(EVENTS.BALL_RETURN, this.ballSpeed.x, this.y);
@@ -116,8 +140,18 @@ export class Ball extends DrawObject {
   }
 
   changeYDirection(): void {
-    const was = { ...this.ballSpeed };
     this.ballSpeed.y = -this.ballSpeed.y;
-    console.log('Change Y Direction', { ballSpeed: this.ballSpeed, was });
+  }
+
+  intersection(objectLeft: number, objectTop: number, width: number, height: number):boolean {
+    const left = this.x - this.radius;
+    const right = this.x + this.radius;
+    const top = this.y - this.radius;
+    const bottom = this.y + this.radius;
+    const objectRight = objectLeft + width;
+    const objectBottom = objectTop + height;
+    return !(
+      (bottom < objectTop) || (top > objectBottom) || (right < objectLeft) || (left > objectRight)
+    );
   }
 }
