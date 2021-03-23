@@ -27,11 +27,23 @@ const Login: LoginProps = ({ caption }) => {
       // console.log('Login error', e);
     });
   }, []);
+
   return (
     <>
       <Form caption={caption}>
-        <Input id="login_login" label="Имя пользователя" value={login} onValueChanged={onLoginChangedHandler} />
-        <Input id="login_password" label="Пароль" value={password} type="password" onValueChanged={onPasswordChangedHandler} />
+        <Input
+          id="login_login"
+          label="Имя пользователя"
+          value={login}
+          onValueChanged={onLoginChangedHandler}
+        />
+        <Input
+          id="login_password"
+          label="Пароль"
+          value={password}
+          type="password"
+          onValueChanged={onPasswordChangedHandler}
+        />
         <Button onClick={loginButtonHandle}>Логин</Button>
         <a href="/register">Нет аккаунта</a>
       </Form>
