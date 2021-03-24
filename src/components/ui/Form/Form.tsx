@@ -3,7 +3,8 @@ import { FormProps } from 'UI/Form/types';
 import './Form.scss';
 
 const Form: FormProps = ({ children, onSubmit, caption }) => {
-  const onSubmitHandler = () => {
+  const onSubmitHandler = (evt) => {
+    evt.preventDefault();
     if (onSubmit) {
       onSubmit();
     }

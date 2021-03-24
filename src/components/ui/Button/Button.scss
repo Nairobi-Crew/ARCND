@@ -11,6 +11,12 @@
   color: $fc;
   background: $background-color;
   box-shadow: $shadow-small;
+  transition: all linear .3s;
+
+  &:active {
+    transition: all linear .3s;
+    transform: scale(0.7);
+  }
 
   &_type_rounded {
     padding: 16px;

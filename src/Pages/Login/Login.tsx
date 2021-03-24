@@ -51,7 +51,7 @@ const Login: LoginProps = ({ caption }) => {
           onClick={loginButtonHandle}
           className={'login__submit button button_type_rounded'}
         >login</Button>
-        <a className='login__link' href="/register">Sign up</a>
+        <a className='login__link' href="/signup">Sign up</a>
       </Form>
     </>
   );
