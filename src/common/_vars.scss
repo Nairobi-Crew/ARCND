@@ -1,3 +1,7 @@
+$secondary-btn: #03dac5;
+$primary-btn: #bb86fc;
+$error: #cf6679;
+
 $background-color: linear-gradient(145deg, #433b6a, #4f467e);
 $shadow: 21px 21px 35px #312b4e, -21px -21px 35px #63579e;
 $shadow-small:  6px 6px 11px #312b4e, -6px -6px 11px #63579e;
@@ -14,3 +18,13 @@ $f-m: 16px;
 $f-l: 18px;
 $f-xl: 24px;
 $f-xxl: 32px;
+
+
+// forum
+$forum-topic-header-background: #444;
+$forum-topic-header-color: #fff;
+$forum-header-background: #555;
+$forum-header-color: #eee;
+$forum-message-background: #444;
+$forum-message-color: #ddd;
+$forum-message-header-border: 1px solid $forum-message-background;
