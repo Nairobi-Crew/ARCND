@@ -6,6 +6,7 @@ export interface IBaseObjectProps {
   gameWindow?: GameWindowProps
   fillStyle?: string
   strokeStyle?: string
+  ctx?: CanvasRenderingContext2D
 }
 
 export type DrawObjectProps = IBaseObjectProps;
@@ -21,12 +22,20 @@ export default class BaseObject {
 
   y: number;
 
+  ctx: CanvasRenderingContext2D;
+
   constructor(props: DrawObjectProps) {
     this.x = props.x ? props.x : 0;
     this.y = props.y ? props.y : 0;
     this.gameWindow = props.gameWindow;
     this.fillStyle = props.fillStyle ? props.fillStyle : '';
     this.strokeStyle = props.strokeStyle ? props.strokeStyle : '';
+    this.ctx = props.ctx;
+  }
+
+  setContext(c: CanvasRenderingContext2D): BaseObject {
+    this.ctx = c;
+    return this;
   }
 
   render(gameWindow: GameWindowProps | undefined = undefined): void {

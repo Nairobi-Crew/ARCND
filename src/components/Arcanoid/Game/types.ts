@@ -16,7 +16,6 @@ export type GameWindowProps = {
   bottom: number
   width: number
   height: number
-  ctx: CanvasRenderingContext2D
 };
 
 export interface IGameFieldObjectProps {

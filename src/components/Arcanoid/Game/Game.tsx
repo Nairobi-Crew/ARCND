@@ -1,43 +1,54 @@
 import React, { useEffect } from 'react';
-import { GameProps } from 'Components/Arcanoid/Game/types';
+import { GameProps, GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
-import GameFieldObjects from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
-// import { ROCKET_HEIGHT } from 'Components/Arcanoid/settings';
+import { globalBus } from 'Util/EventBus';
+import { EVENTS, RENDER_TIME } from 'Components/Arcanoid/settings';
+import drawFrame from 'Components/Arcanoid/UI/drawFrame';
+import drawHelp from 'Components/Arcanoid/UI/drawHelp';
+import drawScore from 'Components/Arcanoid/UI/drawScore';
+import drawLevel from 'Components/Arcanoid/UI/drawLevel';
+import drawLives from 'Components/Arcanoid/UI/drawLives';
+import { levels } from 'Components/Arcanoid/levels/levelData';
 
+// const Game: GameProps = ({ ctx, width, height }) => {
 const Game: GameProps = ({ ctx, width, height }) => {
-  const gameContext = {
-    top: 50,
-    left: 50,
-    width: width - 100,
-    height: height - 100,
-    right: width - 50,
-    bottom: height - 50,
-    ctx,
+  const gameContext: GameWindowProps = {
+    top: 30,
+    left: 30,
+    width: width - 60,
+    height: height - 60,
+    right: width - 30,
+    bottom: height - 30,
   };
 
-  const gameObjects = new GameFieldObjects();
-  gameObjects.add({
-    type: 'brick',
-    object: new Brick({
-      x: 10, y: 10, width: 100, height: 25, fillStyle: 'red',
-    }),
-  });
-  gameObjects.add({
-    type: 'brick',
-    object: new Brick({
-      x: 10, y: 100, width: 100, height: 25, fillStyle: 'red',
-    }),
-  });
-  // rocket.y = gameContext.bottom - ROCKET_HEIGHT;
+  gameObjects.gameWindow = gameContext;
+
+  useEffect(() => {
+    gameObjects.setContext(ctx);
+    ball.setContext(ctx);
+    rocket.setContext(ctx);
+  }, [ctx]);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  };
+
+  let firstLoading = true;
 
   const checkContext = (): boolean => {
-    if (!ctx) {
+    if (!gameObjects.ctx) {
+      if (ctx) {
+        gameObjects.ctx = ctx;
+        return true;
+      }
       return false;
-    }
-    if (!gameContext.ctx) {
-      gameContext.ctx = ctx;
     }
     return true;
   };
@@ -45,6 +56,13 @@ const Game: GameProps = ({ ctx, width, height }) => {
   const drawGame = () => {
     if (!checkContext()) {
       return;
+    }
+
+    const context = gameObjects.ctx;
+
+    if (firstLoading) {
+      gameObjects.generateLevel(levels[ball.level - 1]);
+      firstLoading = false;
     }
     gameObjects.data
       .filter((item) => item.type === 'brick' && (item.object as Brick).level > 0)
@@ -54,29 +72,39 @@ const Game: GameProps = ({ ctx, width, height }) => {
     );
     ball.nextMove();
     rocket.nextMove();
-    ctx.beginPath();
-    ctx.clearRect(0, 0, width, height);
-    gameObjects.render(gameContext);
+    context.beginPath();
+    context.clearRect(0, 0, width, height);
+    gameObjects.render();
     ball.render(gameContext);
     rocket.render(gameContext);
 
-    ctx.beginPath();
-    ctx.strokeStyle = '#fff';
-    // noinspection JSSuspiciousNameCombination
-    ctx.rect(gameContext.top, gameContext.left, gameContext.width, gameContext.height);
-    ctx.stroke();
+    drawFrame(gameContext);
+    drawHelp(gameContext);
+    drawScore(gameContext);
+    drawLevel(gameContext);
+    drawLives(gameContext);
   };
 
-  (function loop() {
-    drawGame();
-    requestAnimationFrame(loop);
-  }());
+  // (function loop() {
+  //   drawGame();
+  //   requestAnimationFrame(loop);
+  // }());
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      const { key } = e;
+      const { key, keyCode } = e;
+      if (keyCode === 13) {
+        toggleFullScreen();
+      }
       if (key === ' ') {
-        ball.moved = !ball.moved;
+        if (!ball.gameStarted) {
+          ball.gameStarted = true;
+          ball.onRocket = false;
+          if (ball.speedY > 0) {
+            ball.invertYDirection();
+          }
+        }
+        // ball.moved = !ball.moved;
       } else if (key === 'ArrowLeft') {
         rocket.movedLeft = true;
         rocket.movedRight = false;
@@ -95,11 +123,34 @@ const Game: GameProps = ({ ctx, width, height }) => {
       }
     };
 
+    const onGoal = () => {
+      if (ball.lives === 1) {
+        globalBus.emit(EVENTS.GAME_OVER, ball.score, ball.level);
+      } else {
+        ball.lives -= 1;
+        ball.onRocket = true;
+        ball.gameStarted = false;
+      }
+    };
+
+    const onBallReturn = () => {
+      ball.score += 1;
+    };
+
+    const interval = setInterval(() => {
+      drawGame();
+    }, RENDER_TIME);
+
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
+    globalBus.on(EVENTS.GOAL, onGoal);
+    globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
+      globalBus.off(EVENTS.GOAL, onGoal);
+      globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
+      clearInterval(interval);
     };
   }, []);
 

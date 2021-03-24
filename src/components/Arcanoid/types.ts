@@ -1,5 +1,8 @@
-export type ArcanoidCanvas = {
-  ctx: CanvasRenderingContext2D
-  width: number
-  height: number
+import { FC } from 'react';
+
+export type OwnGameScreenProps = {
+  margin?: number
+  fullScreen?: boolean
 }
+
+export type GameScreenProps = FC<OwnGameScreenProps>;

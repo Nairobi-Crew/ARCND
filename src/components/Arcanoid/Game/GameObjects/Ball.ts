@@ -1,6 +1,8 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
+  BALL_SPEED_LIMIT,
+  BALL_SPEED_UNIT,
   EVENTS,
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
@@ -15,6 +17,13 @@ export interface IBallProps extends IBaseObjectProps {
   speedX: number
   speedY: number
   moved: boolean
+  gameStarted?: boolean
+  onRocket?: boolean
+  glue?: boolean
+  gun?: boolean
+  score?: number
+  lives?: number
+  leve?: number
 }
 
 export class Ball extends BaseObject {
@@ -27,6 +36,22 @@ export class Ball extends BaseObject {
   speedY = 0;
 
   moved = false;
+
+  gameStarted = false;
+
+  onRocket = true;
+
+  glue = false;
+
+  gun = false;
+
+  score = 0;
+
+  lives = 3;
+
+  level = 1;
+
+  ctx: CanvasRenderingContext2D;
 
   constructor(props: IBallProps) {
     super(props);
@@ -42,10 +67,10 @@ export class Ball extends BaseObject {
 
   render(gameWindow: GameWindowProps | undefined = undefined) {
     super.render(gameWindow);
-    if (!gameWindow || !gameWindow.ctx) {
+    if (!gameWindow || !this.ctx) {
       return;
     }
-    const { ctx } = this.gameWindow;
+    const { ctx } = this;
     ctx.beginPath();
     ctx.strokeStyle = this.strokeStyle;
     ctx.fillStyle = this.fillStyle;
@@ -88,7 +113,7 @@ export class Ball extends BaseObject {
 
   nextMove(): void {
     let needInvert = false;
-    if (!this.moved || !this.gameWindow) {
+    if (!this.moved || !this.gameWindow || !this.gameStarted || this.onRocket) {
       return;
     }
 
@@ -113,17 +138,20 @@ export class Ball extends BaseObject {
         }
         // попали в ракетку
         const ballOnRocketPosition = this.x - leftOfRocket;
-        const partSize = (rocket.width - 1) / ROCKET_PARTS;
-        let onPart = Math.round(ballOnRocketPosition / partSize);
-        if (onPart === 0) {
-          onPart = 1;
-        }
+        const partSize = (rocket.width + this.radius * 2) / ROCKET_PARTS;
+        const onPart = Math.round(ballOnRocketPosition / partSize) + 1;
+        console.log(`onPart = ${onPart}`, ROCKET_PART_SPEED_CHANGER - onPart);
 
-        if (onPart < ROCKET_PART_SPEED_CHANGER) {
-          const changeSpeed = ((ROCKET_PART_SPEED_CHANGER + 1) - onPart) * ROCKET_PART_SPEED_MULT;
-          this.speedX -= changeSpeed;
+        if (onPart <= ROCKET_PART_SPEED_CHANGER) {
+          const speedChanger = onPart - ROCKET_PART_SPEED_CHANGER + 1;
+          this.speedX -= (speedChanger * ROCKET_PART_SPEED_MULT);
+          if (this.speedX < 0) {
+            if (Math.abs(this.speedX) < BALL_SPEED_LIMIT) {
+              this.speedX = -BALL_SPEED_LIMIT;
+            }
+          }
         } else if (onPart > ROCKET_PARTS - ROCKET_PART_SPEED_CHANGER) {
-          const partNum = ROCKET_PARTS - onPart;
+          const partNum = ROCKET_PARTS - onPart + 1;
           const changeSpeed = partNum * ROCKET_PART_SPEED_MULT;
           this.speedX += changeSpeed;
         } else {
@@ -163,5 +191,5 @@ export class Ball extends BaseObject {
   }
 }
 export const ball = new Ball({
-  x: 950, y: 500, radius: 20, fillStyle: '#0f0', strokeStyle: '#f00', moved: false, speedX: 5, speedY: 5,
+  x: 950, y: 500, radius: 15, fillStyle: '#0f0', strokeStyle: '#f00', moved: true, speedX: 5, speedY: 5,
 });

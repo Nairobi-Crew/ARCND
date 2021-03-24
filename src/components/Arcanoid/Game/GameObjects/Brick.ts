@@ -8,6 +8,7 @@ export interface IBrickProps extends IBaseObjectProps {
   width: number
   height: number
   level?: number
+  type?: number
 }
 
 export class Brick extends BaseObject {
@@ -17,11 +18,14 @@ export class Brick extends BaseObject {
 
   level: number;
 
+  type: number;
+
   constructor(props: IBrickProps) {
     super(props);
     this.width = props.width;
     this.height = props.height;
     this.level = props.level || 1;
+    this.type = props.type || 1;
   }
 
   render(gameWindow: GameWindowProps | undefined = undefined): void {
@@ -29,9 +33,10 @@ export class Brick extends BaseObject {
     if (!this.gameWindow) {
       return;
     }
-    const { ctx } = this.gameWindow;
+    const { ctx } = this;
     if (ctx) {
       ctx.beginPath();
+      this.stylesByLevelType();
       ctx.fillStyle = this.fillStyle;
       ctx.strokeStyle = this.strokeStyle;
       ctx.fillRect(this.x + this.gameWindow.left,
@@ -71,6 +76,22 @@ export class Brick extends BaseObject {
       globalBus.emit(EVENTS.BRICK, 'TOP', this, ball.x, ball.y);
       this.level -= 1;
       ball.invertYDirection();
+    }
+  }
+
+  stylesByLevelType(): void {
+    if (this.level === 1) {
+      this.strokeStyle = 'red';
+      this.fillStyle = 'white';
+    } else if (this.level === 2) {
+      this.strokeStyle = 'red';
+      this.fillStyle = 'yellow';
+    } else if (this.level === 3) {
+      this.strokeStyle = 'red';
+      this.fillStyle = 'green';
+    } else {
+      this.strokeStyle = 'red';
+      this.fillStyle = 'blue';
     }
   }
 }

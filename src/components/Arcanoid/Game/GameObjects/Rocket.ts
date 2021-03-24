@@ -1,6 +1,7 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { ROCKET_HEIGHT, ROCKET_MOVE_STEP, ROCKET_WIDTH } from 'Components/Arcanoid/settings';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,
@@ -32,10 +33,10 @@ export class Rocket extends BaseObject {
 
   render(gameWindow: GameWindowProps | undefined = undefined): void {
     super.render(gameWindow);
-    if (!this.gameWindow || !this.gameWindow.ctx) {
+    if (!this.gameWindow || !this.ctx) {
       return;
     }
-    const { ctx } = this.gameWindow;
+    const { ctx } = this;
     ctx.strokeStyle = this.strokeStyle;
     ctx.fillStyle = this.fillStyle;
     ctx.fillRect(this.x + this.gameWindow.left,
@@ -60,6 +61,10 @@ export class Rocket extends BaseObject {
   }
 
   nextMove(): void {
+    if (this.gameWindow && this.ctx && ball.onRocket) {
+      ball.x = this.x + Math.round(this.width / 2);
+      ball.y = this.gameWindow.height - this.height - ball.radius;
+    }
     if (this.movedLeft) {
       this.moveRocket(-ROCKET_MOVE_STEP);
     } else if (this.movedRight) {
