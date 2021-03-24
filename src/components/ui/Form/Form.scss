@@ -1,0 +1,41 @@
+@import "src/common/vars";
+@import "src/styles/default";
+@import "src/styles/settings";
+
+.form {
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    align-items: center;
+  }
+
+  &__empty_column {
+    flex: 1;
+  }
+
+  &__form_column {
+    .caption {
+      font-size: $f-xl;
+      font-family: $ff;
+      text-align: center;
+      padding: 15px 30px;
+      box-shadow: $shadow-small;
+      text-transform: uppercase;
+      margin: 0 0 30px;
+    }
+
+    align-items: center;
+    align-content: center;
+    background: $form-background-color;
+    border-radius: $form-border-radius;
+    box-shadow: $shadow;
+    flex: 1;
+    padding: 40px;
+
+    @media only screen and (max-width: 768px) {
+      flex: 5;
+    }
+  }
+}
