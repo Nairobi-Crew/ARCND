@@ -1,7 +1,5 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { globalBus } from 'Util/EventBus';
-import { EVENTS } from 'Components/Arcanoid/settings';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 
 export interface IBrickProps extends IBaseObjectProps {
@@ -60,11 +58,13 @@ export class Brick extends BaseObject {
       if (Math.abs(this.x + this.width - ball.x) < ball.radius) {
         ball.invertXDirection();
         this.level -= 1;
+        ball.score += 2;
         return;
       }
     } else if (Math.abs(this.x - ball.x) < ball.radius) {
       ball.invertXDirection();
       this.level -= 1;
+      ball.score += 2;
       return;
     }
     if (ball.speedY < 0) {
@@ -73,7 +73,6 @@ export class Brick extends BaseObject {
         ball.invertYDirection();
       }
     } else if (Math.abs(this.y - ball.y) < ball.radius) {
-      globalBus.emit(EVENTS.BRICK, 'TOP', this, ball.x, ball.y);
       this.level -= 1;
       ball.invertYDirection();
     }

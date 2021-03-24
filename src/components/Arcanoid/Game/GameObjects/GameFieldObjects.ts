@@ -18,6 +18,8 @@ export default class GameFieldObjects {
 
   ctx: CanvasRenderingContext2D;
 
+  brickCount: number = 0;
+
   constructor() {
     if (GameFieldObjects.instance) {
       return GameFieldObjects.instance;
@@ -35,11 +37,16 @@ export default class GameFieldObjects {
   }
 
   render(): void {
+    let count = 0;
     this.data
       .forEach((item) => {
+        if (item.type === 'brick') {
+          count += 1;
+        }
         item.object.setContext(this.ctx);
         item.object.render(this.gameWindow);
       });
+    this.brickCount = count;
   }
 
   generateLevel(levelData: string[]): void {
@@ -59,7 +66,13 @@ export default class GameFieldObjects {
             if (nextChar) {
               res.type = parseInt(nextChar);
             }
+            if (Number.isNaN(res.level) || Number.isNaN(res.type)) {
+              return undefined;
+            }
             return res;
+          }
+          if (Number.isNaN(res.level) || Number.isNaN(res.type)) {
+            return undefined;
           }
           return res;
         }
@@ -72,6 +85,7 @@ export default class GameFieldObjects {
     const blockWidth = Math.round(this.gameWindow.width / 100 * LEVEL_BLOCKS_WIDTH);
     const spaceWidth = Math.round(blockWidth * LEVEL_BLOCK_SPACE);
     let y = 0;
+    this.brickCount = 0;
     for (let item of ld) {
       item = padString(item, LEVEL_STRING_LENGTH, ' ');
       const nextItem = getNextItem(item);
@@ -83,6 +97,7 @@ export default class GameFieldObjects {
           x += spaceWidth;
         } else if (block === 'brick') {
           const { strokeStyle, fillStyle } = typeData[level];
+          this.brickCount += 1;
           this.data.push(
             {
               object:

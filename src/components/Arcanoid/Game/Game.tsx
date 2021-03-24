@@ -70,6 +70,12 @@ const Game: GameProps = ({ ctx, width, height }) => {
     gameObjects.data = gameObjects.data.filter(
       (item) => item.type !== 'brick' || (item.object as Brick).level > 0,
     );
+    if (gameObjects.brickCount <= 0) {
+      ball.gameStarted = false;
+      ball.onRocket = true;
+      ball.level += 1;
+      gameObjects.generateLevel(levels[ball.level - 1]);
+    }
     ball.nextMove();
     rocket.nextMove();
     context.beginPath();
@@ -126,6 +132,12 @@ const Game: GameProps = ({ ctx, width, height }) => {
     const onGoal = () => {
       if (ball.lives === 1) {
         globalBus.emit(EVENTS.GAME_OVER, ball.score, ball.level);
+        ball.lives = 3;
+        ball.onRocket = true;
+        ball.gameStarted = false;
+        ball.score = 0;
+        ball.level = 1;
+        gameObjects.generateLevel(levels[ball.level - 1]);
       } else {
         ball.lives -= 1;
         ball.onRocket = true;
