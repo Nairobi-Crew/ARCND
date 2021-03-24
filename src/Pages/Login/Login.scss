@@ -1,0 +1,17 @@
+@import '@/styles/settings';
+
+.login {
+
+  &__link,
+  &__submit {
+    font-family: $ff;
+    font-size: $f-m;
+    color: $fc;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  &__submit {
+    margin: 0 20px 0 0;
+  }
+}

@@ -1,17 +1,21 @@
 @import 'src/common/common';
+@import '@/styles/settings';
 
 .input {
   font-weight: 400;
   height: 56px;
   width: 100%;
   background-color: inherit;
-  color: #e2e0e0;
+  color: $fc;
+  margin: 0 0 40px;
 
   &__label {
     position: relative;
     display: block;
     height: 100%;
     width: 100%;
+    font-family: $ff;
+    color: $fc;
     background-color: inherit;
   }
 
@@ -20,9 +24,10 @@
     width: 100%;
     outline: none;
     border: none;
-    border-bottom: 1px solid #464545;
+    border-bottom: 2px solid #49005d;
     background-color: inherit;
-    color: #e2e0e0;
+    font-family: $ff;
+    color: $fc;
   }
 
   &__input:focus {
@@ -44,7 +49,8 @@
 
   &__label-text {
     position: absolute;
-    font-size: 14px;
+    font-size: $f-m;
+    font-family: $ff;
     top: 50%;
     left: 0;
     padding: 2px 8px 2px 2px;
@@ -67,7 +73,7 @@
   }
 
   &__error-message {
-    font-size: 12px;
+    font-size: $f-m;
     color: $red;
   }
 }
