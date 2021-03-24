@@ -79,23 +79,18 @@ const Arcanoid: React.FC<Props> = ({
   brick.push(new Brick({
     x: 200, y: 50, width: 90, height: 20, style: 'rgba(0, 0, 2000, 1)',
   }));
-
   brick.push(new Brick({
     x: 200, y: 200, width: 100, height: 30, style: 'rgba(100, 200, 0, 1)',
   }));
-
   brick.push(new Brick({
     x: 400, y: 50, width: 100, height: 30, style: 'rgba(200, 200, 100, 1)',
   }));
-
   brick.push(new Brick({
     x: 400, y: 200, width: 100, height: 30, style: 'rgba(200, 200, 100, 1)',
   }));
-
   brick.forEach((b: DrawObject) => {
     objects.addObject(b, 'brick');
   });
-
   objects.addObject(ball, 'ball');
   objects.addObject(rocket, 'rocket');
 
