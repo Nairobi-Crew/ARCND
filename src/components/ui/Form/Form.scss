@@ -1,7 +1,6 @@
 @import "../../../common/vars";
 
 .form {
-
   &__container {
     display: flex;
     flex-direction: row;
@@ -11,6 +10,7 @@
 
   &__empty_column {
     flex: 1;
+    height: 100vh;
   }
 
   &__form_column {

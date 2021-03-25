@@ -49,14 +49,15 @@ export class AuthService {
         },
         body: JSON.stringify({ login, password }),
       }).then((answer) => {
-        const event = answer.status === 200
-          ? AUTH_SERVICE_EVENTS.SIGNUP_DONE
-          : AUTH_SERVICE_EVENTS.SIGNUP_ERROR;
-        answer.json().then((data) => {
-          globalBus.emit(event, { data, status: answer.status });
-        }).catch((data) => {
-          globalBus.emit(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, { data, status: answer.status });
-        });
+        if (answer.status === 200) {
+          globalBus.emit(AUTH_SERVICE_EVENTS.SIGNIN_DONE, { data: {}, status: answer.status });
+        } else {
+          answer.json().then((data) => {
+            globalBus.emit(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, { data, status: answer.status });
+          }).catch((data) => {
+            globalBus.emit(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, { data, status: answer.status });
+          });
+        }
       }).catch((error) => {
         globalBus.emit(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, { data: error, status: 0 });
       });

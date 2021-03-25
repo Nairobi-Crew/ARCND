@@ -1,15 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import './common/common.scss'
+import './common/common.scss';
+
 ReactDOM.render(
-  <>
-    <header className='header'>
-      <a href='/' className='header__title'>
-        <h1>ARCND</h1>
-      </a>
-    </header>
-    <App />
-  </>,
+  <App />,
   document?.getElementById('root'),
 );

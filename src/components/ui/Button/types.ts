@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, FC } from 'react';
 
 export type OwnButtonProps = {
-  className?: string
+  buttonType?: 'round' | 'rect'
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type ButtonProps = FC<OwnButtonProps>;

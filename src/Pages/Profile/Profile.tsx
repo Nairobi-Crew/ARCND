@@ -50,15 +50,15 @@ const Profile: ProfileProps = ({ caption }) => {
     globalBus.emit(AUTH_SERVICE_EVENTS.DO_GET_INFO);
     globalBus.on(AUTH_SERVICE_EVENTS.GET_INFO_DONE, ({ data, status }) => {
       if (status !== 200) {
-        // alert('Get user information error');
+        alert(`Get user information error ${data.reason}`);
       }
       setLogin(data.login);
       setFirstName(data.first_name);
-      setSecondName(data.second_name);
-      setDisplayName(data.display_name);
+      setSecondName(data.second_name || '');
+      setDisplayName(data.display_name || '');
       setEmail(data.email);
       setPhone(data.phone);
-      setAvatar(data.avatar);
+      setAvatar(data.avatar || '');
     });
     globalBus.on(AUTH_SERVICE_EVENTS.GET_INFO_ERROR, ({ data, status }) => {
       if (status === 401) {
@@ -87,18 +87,22 @@ const Profile: ProfileProps = ({ caption }) => {
   }, [phoneMessage, emailMessage, loginMessage, firstNameMessage, secondNameMessage]);
 
   return (
-    <Form caption={caption}>
-      <img src={avatarField} width="50" height="50" alt="Avatar" />
-      <Input id="firstName" value={firstNameField} onValueChanged={(val) => setFirstName(val)} label="Имя" errorMessage={firstNameMessage} />
-      <Input id="secondName" value={secondNameField} onValueChanged={(val) => setSecondName(val)} label="Фамилия" errorMessage={secondNameMessage} />
-      <Input id="displayName" value={displayNameField} onValueChanged={(val) => setDisplayName(val)} label="Имя в чате" />
-      <Input id="login" value={loginField} onValueChanged={(val) => setLogin(val)} label="Логин" type="login" errorMessage={loginMessage} />
-      <Input id="email" value={emailField} onValueChanged={(val) => setEmail(val)} label="Email" type="email" errorMessage={emailMessage} />
-      <Input id="phone" value={phoneField} onValueChanged={(val) => setPhone(val)} label="Phone" type="phone" errorMessage={phoneMessage} />
-      <Input id="avatar" value={avatarField} onValueChanged={(val) => setAvatar(val)} label="Avatar" type="file" accept="image/png, image/jpeg, image/svg+xml, image/svg" />
+    <>
+      <Form caption={caption || 'Профиль'}>
+        <div style={{ textAlign: 'center' }}>
+          {avatarField ? <img src={avatarField} width="50" height="50" alt="Avatar" /> : ''}
 
-      <Button onClick={saveProfileButtonHandler} disabled={!formValid}>Сохранить</Button>
-    </Form>
+        </div>
+        <Input id="firstName" value={firstNameField} onValueChanged={(val) => setFirstName(val)} label="Имя" errorMessage={firstNameMessage} />
+        <Input id="secondName" value={secondNameField} onValueChanged={(val) => setSecondName(val)} label="Фамилия" errorMessage={secondNameMessage} />
+        <Input id="displayName" value={displayNameField} onValueChanged={(val) => setDisplayName(val)} label="Имя в чате" />
+        <Input id="login" value={loginField} onValueChanged={(val) => setLogin(val)} label="Логин" type="login" errorMessage={loginMessage} />
+        <Input id="email" value={emailField} onValueChanged={(val) => setEmail(val)} label="Email" type="email" errorMessage={emailMessage} />
+        <Input id="phone" value={phoneField} onValueChanged={(val) => setPhone(val)} label="Phone" type="phone" errorMessage={phoneMessage} />
+
+        <Button onClick={saveProfileButtonHandler} disabled={!formValid}>Сохранить</Button>
+      </Form>
+    </>
   );
 };
 

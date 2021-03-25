@@ -16,16 +16,3 @@ html, body {
   padding: 0;
   outline: none;
 }
-
-.header {
-  padding: 15px 130px;
-  &__title {
-    color: $fc;
-    font: {
-      family: $ff;
-      weight: 600;
-      size: $f-xxl;
-    }
-  }
-}
-
