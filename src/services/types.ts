@@ -67,3 +67,5 @@ export type UserInfo = {
   phone: string
   avatar?: string
 }
+
+export type PlainObject = Record<string | number, unknown>;

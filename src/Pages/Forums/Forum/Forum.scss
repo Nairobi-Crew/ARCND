@@ -8,11 +8,19 @@
   padding: 1em;
   flex-direction: column;
 
+  &_tools {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    &_item {
+      flex: 1;
+    }
+  }
+
   &__header {
     font-size: larger;
     text-align: center;
-    background-color: $forum-header-background;
-    color: $forum-header-color;
     margin-bottom: 1em;
   }
 
@@ -29,8 +37,6 @@
       padding-bottom: 0.1em;
 
       &_header {
-        background-color: $forum-topic-header-background;
-        color: $forum-topic-header-color;
         display: flex;
         flex-direction: row;
         width: 100%;
@@ -61,8 +67,6 @@
       &_message {
         width: 100%;
         flex: 1;
-        color: $forum-message-color;
-        background-color: $forum-message-background;
         font-size: medium;
         cursor: pointer;
       }

@@ -4,7 +4,7 @@ import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import { AUTH_SERVICE_EVENTS } from '../../services/types';
-import { globalBus } from '../../util/EventBus';
+import { globalBus } from 'Util/EventBus';
 import './Login.scss';
 
 const Login: LoginProps = ({ caption }) => {

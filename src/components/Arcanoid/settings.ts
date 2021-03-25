@@ -22,7 +22,7 @@ export const LEVEL_STROKE_STYLE = 'rgba(255, 255, 255, 0.5)';
 export const LEVEL_TEXT = 'Уровень:';
 export const LEVEL_FONT = '20px Arial';
 
-export const LEVEL_STRING_LENGTH = 20;
+export const LEVEL_STRING_LENGTH = 30;
 export const LEVEL_BLOCKS_WIDTH = 5; // %
 export const LEVEL_BLOCKS_HEIGHT = 5; // %
 export const LEVEL_BLOCK_SPACE = 0.25;
