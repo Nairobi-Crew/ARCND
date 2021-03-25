@@ -25,7 +25,7 @@ const App = () => (
         <Route path="/leaderboard">
           <Leaderboard/>
         </Route>
-        <Route path="/">
+        <Route exact path="/">
           <Arcanoid margin={10}/>
         </Route>
       </Switch>

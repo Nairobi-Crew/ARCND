@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {LeaderboardProps} from 'Pages/Leaderboard/types';
-import Form from 'UI/Form/Form';
-import Input from 'UI/Input/Input';
-import Button from 'UI/Button/Button';
-import {AUTH_SERVICE_EVENTS} from '../../services/types';
-import {globalBus} from '../../util/EventBus';
 import Leader from "Pages/Leaderboard/Leader/Leader";
 import './Leaderboard.scss'
 
