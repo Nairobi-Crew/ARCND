@@ -1,0 +1,51 @@
+@import "src/common/vars";
+
+.topic__item {
+  background-color: $background-color;
+  border: 1px solid;
+  border-top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.1em;
+  cursor: pointer;
+
+  &_header {
+    display: flex;
+    flex-direction: row;
+    padding: 0.2em;
+
+    &_description {
+      flex: 9;
+      border-right: 1px dotted;
+      padding: 0.2em;
+    }
+
+    &_created {
+      flex: 1;
+      border-right: 1px dotted;
+      padding: 0.2em;
+      text-align: center;
+    }
+
+    &_time {
+      flex: 1;
+      border-right: 1px dotted;
+      padding: 0.2em;
+      text-align: center;
+    }
+
+    &_count {
+      flex: 1;
+      padding: 0.2em;
+      text-align: center;
+    }
+  }
+
+  &_message {
+    border-top: 1px dotted;
+    width: 100%;
+    padding: 0.5em 0.5em 2em;
+    font-size: 0.8em;
+  }
+}

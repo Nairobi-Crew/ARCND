@@ -1,0 +1,50 @@
+.thread {
+  width: 100%;
+
+  &_title {
+    font-size: 1.5em;
+    text-align: left;
+    padding: 2em 0.5em 0.5em 0.5em;
+    margin: 2em 0.5em 0.5em 0.5em;
+  }
+
+  &_tools {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    &_item {
+      flex: 1;
+    }
+  }
+
+  &_header {
+    display: flex;
+    flex-direction: row;
+    padding: 1em;
+    border: 1px dotted;
+
+    &_description {
+      flex: 10;
+      border-right: 1px dotted;
+      padding: 1em;
+    }
+
+    &_author {
+      flex: 1;
+      border-right: 1px dotted;
+      padding: 1em;
+    }
+
+    &_time {
+      flex: 1;
+      padding: 1em;
+    }
+  }
+
+  &_body {
+    display: flex;
+    flex-direction: column;
+    margin: 1em 1em 1em 2em;
+  }
+}

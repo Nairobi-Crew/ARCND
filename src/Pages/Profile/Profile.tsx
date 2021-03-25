@@ -1,5 +1,6 @@
 import { ProfileProps } from 'Pages/Profile/types';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import Form from 'UI/Form/Form';
@@ -24,6 +25,8 @@ const Profile: ProfileProps = ({ caption }) => {
   const [secondNameMessage, setSecondNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
 
+  const history = useHistory();
+
   const saveProfileButtonHandler = () => {
     const params: UserInfo = {
       first_name: firstNameField,
@@ -41,7 +44,7 @@ const Profile: ProfileProps = ({ caption }) => {
     globalBus.on(USER_SERVICE_EVENTS.PROFILE_DONE, (data, status) => {
       console.log('Save profile done', { data, status });
     });
-    globalBus.on(USER_SERVICE_EVENTS.PROFILE_ERROR, (data, status) => {
+    globalBus.on(USER_SERVICE_EVENTS.PROFILE_ERROR, ({ data, status }) => {
       console.log('Save profile error', { data, status });
     });
     globalBus.emit(AUTH_SERVICE_EVENTS.DO_GET_INFO);
@@ -58,6 +61,9 @@ const Profile: ProfileProps = ({ caption }) => {
       setAvatar(data.avatar);
     });
     globalBus.on(AUTH_SERVICE_EVENTS.GET_INFO_ERROR, ({ data, status }) => {
+      if (status === 401) {
+        history.push('/signin');
+      }
       console.log('Get user error', { data, status });
     });
   }, []);
