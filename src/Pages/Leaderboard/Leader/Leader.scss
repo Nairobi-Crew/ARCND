@@ -1,0 +1,12 @@
+.leader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}

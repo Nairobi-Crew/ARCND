@@ -31,6 +31,7 @@ module.exports = {
       UI: resolve('src/components/ui/'),
       Config: resolve('src/config/'),
       Util: resolve('src/util/'),
+      Common: resolve('srs/common')
     },
 
   },
@@ -46,7 +47,7 @@ module.exports = {
         exclude: /node_modules/,
       }, {
         test: /\.(scss|css)$/,
-        use: [!isDev && MiniCssExtractPlugin.loader, !isDev && 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader,'css-loader', 'sass-loader'],
       },
 
       {

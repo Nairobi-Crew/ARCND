@@ -1,5 +1,4 @@
 @import 'src/common/common';
-@import '@/styles/settings';
 
 .button {
   font-size: $f-s;
@@ -28,11 +27,11 @@
     border-radius: 4px;
   }
 
-  &_color_aqua {
-    background-color: $aqua;
+  &_secondary {
+    background-color: $secondary-btn;
   }
 
-  &_color_violet {
-    background-color: $violet;
+  &_primary {
+    background-color: $primary-btn;
   }
 }

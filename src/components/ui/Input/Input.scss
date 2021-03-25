@@ -1,5 +1,4 @@
-@import 'src/common/common';
-@import '@/styles/settings';
+@import "src/common/utils";
 
 .input {
   font-weight: 400;
@@ -31,16 +30,16 @@
   }
 
   &__input:focus {
-    border-color: $violet;
+    border-color: $primary-btn;
   }
 
   &__input:invalid,
   &__input._error {
-    border-color: $red;
+    border-color: $error;
   }
 
   &__input:valid:not(:placeholder-shown):not(:focus):not(._error) {
-    border-color: $aqua;
+    border-color: $secondary-btn;
   }
 
   &__input::placeholder {
@@ -63,7 +62,7 @@
     position: absolute;
     bottom: 5px;
     right: 2px;
-    color: $red;
+    color: $error;
   }
 
   &__input:not(:placeholder-shown) + &__label-text,
@@ -74,6 +73,6 @@
 
   &__error-message {
     font-size: $f-m;
-    color: $red;
+    color: $error;
   }
 }

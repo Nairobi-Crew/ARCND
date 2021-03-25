@@ -1,6 +1,31 @@
-@import './vars.scss';
+@import "src/common/utils";
 
-body, html {
+html, body {
+  color: $fc;
+  background: $background-color;
+  min-width: 360px;
+  box-sizing: border-box;
+}
+
+*,
+::after,
+::before {
+  list-style: none;
+  box-sizing: inherit;
   margin: 0;
   padding: 0;
+  outline: none;
 }
+
+.header {
+  padding: 15px 130px;
+  &__title {
+    color: $fc;
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-xxl;
+    }
+  }
+}
+
