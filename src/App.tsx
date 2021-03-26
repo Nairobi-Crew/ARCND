@@ -1,7 +1,7 @@
 import './common/common.scss';
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Arcanoid from 'Components/Arcanoid/Arcanoid';
 import Login from 'Pages/Login/Login';
 import Registration from 'Pages/Register/Register';
@@ -9,40 +9,65 @@ import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import Forum from 'Pages/Forums/Forum/Forum';
 import Profile from 'Pages/Profile/Profile';
 import Thread from 'Pages/Forums/Thread/Thread';
-import ChangePassword from 'Pages/ChangePassword/index';
-import { CANVAS_MARGIN } from 'Components/Arcanoid/settings';
-import { userService } from './services/UserService';
-import { authService } from './services/AuthService';
+import {userService} from './services/UserService';
+import {authService} from './services/AuthService';
+import ErrorBoundary from 'Components/ErrorBoundary/ErrorBoundary';
+import Page404 from "Pages/404/404";
 
 authService.dummy();
 userService.dummy();
+
 
 const App = () => (
   <>
     <BrowserRouter>
       <Switch>
+
         <Route path="/signin">
-          <Login />
+          <ErrorBoundary>
+            <Login />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/signup">
-          <Registration />
+          <ErrorBoundary>
+            <Registration />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/leaderboard">
-          <Leaderboard />
+          <ErrorBoundary>
+            <Leaderboard />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/forum">
-          <Forum />
+          <ErrorBoundary>
+            <Forum />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/profile">
-          <Profile />
+          <ErrorBoundary>
+            <Profile />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/thread/:threadId">
-          <Thread />
+          <ErrorBoundary>
+            <Thread />
+          </ErrorBoundary>
         </Route>
+
         <Route path="/" exact>
-          <Arcanoid margin={CANVAS_MARGIN} />
+          <ErrorBoundary>
+            <Arcanoid margin={10} />
+          </ErrorBoundary>
         </Route>
-        <Route path="/password" component={ChangePassword} />
+
+        <Route path="/">
+          <Page404/>
+        </Route>
       </Switch>
     </BrowserRouter>
   </>
