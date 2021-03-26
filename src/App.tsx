@@ -12,6 +12,7 @@ import Thread from 'Pages/Forums/Thread/Thread';
 import {userService} from './services/UserService';
 import {authService} from './services/AuthService';
 import ErrorBoundary from 'Components/ErrorBoundary/ErrorBoundary';
+import Page404 from "Pages/404/404";
 
 authService.dummy();
 userService.dummy();
@@ -21,46 +22,51 @@ const App = () => (
   <>
     <BrowserRouter>
       <Switch>
+
         <Route path="/signin">
           <ErrorBoundary>
             <Login />
           </ErrorBoundary>
         </Route>
-        <Route path="/signup">
 
+        <Route path="/signup">
           <ErrorBoundary>
             <Registration />
           </ErrorBoundary>
         </Route>
-        <Route path="/leaderboard">
 
+        <Route path="/leaderboard">
           <ErrorBoundary>
             <Leaderboard />
           </ErrorBoundary>
         </Route>
-        <Route path="/forum">
 
+        <Route path="/forum">
           <ErrorBoundary>
             <Forum />
           </ErrorBoundary>
         </Route>
-        <Route path="/profile">
 
+        <Route path="/profile">
           <ErrorBoundary>
             <Profile />
           </ErrorBoundary>
         </Route>
-        <Route path="/thread/:threadId">
 
+        <Route path="/thread/:threadId">
           <ErrorBoundary>
             <Thread />
           </ErrorBoundary>
         </Route>
-        <Route path="/" exact>
 
+        <Route path="/" exact>
           <ErrorBoundary>
             <Arcanoid margin={10} />
           </ErrorBoundary>
+        </Route>
+
+        <Route path="/">
+          <Page404/>
         </Route>
       </Switch>
     </BrowserRouter>

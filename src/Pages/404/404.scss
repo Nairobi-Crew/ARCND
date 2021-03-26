@@ -1,0 +1,25 @@
+@import "src/common/utils";
+
+.error {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__title {
+    @include f-bold(xxl);
+    margin-bottom: 40px;
+  }
+
+
+  &__subtitle {
+    @include f-norm(l);
+    margin-bottom: 40px;
+  }
+
+  &__link {
+    text-decoration: none;
+  }
+}
