@@ -1,8 +1,4 @@
-import { FC } from 'react';
-
-export type OwnForumProps = {
+export type ForumProps = {
   style?: string
   caption?: string
 }
-
-export type ForumProps = FC<OwnForumProps>;

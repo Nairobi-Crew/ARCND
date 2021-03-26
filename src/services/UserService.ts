@@ -136,7 +136,11 @@ export class UserService {
           const event = response.status === 200
             ? USER_SERVICE_EVENTS.PASSWORD_DONE
             : USER_SERVICE_EVENTS.PASSWORD_ERROR;
-          globalBus.emit(event, { data: response, status: response.status });
+          response.text().then((data) => {
+            globalBus.emit(event, { data, status: response.status });
+          }).catch((data) => {
+            globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_ERROR, { data, status: response.status });
+          });
         })
         .catch((error) => {
           globalBus.emit(USER_SERVICE_EVENTS.PASSWORD_ERROR, { data: error, status: 0 });

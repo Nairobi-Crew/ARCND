@@ -3,7 +3,7 @@ import { TopicListProps } from 'Pages/Forums/TopicList/types';
 import TopicItem from 'Pages/Forums/TopicList/TopicItem/TopicItem';
 import './TopicList.scss';
 
-const TopicList: TopicListProps = ({ topics }) => (
+const TopicList: React.FC<TopicListProps> = ({ topics }) => (
   <>
     <div className="topic_list">
       <div className="topic_list_header">

@@ -6,7 +6,7 @@ import { data, messages as sampleMessages } from 'Pages/Forums/sampleData';
 import Button from 'UI/Button/Button';
 import './Thread.scss';
 
-const Thread: ThreadProps = ({ messages }) => {
+const Thread: React.FC<ThreadProps> = ({ messages }) => {
   const { threadId } = useParams<{ threadId: string }>();
   const [topics, setTopics] = useState(messages || []);
   const history = useHistory();

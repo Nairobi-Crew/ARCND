@@ -1,9 +1,6 @@
-import { FC } from 'react';
 import { Topics } from 'Pages/Forums/types';
 
-export type OwnTopicListProps = {
+export type TopicListProps = {
   caption?: string
   topics : Topics
 }
-
-export type TopicListProps = FC<OwnTopicListProps>;

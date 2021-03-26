@@ -1,7 +1,6 @@
 @import "src/common/utils";
 
 .login {
-
   &__link,
   &__submit {
     font-family: $ff;
@@ -14,4 +13,8 @@
   &__submit {
     margin: 0 20px 0 0;
   }
+}
+
+.logout_button {
+  margin: 0 1em;
 }

@@ -5,7 +5,7 @@ import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { globalBus } from 'Util/EventBus';
-import { EVENTS, RENDER_TIME } from 'Components/Arcanoid/settings';
+import { EVENTS, FPS } from 'Components/Arcanoid/settings';
 import drawFrame from 'Components/Arcanoid/UI/drawFrame';
 import drawHelp from 'Components/Arcanoid/UI/drawHelp';
 import drawScore from 'Components/Arcanoid/UI/drawScore';
@@ -13,18 +13,19 @@ import drawLevel from 'Components/Arcanoid/UI/drawLevel';
 import drawLives from 'Components/Arcanoid/UI/drawLives';
 import { levels } from 'Components/Arcanoid/levels/levelData';
 
-// const Game: GameProps = ({ ctx, width, height }) => {
 const Game: GameProps = ({ ctx, width, height }) => {
-  const gameContext: GameWindowProps = {
+  const getGameContext = (): GameWindowProps => ({
     top: 30,
     left: 30,
     width: width - 60,
     height: height - 60,
     right: width - 30,
     bottom: height - 30,
-  };
+  });
 
-  gameObjects.gameWindow = gameContext;
+  let animationFrameId;
+
+  gameObjects.gameWindow = getGameContext();
 
   useEffect(() => {
     gameObjects.setContext(ctx);
@@ -60,6 +61,8 @@ const Game: GameProps = ({ ctx, width, height }) => {
 
     const context = gameObjects.ctx;
 
+    const gameContext = getGameContext();
+
     if (firstLoading) {
       gameObjects.generateLevel(levels[ball.level - 1]);
       firstLoading = false;
@@ -91,10 +94,23 @@ const Game: GameProps = ({ ctx, width, height }) => {
     drawLives(gameContext);
   };
 
-  // (function loop() {
-  //   drawGame();
-  //   requestAnimationFrame(loop);
-  // }());
+  let now;
+  let then = Date.now();
+  const interval = 1000 / FPS;
+  let delta;
+
+  function loop() {
+    animationFrameId = requestAnimationFrame(loop);
+    now = Date.now();
+    delta = now - then;
+
+    if (delta > interval) {
+      then = now - (delta % interval);
+      drawGame();
+    }
+  }
+
+  // loop();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -110,7 +126,6 @@ const Game: GameProps = ({ ctx, width, height }) => {
             ball.invertYDirection();
           }
         }
-        // ball.moved = !ball.moved;
       } else if (key === 'ArrowLeft') {
         rocket.movedLeft = true;
         rocket.movedRight = false;
@@ -149,22 +164,28 @@ const Game: GameProps = ({ ctx, width, height }) => {
       ball.score += 1;
     };
 
-    const interval = setInterval(() => {
-      drawGame();
-    }, RENDER_TIME);
-
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     globalBus.on(EVENTS.GOAL, onGoal);
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
+    // loop();
     return () => {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
-      clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    console.log('Effect width');
+    window.cancelAnimationFrame(animationFrameId);
+    const gameContext = getGameContext();
+    ball.setGameWindow(gameContext);
+    rocket.setGameWindow(gameContext);
+    gameObjects.gameWindow = gameContext;
+    loop();
+  }, [width, height]);
 
   return (
     <></>

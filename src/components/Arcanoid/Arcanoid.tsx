@@ -7,11 +7,11 @@ export const Arcanoid: GameScreenProps = ({ margin }) => {
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      setScreenHeight(window.innerHeight);
-      setScreenWidth(window.innerWidth);
-    });
-  });
+    // window.addEventListener('resize', () => {
+    //   setScreenHeight(window.innerHeight);
+    //   setScreenWidth(window.innerWidth);
+    // });
+  }, []);
 
   return (
     <Canvas

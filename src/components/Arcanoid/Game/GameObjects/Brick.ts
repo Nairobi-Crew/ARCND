@@ -1,6 +1,7 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 
 export interface IBrickProps extends IBaseObjectProps {
   width: number
@@ -32,16 +33,7 @@ export class Brick extends BaseObject {
       return;
     }
     const { ctx } = this;
-    if (ctx) {
-      ctx.beginPath();
-      this.stylesByLevelType();
-      ctx.fillStyle = this.fillStyle;
-      ctx.strokeStyle = this.strokeStyle;
-      ctx.fillRect(this.x + this.gameWindow.left,
-        this.y + this.gameWindow.top,
-        this.width,
-        this.height);
-    }
+    drawBrick(ctx, gameWindow, this.x, this.y, this.width, this.height, this.level, this.type);
   }
 
   intersect():void {
@@ -75,22 +67,6 @@ export class Brick extends BaseObject {
     } else if (Math.abs(this.y - ball.y) < ball.radius) {
       this.level -= 1;
       ball.invertYDirection();
-    }
-  }
-
-  stylesByLevelType(): void {
-    if (this.level === 1) {
-      this.strokeStyle = 'red';
-      this.fillStyle = 'white';
-    } else if (this.level === 2) {
-      this.strokeStyle = 'red';
-      this.fillStyle = 'yellow';
-    } else if (this.level === 3) {
-      this.strokeStyle = 'red';
-      this.fillStyle = 'green';
-    } else {
-      this.strokeStyle = 'red';
-      this.fillStyle = 'blue';
     }
   }
 }

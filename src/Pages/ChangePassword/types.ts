@@ -1,7 +1,3 @@
-import { FC } from 'react';
-
-export type OwnChangePasswordProps = {
+export type ChangePasswordProps = {
   caption?: string
 }
-
-export type ChangePasswordProps = FC<OwnChangePasswordProps>;
