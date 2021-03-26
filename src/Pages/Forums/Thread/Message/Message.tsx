@@ -5,7 +5,7 @@ import dateFormat from 'Util/dateFormat';
 import odd from 'Util/odd';
 import Button from 'UI/Button/Button';
 
-const Message: MessageProps = ({ message, index }) => {
+const Message: React.FC<MessageProps> = ({ message, index }) => {
   const classes: string[] = ['message', odd(index) ? 'half_opacity' : ''];
   return (
     <div className={classes.join(' ')}>

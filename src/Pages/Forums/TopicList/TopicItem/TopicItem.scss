@@ -8,7 +8,15 @@
   display: flex;
   flex-direction: column;
   font-size: 1.1em;
-  cursor: pointer;
+
+  & a {
+    color: #bbf;
+    font-weight: bold;
+
+    &:visited {
+      color: #bbf;
+    }
+  }
 
   &_header {
     display: flex;

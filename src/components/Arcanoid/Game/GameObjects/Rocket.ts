@@ -1,7 +1,14 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
-import { ROCKET_HEIGHT, ROCKET_MOVE_STEP, ROCKET_WIDTH } from 'Components/Arcanoid/settings';
+import {
+  ROCKET_FILL_STYLE,
+  ROCKET_HEIGHT,
+  ROCKET_MOVE_STEP,
+  ROCKET_STROKE_STYLE,
+  ROCKET_WIDTH,
+} from 'Components/Arcanoid/settings';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import drawRocket from 'Components/Arcanoid/UI/drawRocket';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,
@@ -37,16 +44,7 @@ export class Rocket extends BaseObject {
       return;
     }
     const { ctx } = this;
-    ctx.strokeStyle = this.strokeStyle;
-    ctx.fillStyle = this.fillStyle;
-    ctx.fillRect(this.x + this.gameWindow.left,
-      this.gameWindow.bottom - ROCKET_HEIGHT,
-      this.width,
-      ROCKET_HEIGHT);
-    ctx.strokeRect(this.x + this.gameWindow.left,
-      this.gameWindow.bottom - ROCKET_HEIGHT,
-      this.width,
-      ROCKET_HEIGHT);
+    drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.strokeStyle, this.fillStyle);
   }
 
   moveRocket(delta: number): void {
@@ -78,4 +76,6 @@ export const rocket = new Rocket({
   y: window.innerHeight - ROCKET_HEIGHT,
   width: ROCKET_WIDTH,
   height: ROCKET_HEIGHT,
+  fillStyle: ROCKET_FILL_STYLE,
+  strokeStyle: ROCKET_STROKE_STYLE,
 });

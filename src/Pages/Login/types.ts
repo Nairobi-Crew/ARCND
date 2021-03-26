@@ -1,7 +1,3 @@
-import { FC } from 'react';
-
-export type OwnLoginProps = {
+export type LoginProps = {
   caption?: string
 }
-
-export type LoginProps = FC<OwnLoginProps>;

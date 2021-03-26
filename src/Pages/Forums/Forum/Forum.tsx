@@ -5,7 +5,7 @@ import Button from 'UI/Button/Button';
 import { data } from '../sampleData';
 import './Forum.scss';
 
-const Forum: ForumProps = ({ caption }) => (
+const Forum: React.FC<ForumProps> = ({ caption }) => (
   <div className="forum">
     <div className="forum_tools">
       <div className="forum_tools_item">

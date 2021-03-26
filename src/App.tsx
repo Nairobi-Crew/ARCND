@@ -9,6 +9,8 @@ import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import Forum from 'Pages/Forums/Forum/Forum';
 import Profile from 'Pages/Profile/Profile';
 import Thread from 'Pages/Forums/Thread/Thread';
+import ChangePassword from 'Pages/ChangePassword/index';
+import { CANVAS_MARGIN } from 'Components/Arcanoid/settings';
 import { userService } from './services/UserService';
 import { authService } from './services/AuthService';
 
@@ -38,8 +40,9 @@ const App = () => (
           <Thread />
         </Route>
         <Route path="/" exact>
-          <Arcanoid margin={10} />
+          <Arcanoid margin={CANVAS_MARGIN} />
         </Route>
+        <Route path="/password" component={ChangePassword} />
       </Switch>
     </BrowserRouter>
   </>

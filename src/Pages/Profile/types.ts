@@ -1,8 +1,4 @@
-import { FC } from 'react';
-
-export type OwnProfileProps = {
+export type ProfileProps = {
   caption?: string
   id? : number
 }
-
-export type ProfileProps = FC<OwnProfileProps>;

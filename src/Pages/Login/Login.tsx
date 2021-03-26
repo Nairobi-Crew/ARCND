@@ -4,17 +4,24 @@ import { LoginProps } from 'Pages/Login/types';
 import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { AUTH_SERVICE_EVENTS } from '../../services/types';
 import { globalBus } from 'Util/EventBus';
+import { AUTH_SERVICE_EVENTS } from '../../services/types';
 import './Login.scss';
 
-const Login: LoginProps = ({ caption }) => {
+const Login: React.FC<LoginProps> = ({ caption }) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordMessage, setPasswordMessage] = useState('');
   const history = useHistory();
+
   const loginButtonHandle = () => {
     globalBus.emit(AUTH_SERVICE_EVENTS.DO_SIGNIN, login, password);
   };
+
+  const logoutButtonHandle = () => {
+    globalBus.emit(AUTH_SERVICE_EVENTS.DO_LOGOUT);
+  };
+
   const onLoginChangedHandler = (val: string): void => {
     setLogin(val);
   };
@@ -27,7 +34,7 @@ const Login: LoginProps = ({ caption }) => {
       history.push('/profile');
     });
     globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, ({ data }) => {
-      alert(data.reason);
+      setPasswordMessage(data.reason);
     });
   }, []);
 
@@ -48,8 +55,10 @@ const Login: LoginProps = ({ caption }) => {
           type="password"
           className="input__input"
           onValueChanged={onPasswordChangedHandler}
+          errorMessage={passwordMessage}
         />
         <Button onClick={loginButtonHandle} buttonType="round">login</Button>
+        <Button className="logout_button" onClick={logoutButtonHandle} buttonType="round">logout</Button>
         <a className="login__link" href="/signup">Sign up</a>
       </Form>
     </>

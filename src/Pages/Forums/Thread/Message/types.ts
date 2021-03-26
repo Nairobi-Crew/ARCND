@@ -1,9 +1,6 @@
 import { IMessagesItem } from 'Pages/Forums/types';
-import { FC } from 'react';
 
-export type OwnMessageProps = {
+export type MessageProps = {
   message: IMessagesItem
   index?: number
 };
-
-export type MessageProps = FC<OwnMessageProps>;

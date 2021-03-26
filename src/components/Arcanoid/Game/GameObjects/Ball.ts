@@ -1,8 +1,9 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
+  BALL_FILL_STYLE,
   BALL_SPEED_LIMIT,
-  BALL_SPEED_UNIT,
+  BALL_STROKE_STYLE,
   EVENTS,
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
@@ -11,6 +12,7 @@ import {
 } from 'Components/Arcanoid/settings';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
+import drawBall from 'Components/Arcanoid/UI/drawBall';
 
 export interface IBallProps extends IBaseObjectProps {
   radius: number
@@ -71,20 +73,7 @@ export class Ball extends BaseObject {
       return;
     }
     const { ctx } = this;
-    ctx.beginPath();
-    ctx.strokeStyle = this.strokeStyle;
-    ctx.fillStyle = this.fillStyle;
-    ctx.ellipse(
-      this.x + this.gameWindow.left,
-      this.y + this.gameWindow.top,
-      this.radius,
-      this.radius,
-      0,
-      0,
-      2 * Math.PI,
-    );
-    ctx.fill();
-    ctx.stroke();
+    drawBall(ctx, this.gameWindow, this.x, this.y, this.radius, this.strokeStyle, this.fillStyle);
   }
 
   changeXSpeed(speed: number, fromCurrent = false): void {
@@ -191,5 +180,12 @@ export class Ball extends BaseObject {
   }
 }
 export const ball = new Ball({
-  x: 950, y: 500, radius: 15, fillStyle: '#0f0', strokeStyle: '#f00', moved: true, speedX: 5, speedY: 5,
+  x: 950,
+  y: 500,
+  radius: 15,
+  fillStyle: BALL_FILL_STYLE,
+  strokeStyle: BALL_STROKE_STYLE,
+  moved: true,
+  speedX: 5,
+  speedY: 5,
 });

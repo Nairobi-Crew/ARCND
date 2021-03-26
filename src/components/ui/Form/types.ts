@@ -6,6 +6,7 @@ export type OwnFormProps = {
   onSubmit?: TOnSubmit
   classList?: string[]
   caption?: string
+  visible?: boolean
 } & FormHTMLAttributes<HTMLFormElement>;
 
 export type FormProps = FC<OwnFormProps>;

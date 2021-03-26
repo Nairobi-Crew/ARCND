@@ -40,6 +40,7 @@ export default class BaseObject {
 
   render(gameWindow: GameWindowProps | undefined = undefined): void {
     if (gameWindow) {
+      this.setGameWindow(gameWindow);
       this.gameWindow = gameWindow;
     }
   }
