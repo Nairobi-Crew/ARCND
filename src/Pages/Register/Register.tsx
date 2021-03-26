@@ -81,10 +81,16 @@ const Register: RegisterProps = ({ caption }) => {
         onValueChanged={(val) => setPassword2(val)}
         value={password2}
       />
-      <Button className={'registration__submit button button_type_rounded'} onClick={registerButtonHandler}>
+      <Button
+        className={'registration__submit button button_type_rounded'}
+        onClick={registerButtonHandler}
+      >
         Зарегистрироваться
       </Button>
-      <Button className={'button button_type_rounded'} onClick={LogoutButtonHandler}>
+      <Button
+        className={'button button_type_rounded'}
+        onClick={LogoutButtonHandler}
+      >
         Logout
       </Button>
     </Form>
