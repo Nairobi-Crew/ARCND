@@ -191,5 +191,5 @@ export class Ball extends BaseObject {
   }
 }
 export const ball = new Ball({
-  x: 950, y: 500, radius: 15, fillStyle: '#0f0', strokeStyle: '#f00', moved: true, speedX: 5, speedY: 5,
+  x: 950, y: 500, radius: 15, fillStyle: '#54CBCB', strokeStyle: '#0B6161', moved: true, speedX: 5, speedY: 5,
 });
