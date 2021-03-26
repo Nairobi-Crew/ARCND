@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
 import { LoginProps } from 'Pages/Login/types';
 import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
@@ -10,6 +11,7 @@ import './Login.scss';
 const Login: LoginProps = ({ caption }) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
   const loginButtonHandle = () => {
     globalBus.emit(AUTH_SERVICE_EVENTS.DO_SIGNIN, login, password);
   };
@@ -22,7 +24,7 @@ const Login: LoginProps = ({ caption }) => {
 
   useEffect(() => {
     globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_DONE, (params) => {
-      // console.log('Login OK', params);
+      history.push('/game');
     });
     globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, (e) => {
       // console.log('Login error', e);

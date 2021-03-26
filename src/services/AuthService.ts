@@ -52,6 +52,9 @@ export class AuthService {
         const event = answer.status === 200
           ? AUTH_SERVICE_EVENTS.SIGNUP_DONE
           : AUTH_SERVICE_EVENTS.SIGNUP_ERROR;
+        const a = document.createElement('a');
+        a.href = '/game';
+        a.click();
         answer.json().then((data) => {
           globalBus.emit(event, { data, status: answer.status });
         }).catch((data) => {
