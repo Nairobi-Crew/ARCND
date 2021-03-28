@@ -18,12 +18,12 @@ const drawHelp = (w: GameWindowProps) => {
   ctx.fillText(
     HELP_TEXT,
     Math.round((w.left + w.width) / 2),
-    w.top + w.height + 30,
+    w.top + w.height + 20,
   );
   ctx.strokeText(
     HELP_TEXT,
     Math.round((w.left + w.width) / 2),
-    w.top + w.height + 30,
+    w.top + w.height + 20,
   );
 };
 

@@ -55,6 +55,8 @@ export class Ball extends BaseObject {
 
   ctx: CanvasRenderingContext2D;
 
+  menuMode = false;
+
   constructor(props: IBallProps) {
     super(props);
     if (Ball.instance) {
@@ -129,7 +131,6 @@ export class Ball extends BaseObject {
         const ballOnRocketPosition = this.x - leftOfRocket;
         const partSize = (rocket.width + this.radius * 2) / ROCKET_PARTS;
         const onPart = Math.round(ballOnRocketPosition / partSize) + 1;
-        console.log(`onPart = ${onPart}`, ROCKET_PART_SPEED_CHANGER - onPart);
 
         if (onPart <= ROCKET_PART_SPEED_CHANGER) {
           const speedChanger = onPart - ROCKET_PART_SPEED_CHANGER + 1;
@@ -180,12 +181,12 @@ export class Ball extends BaseObject {
   }
 }
 export const ball = new Ball({
-  x: 950,
+  x: 950, // координаты по умолчанию
   y: 500,
-  radius: 15,
-  fillStyle: BALL_FILL_STYLE,
-  strokeStyle: BALL_STROKE_STYLE,
-  moved: true,
-  speedX: 5,
+  radius: 15, // радиус
+  fillStyle: BALL_FILL_STYLE, // стили. заполнения
+  strokeStyle: BALL_STROKE_STYLE, // и обводки
+  moved: true, // шарик в движении?
+  speedX: 5, // сророст и по осям
   speedY: 5,
 });

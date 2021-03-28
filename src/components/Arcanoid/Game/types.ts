@@ -1,21 +1,17 @@
-import { FC } from 'react';
 import BaseObject from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 
-export type OwnGameProps = {
+export type GameProps = {
   ctx: CanvasRenderingContext2D
-  width: number
-  height: number
 }
 
-export type GameProps = FC<OwnGameProps>;
-
+// размер игрового окна
 export type GameWindowProps = {
-  top: number
-  left: number
-  right: number
-  bottom: number
-  width: number
-  height: number
+  top: number // верхний отступ
+  left: number // левый
+  right: number // правый
+  bottom: number // нижний
+  width: number // ширина
+  height: number // высота
 };
 
 export interface IGameFieldObjectProps {

@@ -1,7 +1,7 @@
 import './common/common.scss';
 
 import React from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Arcanoid from 'Components/Arcanoid/Arcanoid';
 import Login from 'Pages/Login/Login';
 import Registration from 'Pages/Register/Register';
@@ -9,14 +9,14 @@ import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import Forum from 'Pages/Forums/Forum/Forum';
 import Profile from 'Pages/Profile/Profile';
 import Thread from 'Pages/Forums/Thread/Thread';
-import {userService} from './services/UserService';
-import {authService} from './services/AuthService';
 import ErrorBoundary from 'Components/ErrorBoundary/ErrorBoundary';
-import Page404 from "Pages/404/404";
+import Page404 from 'Pages/404/404';
+import { CANVAS_MARGIN } from 'Components/Arcanoid/settings';
+import { userService } from './services/UserService';
+import { authService } from './services/AuthService';
 
 authService.dummy();
 userService.dummy();
-
 
 const App = () => (
   <>
@@ -61,12 +61,12 @@ const App = () => (
 
         <Route path="/" exact>
           <ErrorBoundary>
-            <Arcanoid margin={10} />
+            <Arcanoid margin={CANVAS_MARGIN} />
           </ErrorBoundary>
         </Route>
 
         <Route path="/">
-          <Page404/>
+          <Page404 />
         </Route>
       </Switch>
     </BrowserRouter>

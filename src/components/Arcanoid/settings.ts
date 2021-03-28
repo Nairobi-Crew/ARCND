@@ -1,3 +1,5 @@
+export const GAME_CANVAS_ID = 'arcanoid';
+
 export const FPS = 60;
 
 export const CANVAS_MARGIN = 10;
@@ -19,8 +21,8 @@ export const ROCKET_PART_SPEED_CHANGER = 3;
 
 export const HELP_FILL_STYLE = '#fff';
 export const HELP_STROKE_STYLE = 'rgba(255, 255, 255, 0.5)';
-export const HELP_TEXT = 'Стрелки влево-вправо - перемещение рокетки, ENTER - полноэкранный режим, SPACE - старт игры/выстрел';
-export const HELP_FONT = '20px Arial';
+export const HELP_TEXT = 'Стрелки влево-вправо - перемещение рокетки, ENTER - полноэкранный режим, SPACE - старт игры/выстрел, ESC - выход';
+export const HELP_FONT = '18px Arial';
 
 export const SCORES_FILL_STYLE = '#fff';
 export const SCORES_STROKE_STYLE = 'rgba(255, 255, 255, 0.5)';
