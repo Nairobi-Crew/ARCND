@@ -14,8 +14,8 @@
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-param-reassign": "off",
-    "react-hooks/rules-of-hooks": "error", // Проверяем правила хуков
-    "react-hooks/exhaustive-deps": "warn", // Проверяем зависимости эффекта
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react/jsx-filename-extension": [
       2,
       {

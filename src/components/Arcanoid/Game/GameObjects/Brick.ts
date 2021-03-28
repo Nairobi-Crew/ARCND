@@ -37,35 +37,35 @@ export class Brick extends BaseObject {
     drawBrick(ctx, gameWindow, this.x, this.y, this.width, this.height, this.level, this.type);
   }
 
-  intersect():void {
-    if (ball.x - ball.radius > this.x + this.width
+  intersect():void { // проверка пересечения кирпича и шарика
+    if (ball.x - ball.radius > this.x + this.width // не перекрываются по оси Х
       || ball.x + ball.radius < this.x) {
       return;
     }
-    if (ball.y - ball.radius > this.y + this.height
+    if (ball.y - ball.radius > this.y + this.height // не перекрываются по оси У
       || ball.y + ball.radius < this.y) {
       return;
     }
 
-    if (ball.speedX < 0) {
-      if (Math.abs(this.x + this.width - ball.x) < ball.radius) {
-        ball.invertXDirection();
-        this.level -= 1;
-        gameProperties.score += 2;
+    if (ball.speedX < 0) { // если шарик летит влево
+      if (Math.abs(this.x + this.width - ball.x) < ball.radius) { // удар по грани
+        ball.invertXDirection(); // инвертирование направления
+        this.level -= 1; // уменьшение уровня блока
+        gameProperties.score += 2; // увеличение счета
         return;
       }
-    } else if (Math.abs(this.x - ball.x) < ball.radius) {
+    } else if (Math.abs(this.x - ball.x) < ball.radius) { // летит враво и удар по грани
       ball.invertXDirection();
       this.level -= 1;
       gameProperties.score += 2;
       return;
     }
-    if (ball.speedY < 0) {
-      if (Math.abs(this.y + this.height - ball.y) < ball.radius) {
+    if (ball.speedY < 0) { // летит вверх
+      if (Math.abs(this.y + this.height - ball.y) < ball.radius) { // удар по грани
         this.level -= 1;
         ball.invertYDirection();
       }
-    } else if (Math.abs(this.y - ball.y) < ball.radius) {
+    } else if (Math.abs(this.y - ball.y) < ball.radius) { // вниз и удар по грания
       this.level -= 1;
       ball.invertYDirection();
     }

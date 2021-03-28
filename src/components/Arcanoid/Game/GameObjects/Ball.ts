@@ -21,7 +21,7 @@ export interface IBallProps extends IBaseObjectProps {
   speedY: number
 }
 
-// синглтон на объект шарика и другие игровые свойства
+// синглтон на объект шарика
 export class Ball extends BaseObject {
   private static instance : Ball;
 
@@ -42,7 +42,7 @@ export class Ball extends BaseObject {
     Ball.instance = this;
   }
 
-  render(gameWindow: GameWindowProps | undefined = undefined) {
+  render(gameWindow: GameWindowProps | undefined = undefined) { // отрисовка
     super.render(gameWindow);
     if (!gameWindow || !this.ctx) {
       return;
@@ -51,31 +51,31 @@ export class Ball extends BaseObject {
     drawBall(ctx, this.gameWindow, this.x, this.y, this.radius, this.strokeStyle, this.fillStyle);
   }
 
-  changeXSpeed(speed: number, fromCurrent = false): void {
-    if (fromCurrent) {
+  changeXSpeed(speed: number, fromCurrent = false): void { // изменение скорости по оси Х
+    if (fromCurrent) { // относительная скорость
       this.speedX += speed;
-    } else {
+    } else { // абсолютная
       this.speedX = Math.abs(speed) * (this.speedX < 0 ? -1 : 1);
     }
   }
 
-  changeYSpeed(speed: number, fromCurrent = false): void {
-    if (fromCurrent) {
+  changeYSpeed(speed: number, fromCurrent = false): void { // изменение скорости по оси У
+    if (fromCurrent) { // относительная скорость
       this.speedY += speed;
-    } else {
+    } else { // абсолютная
       this.speedY = Math.abs(speed) * (this.speedY < 0 ? -1 : 1);
     }
   }
 
-  invertXDirection(needInvert = true): void {
+  invertXDirection(needInvert = true): void { // инверсия направления по оси Х
     this.speedX = needInvert ? -this.speedX : this.speedX;
   }
 
-  invertYDirection(needInvert = true): void {
+  invertYDirection(needInvert = true): void { // инверсия направления по оси У
     this.speedY = needInvert ? -this.speedY : this.speedY;
   }
 
-  nextMove(): void {
+  nextMove(): void { // обсчет кадра
     let needInvert = false;
     if (
       !gameProperties.moved
@@ -97,9 +97,9 @@ export class Ball extends BaseObject {
     const rightOfRocket = leftOfRocket + rocket.width;
 
     if (this.speedY > 0) { // есть движение по оси вниз проверка ракетки или нижней кромки
-      if (bottomOfBall > upOfRocket) {
+      if (bottomOfBall > upOfRocket) { // шарик опустиля ниже верхней грани ракетки
         if (rightOfBall < leftOfRocket || leftOfBall > rightOfRocket) { // не попали в ракетку
-          globalBus.emit(EVENTS.GOAL);
+          globalBus.emit(EVENTS.GOAL); // эмит события гол
           this.y = upOfRocket;
           this.invertYDirection(true);
           return;
@@ -107,9 +107,10 @@ export class Ball extends BaseObject {
         // попали в ракетку
         const ballOnRocketPosition = this.x - leftOfRocket;
         const partSize = (rocket.width + this.radius * 2) / ROCKET_PARTS;
+        // на какую часть ракетки упал
         const onPart = Math.round(ballOnRocketPosition / partSize) + 1;
 
-        if (onPart <= ROCKET_PART_SPEED_CHANGER) {
+        if (onPart <= ROCKET_PART_SPEED_CHANGER) { // если на край, меняем скорость
           const speedChanger = onPart - ROCKET_PART_SPEED_CHANGER + 1;
           this.speedX -= (speedChanger * ROCKET_PART_SPEED_MULT);
           if (this.speedX < 0) {
@@ -131,28 +132,28 @@ export class Ball extends BaseObject {
       }
     }
 
-    this.x += this.speedX;
-    if (this.speedX > 0) {
-      if (rightOfBall >= this.gameWindow.width) {
-        this.x = this.gameWindow.width - this.radius;
-        needInvert = true;
+    this.x += this.speedX; // перемещаем шарик по Х
+    if (this.speedX > 0) { // летит вправо
+      if (rightOfBall >= this.gameWindow.width) { // если долетел до края
+        this.x = this.gameWindow.width - this.radius; //
+        needInvert = true; // поменяем направление по оси Х
       }
-    } else if (leftOfBall < 0) {
+    } else if (leftOfBall < 0) { // летит влево и долетел до края
       this.x = this.radius;
-      needInvert = true;
+      needInvert = true; // поменяем направление по оси Х
     }
     this.invertXDirection(needInvert);
     needInvert = false;
 
-    this.y += this.speedY;
-    if (this.speedY > 0) {
-      if (bottomOfBall >= this.gameWindow.height) {
+    this.y += this.speedY; // перемещаем по оси У
+    if (this.speedY > 0) { // летит вниз
+      if (bottomOfBall >= this.gameWindow.height) { // долетел до края
         this.y = this.gameWindow.height - this.radius;
-        needInvert = true;
+        needInvert = true; // меняем направление
       }
-    } else if (topOfBall < 0) {
+    } else if (topOfBall < 0) { // долетел до верхнего края
       this.y = this.radius;
-      needInvert = true;
+      needInvert = true; // разворачиваем
     }
     this.invertYDirection(needInvert);
   }

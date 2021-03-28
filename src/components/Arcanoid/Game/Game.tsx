@@ -17,9 +17,9 @@ import { useHistory } from 'react-router-dom';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
-  // устанавливаем размер игрового поля с отступами в 30px
   let canvasId;
-  const getWidth = () => {
+
+  const getWidth = () => { // ширина канваса
     if (canvasId) {
       return canvasId.width;
     }
@@ -30,7 +30,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     return 0;
   };
 
-  const getHeight = () => {
+  const getHeight = () => { // высота канваса
     if (canvasId) {
       return canvasId.height;
     }
@@ -43,28 +43,25 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   const history = useHistory();
 
-  // if (!canvasId) { // канваса нет - выходим
-  //   return (<></>);
-  // }
-
   useEffect(() => { // при изменении контекста канваса, меняем его у
     gameObjects.setContext(ctx);
     ball.setContext(ctx);
     rocket.setContext(ctx);
   }, [ctx]);
 
+  // устанавливаем размер игрового поля
   const getGameContext = (): GameWindowProps => ({
     top: 30,
-    left: 30,
-    width: getWidth() - 60,
+    left: 2,
+    width: getWidth() - 4,
     height: getHeight() - 60,
     right: getWidth() - 30,
     bottom: getHeight() - 30,
   });
 
-  gameObjects.gameWindow = getGameContext();
+  gameObjects.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
 
-  const toggleFullScreen = () => {
+  const toggleFullScreen = () => { // переключатель в полноэкранный режим
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
@@ -72,6 +69,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     }
   };
 
+  // проверка установлен ли канвас в объектах для отрисовки и установка его
   const checkContext = (): boolean => {
     if (!gameObjects.ctx) {
       if (ctx) {
@@ -91,133 +89,145 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     return true;
   };
 
-  const drawGame = () => {
-    if (!checkContext()) {
+  const drawGame = () => { // отрисовка кадра игры
+    if (!checkContext()) { // проверка канваса
       return;
     }
-    const context = gameObjects.ctx;
-    const gameContext = getGameContext();
 
-    gameObjects.data
+    // функция проверки шарика на столкновение с кирпичами
+    // и уменьшение уровня кирпича на 1 при столкновении
+    gameObjects.data // фильтр на кирпичи с уровнем < 1
       .filter((item) => item.type === 'brick' && (item.object as Brick).level > 0)
       .forEach((item) => (item.object as Brick).intersect());
+
+    // удаление кирпичей с уровнем 0
     gameObjects.data = gameObjects.data.filter(
       (item) => item.type !== 'brick' || (item.object as Brick).level > 0,
     );
-    if (gameObjects.brickCount <= 0) {
-      gameProperties.gameStarted = false;
-      gameProperties.onRocket = true;
-      gameProperties.level += 1;
-      gameObjects.generateLevel(levels[gameProperties.level - 1]);
-    }
-    ball.nextMove();
-    rocket.nextMove();
-    context.beginPath();
-    context.clearRect(0, 0, getWidth(), getHeight());
-    gameObjects.render();
-    ball.render(gameContext);
-    rocket.render(gameContext);
 
-    drawFrame(gameContext);
-    drawHelp(gameContext);
-    drawScore(gameContext);
-    drawLevel(gameContext);
-    drawLives(gameContext);
-    if (gameProperties.menuMode) {
-      drawMenu(gameContext);
+    if (gameObjects.brickCount <= 0) { // если количество кирпичей = 0, то уровень пройден
+      gameProperties.gameStarted = false; // игра на паузу
+      gameProperties.onRocket = true; // шарик на рокетку
+      gameProperties.level += 1; // увеличение уровня
+      gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
+    }
+    ball.nextMove(); // перемещение шарика на следующий кадр
+    rocket.nextMove(); // перемещение рокетки на следующий кадр
+    const context = gameObjects.ctx;
+    const gameContext = getGameContext();
+    context.beginPath();
+    context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
+    gameObjects.render(); // отрисовка кирпичей
+    ball.render(gameContext); // шарика
+    rocket.render(gameContext); // рокетки
+
+    drawFrame(gameContext); // рамки
+    drawHelp(gameContext); // строки состояния
+    drawScore(gameContext); // счета
+    drawLevel(gameContext); // уровня
+    drawLives(gameContext); // жизней
+    if (gameProperties.menuMode) { // если режим меню
+      drawMenu(gameContext); // то меню рисуем
     }
   };
 
-  let now;
-  let then = Date.now();
-  const interval = 1000 / FPS;
+  let now; // для текущего времени
+  let then = Date.now(); // текущее время
+  const interval = 1000 / FPS; // интервал в мс для обновления согласно нужного ФПС
   let delta;
 
-  function loop() {
+  function loop() { // обработка отрисовки кадра анимации
     requestAnimationFrame(loop);
     now = Date.now();
-    delta = now - then;
+    delta = now - then; // сколько прошло времени
 
-    if (delta > interval) {
+    if (delta > interval) { // больше, чем интервал с ФПС
       then = now - (delta % interval);
-      drawGame();
+      drawGame(); // рисуем кадр
     }
   }
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
       const { key, keyCode } = e;
-      if (keyCode === 13) {
+      if (keyCode === 13) { // Энтер - переключение полноэкранного режима
         toggleFullScreen();
       }
 
-      if (keyCode === 27) {
-        gameProperties.gameStarted = !gameProperties.gameStarted;
-        gameProperties.menuMode = !gameProperties.menuMode;
+      if (keyCode === 27) { // ESC переключение режима меню
+        gameProperties.gameStarted = !gameProperties.gameStarted; // переключение режима паузы
+        gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
       }
-      if (key === ' ') {
-        if (!gameProperties.gameStarted) {
-          gameProperties.gameStarted = true;
-          gameProperties.onRocket = false;
-          if (ball.speedY > 0) {
+      if (key === ' ') { // пробул
+        if (!gameProperties.gameStarted) { // если игра на паузе
+          gameProperties.gameStarted = true; // снимаем с паузы
+          gameProperties.onRocket = false; // отвязка шарика от рокетки
+          if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
             ball.invertYDirection();
           }
         }
-      } else if (key === 'y' || key === 'Y') {
-        if (gameProperties.menuMode) {
-          history.goBack();
+      } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
+        if (gameProperties.menuMode) { // если режим меню
+          history.goBack(); // то идем НАЗАД
+          // history.push('/leaderboard');
         }
-      } else if (key === 'ArrowLeft') {
-        if (!gameProperties.menuMode) {
-          rocket.movedLeft = true;
-          rocket.movedRight = false;
+      } else if (key === 'ArrowLeft') { // если стрелка ВЛЕВО
+        if (!gameProperties.menuMode) { // не режим меню
+          rocket.movedLeft = true; // перемещать ракетку влево
+          rocket.movedRight = false; // остановить перемещение ракетки вправо
         }
-      } else if (key === 'ArrowRight') {
-        if (!gameProperties.menuMode) {
-          rocket.movedRight = true;
-          rocket.movedLeft = false;
+      } else if (key === 'ArrowRight') { // если стрелка ВПРАВО
+        if (!gameProperties.menuMode) { // не режим меню
+          rocket.movedRight = true; // перемещать ракетку вправо
+          rocket.movedLeft = false; // остановить перемещение влево
         }
       }
     };
 
-    const onKeyUp = (e: KeyboardEvent) => {
+    const onKeyUp = (e: KeyboardEvent) => { // обработчик отпускания клавиши
       const { key } = e;
-      if (key === 'ArrowLeft') {
-        rocket.movedLeft = false;
-      } else if (key === 'ArrowRight') {
-        rocket.movedRight = false;
+      if (key === 'ArrowLeft') { // срелка влево
+        rocket.movedLeft = false; // останавливаем перемещение
+      } else if (key === 'ArrowRight') { // стрелка вправо
+        rocket.movedRight = false; // отсанавливаем перемещение
       }
     };
 
-    const onGoal = () => {
-      if (gameProperties.lives === 1) {
+    const onGoal = () => { // Обработка события ГОЛ
+      if (gameProperties.lives === 1) { // если жизнь последняя
+        // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
-        gameProperties.lives = 3;
-        gameProperties.onRocket = true;
-        gameProperties.gameStarted = false;
-        gameProperties.score = 0;
-        gameProperties.level = 1;
-        gameObjects.generateLevel(levels[gameProperties.level - 1]);
-      } else {
-        gameProperties.lives -= 1;
-        gameProperties.onRocket = true;
-        gameProperties.gameStarted = false;
+        gameProperties.lives = 3; // теперь жизней 3
+        gameProperties.onRocket = true; // шарик приклеен к рокетке
+        gameProperties.gameStarted = false; // игра на паузе
+        gameProperties.score = 0; // счет 0
+        gameProperties.level = 1; // уровень 1
+        gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
+      } else { // если не последняя
+        gameProperties.lives -= 1; // уменьшаем количество жизней
+        gameProperties.onRocket = true; // шарик на рокетке
+        gameProperties.gameStarted = false; // на паузу
       }
     };
 
-    const onBallReturn = () => {
-      gameProperties.score += 1;
+    const onBallReturn = () => { // если шарик отбит ракеткой
+      gameProperties.score += 1; // счет увеличивается
     };
+    // получаем размер поля
     gameObjects.gameWindow = getGameContext();
-
+    // генерируем уровень
     gameObjects.generateLevel(levels[gameProperties.level - 1]);
 
+    // события на нажатие клавиши
     window.addEventListener('keydown', onKeyDown);
+    // события на отпускание клавиши
     window.addEventListener('keyup', onKeyUp);
+    // события на ГОЛ
     globalBus.on(EVENTS.GOAL, onGoal);
+    // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
-    loop();
-    return () => {
+    loop(); // запуск игрового цикла
+    return () => { // очистка обработчиков события
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       globalBus.off(EVENTS.GOAL, onGoal);

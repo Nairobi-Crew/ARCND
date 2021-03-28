@@ -9,16 +9,17 @@ import {
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { typeData } from 'Components/Arcanoid/levels/levelData';
 
+// синглтон объектов игры
 export default class GameFieldObjects {
   private static instance: GameFieldObjects;
 
   data: IGameFieldObjectProps[] = [];
 
-  gameWindow: GameWindowProps = null;
+  gameWindow: GameWindowProps = null; // игровое поле
 
-  ctx: CanvasRenderingContext2D;
+  ctx: CanvasRenderingContext2D; // контекст канваса
 
-  brickCount: number = 0;
+  brickCount: number = 0; // количество кирпичей
 
   constructor() {
     if (GameFieldObjects.instance) {
@@ -49,7 +50,7 @@ export default class GameFieldObjects {
     this.brickCount = count;
   }
 
-  generateLevel(levelData: string[]): void {
+  generateLevel(levelData: string[]): void { // генерация уровня
     this.data = this.data.filter((x) => x.type !== 'brick');
     const getNextItem = (s) => {
       let currentPos = 0;

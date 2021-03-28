@@ -20,8 +20,8 @@ const drawScore = (w: GameWindowProps) => {
   ctx.font = SCORES_FONT;
   ctx.fillText(
     `${SCORES_TEXT}${gameProperties.score}`,
-    0,
-    Math.round(w.top / 2),
+    2,
+    Math.round(w.top / 2 + 2),
   );
 };
 

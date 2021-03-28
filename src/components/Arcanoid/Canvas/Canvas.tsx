@@ -4,11 +4,11 @@ import Game from 'Components/Arcanoid/Game/index';
 import { GAME_CANVAS_ID } from 'Components/Arcanoid/settings';
 import './Canvas.scss';
 
-const Canvas: React.FC<CanvasProps> = () => {
-  const [gameContext, setGameContext] = useState(null);
+const Canvas: React.FC<CanvasProps> = () => { // компонент канваса
+  const [gameContext, setGameContext] = useState(null); // контекст канваса
   const [width, setWidth] = useState(window.innerWidth); // размер канваса по умолчанию
   const [height, setHeight] = useState(window.innerHeight);
-  const canvasRef = useRef<HTMLCanvasElement | null>();
+  const canvasRef = useRef<HTMLCanvasElement | null>(); // ссылка на канвас
 
   useEffect(() => { // эффект для первой отрисовки
     const ctx = canvasRef.current ? canvasRef.current.getContext('2d') : null;

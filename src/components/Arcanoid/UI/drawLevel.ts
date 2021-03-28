@@ -21,12 +21,12 @@ const drawLevel = (w: GameWindowProps) => {
   ctx.strokeText(
     `${LEVEL_TEXT}${gameProperties.level}`,
     Math.round((w.left + w.width) / 2),
-    Math.round(w.top / 2),
+    Math.round(w.top / 2 + 2),
   );
   ctx.fillText(
     `${LEVEL_TEXT}${gameProperties.level}`,
     Math.round((w.left + w.width) / 2),
-    Math.round(w.top / 2),
+    Math.round(w.top / 2 + 2),
   );
 };
 

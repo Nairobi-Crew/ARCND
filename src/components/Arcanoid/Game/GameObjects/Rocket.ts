@@ -48,25 +48,26 @@ export class Rocket extends BaseObject {
     drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.strokeStyle, this.fillStyle);
   }
 
-  moveRocket(delta: number): void {
+  moveRocket(delta: number): void { // перемещение рактки
     this.x += delta;
     if (delta > 0) {
-      if (this.x + this.width > this.gameWindow.width) {
+      if (this.x + this.width > this.gameWindow.width) { // не пускать за край вправо
         this.x = this.gameWindow.width - this.width;
       }
-    } else if (this.x < 0) {
+    } else if (this.x < 0) { // не пускать за край влево
       this.x = 0;
     }
   }
 
-  nextMove(): void {
+  nextMove(): void { // следующий кадр ракетки
+    // если шарик на ракетке, то перемещаем и шарик
     if (this.gameWindow && this.ctx && gameProperties.onRocket) {
       ball.x = this.x + Math.round(this.width / 2);
       ball.y = this.gameWindow.height - this.height - ball.radius;
     }
-    if (this.movedLeft) {
+    if (this.movedLeft) { // если двигается влево
       this.moveRocket(-ROCKET_MOVE_STEP);
-    } else if (this.movedRight) {
+    } else if (this.movedRight) { // или если вправо
       this.moveRocket(ROCKET_MOVE_STEP);
     }
   }
