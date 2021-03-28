@@ -14,17 +14,44 @@ import drawLives from 'Components/Arcanoid/UI/drawLives';
 import { levels } from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   // устанавливаем размер игрового поля с отступами в 30px
-  const canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
-  const getWidth = () => (canvasId ? canvasId.width : 0);
-  const getHeight = () => (canvasId ? canvasId.height : 0);
+  let canvasId;
+  const getWidth = () => {
+    if (canvasId) {
+      return canvasId.width;
+    }
+    canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
+    if (canvasId) {
+      return canvasId.width;
+    }
+    return 0;
+  };
+
+  const getHeight = () => {
+    if (canvasId) {
+      return canvasId.height;
+    }
+    canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
+    if (canvasId) {
+      return canvasId.height;
+    }
+    return 0;
+  };
+
   const history = useHistory();
 
-  if (!canvasId) { // канваса нет - выходим
-    return (<></>);
-  }
+  // if (!canvasId) { // канваса нет - выходим
+  //   return (<></>);
+  // }
+
+  useEffect(() => { // при изменении контекста канваса, меняем его у
+    gameObjects.setContext(ctx);
+    ball.setContext(ctx);
+    rocket.setContext(ctx);
+  }, [ctx]);
 
   const getGameContext = (): GameWindowProps => ({
     top: 30,
@@ -36,12 +63,6 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   });
 
   gameObjects.gameWindow = getGameContext();
-
-  useEffect(() => { // при изменении контекста канваса, меняем его у
-    gameObjects.setContext(ctx);
-    ball.setContext(ctx);
-    rocket.setContext(ctx);
-  }, [ctx]);
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -55,9 +76,17 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     if (!gameObjects.ctx) {
       if (ctx) {
         gameObjects.ctx = ctx;
+        ball.setContext(ctx);
+        rocket.setContext(ctx);
         return true;
       }
       return false;
+    }
+    if (!ball.ctx) {
+      ball.setContext(gameObjects.ctx);
+    }
+    if (!rocket.ctx) {
+      rocket.setContext(gameObjects.ctx);
     }
     return true;
   };
@@ -76,10 +105,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       (item) => item.type !== 'brick' || (item.object as Brick).level > 0,
     );
     if (gameObjects.brickCount <= 0) {
-      ball.gameStarted = false;
-      ball.onRocket = true;
-      ball.level += 1;
-      gameObjects.generateLevel(levels[ball.level - 1]);
+      gameProperties.gameStarted = false;
+      gameProperties.onRocket = true;
+      gameProperties.level += 1;
+      gameObjects.generateLevel(levels[gameProperties.level - 1]);
     }
     ball.nextMove();
     rocket.nextMove();
@@ -94,7 +123,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     drawScore(gameContext);
     drawLevel(gameContext);
     drawLives(gameContext);
-    if (ball.menuMode) {
+    if (gameProperties.menuMode) {
       drawMenu(gameContext);
     }
   };
@@ -123,27 +152,31 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       }
 
       if (keyCode === 27) {
-        ball.gameStarted = !ball.gameStarted;
-        ball.menuMode = !ball.menuMode;
+        gameProperties.gameStarted = !gameProperties.gameStarted;
+        gameProperties.menuMode = !gameProperties.menuMode;
       }
       if (key === ' ') {
-        if (!ball.gameStarted) {
-          ball.gameStarted = true;
-          ball.onRocket = false;
+        if (!gameProperties.gameStarted) {
+          gameProperties.gameStarted = true;
+          gameProperties.onRocket = false;
           if (ball.speedY > 0) {
             ball.invertYDirection();
           }
         }
       } else if (key === 'y' || key === 'Y') {
-        if (ball.menuMode) {
+        if (gameProperties.menuMode) {
           history.goBack();
         }
       } else if (key === 'ArrowLeft') {
-        rocket.movedLeft = true;
-        rocket.movedRight = false;
+        if (!gameProperties.menuMode) {
+          rocket.movedLeft = true;
+          rocket.movedRight = false;
+        }
       } else if (key === 'ArrowRight') {
-        rocket.movedRight = true;
-        rocket.movedLeft = false;
+        if (!gameProperties.menuMode) {
+          rocket.movedRight = true;
+          rocket.movedLeft = false;
+        }
       }
     };
 
@@ -157,26 +190,27 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     };
 
     const onGoal = () => {
-      if (ball.lives === 1) {
-        globalBus.emit(EVENTS.GAME_OVER, ball.score, ball.level);
-        ball.lives = 3;
-        ball.onRocket = true;
-        ball.gameStarted = false;
-        ball.score = 0;
-        ball.level = 1;
-        gameObjects.generateLevel(levels[ball.level - 1]);
+      if (gameProperties.lives === 1) {
+        globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
+        gameProperties.lives = 3;
+        gameProperties.onRocket = true;
+        gameProperties.gameStarted = false;
+        gameProperties.score = 0;
+        gameProperties.level = 1;
+        gameObjects.generateLevel(levels[gameProperties.level - 1]);
       } else {
-        ball.lives -= 1;
-        ball.onRocket = true;
-        ball.gameStarted = false;
+        gameProperties.lives -= 1;
+        gameProperties.onRocket = true;
+        gameProperties.gameStarted = false;
       }
     };
 
     const onBallReturn = () => {
-      ball.score += 1;
+      gameProperties.score += 1;
     };
+    gameObjects.gameWindow = getGameContext();
 
-    gameObjects.generateLevel(levels[ball.level - 1]);
+    gameObjects.generateLevel(levels[gameProperties.level - 1]);
 
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);

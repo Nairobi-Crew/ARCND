@@ -9,6 +9,7 @@ import {
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawRocket from 'Components/Arcanoid/UI/drawRocket';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,
@@ -59,7 +60,7 @@ export class Rocket extends BaseObject {
   }
 
   nextMove(): void {
-    if (this.gameWindow && this.ctx && ball.onRocket) {
+    if (this.gameWindow && this.ctx && gameProperties.onRocket) {
       ball.x = this.x + Math.round(this.width / 2);
       ball.y = this.gameWindow.height - this.height - ball.radius;
     }

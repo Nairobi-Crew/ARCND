@@ -2,7 +2,8 @@
   "extends": ["airbnb"],
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "react-hooks"
   ],
   "parserOptions": {
     "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
@@ -13,6 +14,8 @@
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-param-reassign": "off",
+    "react-hooks/rules-of-hooks": "error", // Проверяем правила хуков
+    "react-hooks/exhaustive-deps": "warn", // Проверяем зависимости эффекта
     "react/jsx-filename-extension": [
       2,
       {

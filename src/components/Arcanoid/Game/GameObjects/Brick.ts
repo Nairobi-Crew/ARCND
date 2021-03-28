@@ -2,6 +2,7 @@ import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjec
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 export interface IBrickProps extends IBaseObjectProps {
   width: number
@@ -50,13 +51,13 @@ export class Brick extends BaseObject {
       if (Math.abs(this.x + this.width - ball.x) < ball.radius) {
         ball.invertXDirection();
         this.level -= 1;
-        ball.score += 2;
+        gameProperties.score += 2;
         return;
       }
     } else if (Math.abs(this.x - ball.x) < ball.radius) {
       ball.invertXDirection();
       this.level -= 1;
-      ball.score += 2;
+      gameProperties.score += 2;
       return;
     }
     if (ball.speedY < 0) {

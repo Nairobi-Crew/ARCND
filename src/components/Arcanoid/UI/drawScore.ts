@@ -4,8 +4,8 @@ import {
   SCORES_FONT,
   SCORES_STROKE_STYLE, SCORES_TEXT,
 } from 'Components/Arcanoid/settings';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawScore = (w: GameWindowProps) => {
   const { ctx } = gameObjects;
@@ -19,7 +19,7 @@ const drawScore = (w: GameWindowProps) => {
   ctx.textAlign = 'left';
   ctx.font = SCORES_FONT;
   ctx.fillText(
-    `${SCORES_TEXT}${ball.score}`,
+    `${SCORES_TEXT}${gameProperties.score}`,
     0,
     Math.round(w.top / 2),
   );

@@ -13,21 +13,15 @@ import {
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import drawBall from 'Components/Arcanoid/UI/drawBall';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 export interface IBallProps extends IBaseObjectProps {
   radius: number
   speedX: number
   speedY: number
-  moved: boolean
-  gameStarted?: boolean
-  onRocket?: boolean
-  glue?: boolean
-  gun?: boolean
-  score?: number
-  lives?: number
-  leve?: number
 }
 
+// синглтон на объект шарика и другие игровые свойства
 export class Ball extends BaseObject {
   private static instance : Ball;
 
@@ -37,33 +31,12 @@ export class Ball extends BaseObject {
 
   speedY = 0;
 
-  moved = false;
-
-  gameStarted = false;
-
-  onRocket = true;
-
-  glue = false;
-
-  gun = false;
-
-  score = 0;
-
-  lives = 3;
-
-  level = 1;
-
-  ctx: CanvasRenderingContext2D;
-
-  menuMode = false;
-
   constructor(props: IBallProps) {
     super(props);
     if (Ball.instance) {
       return Ball.instance;
     }
     this.radius = props.radius;
-    this.moved = props.moved ? props.moved : false;
     this.speedX = props.speedX;
     this.speedY = props.speedY;
     Ball.instance = this;
@@ -104,7 +77,11 @@ export class Ball extends BaseObject {
 
   nextMove(): void {
     let needInvert = false;
-    if (!this.moved || !this.gameWindow || !this.gameStarted || this.onRocket) {
+    if (
+      !gameProperties.moved
+      || !this.gameWindow
+      || !gameProperties.gameStarted
+      || gameProperties.onRocket) {
       return;
     }
 
@@ -186,7 +163,6 @@ export const ball = new Ball({
   radius: 15, // радиус
   fillStyle: BALL_FILL_STYLE, // стили. заполнения
   strokeStyle: BALL_STROKE_STYLE, // и обводки
-  moved: true, // шарик в движении?
   speedX: 5, // сророст и по осям
   speedY: 5,
 });

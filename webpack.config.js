@@ -21,6 +21,7 @@ module.exports = {
   },
   mode: isDev ? 'development' : 'production',
   entry: './src/index.tsx',
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html'],
     alias: {
@@ -31,7 +32,7 @@ module.exports = {
       UI: resolve('src/components/ui/'),
       Config: resolve('src/config/'),
       Util: resolve('src/util/'),
-      Common: resolve('srs/common')
+      Common: resolve('srs/common'),
     },
 
   },

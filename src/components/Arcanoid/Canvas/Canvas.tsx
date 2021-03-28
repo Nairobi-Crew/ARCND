@@ -6,26 +6,25 @@ import './Canvas.scss';
 
 const Canvas: React.FC<CanvasProps> = () => {
   const [gameContext, setGameContext] = useState(null);
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth); // размер канваса по умолчанию
   const [height, setHeight] = useState(window.innerHeight);
-
   const canvasRef = useRef<HTMLCanvasElement | null>();
 
-  useEffect(() => {
+  useEffect(() => { // эффект для первой отрисовки
     const ctx = canvasRef.current ? canvasRef.current.getContext('2d') : null;
     if (ctx) {
       setGameContext(ctx);
     }
 
-    const onResize = () => {
+    const onResize = () => { // на ресайз окна обработчик
       setWidth(window.innerWidth);
       setHeight(window.innerHeight);
     };
 
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize); // подписывание на ресайз
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onResize); // отписывание от события
     };
   }, []);
 
