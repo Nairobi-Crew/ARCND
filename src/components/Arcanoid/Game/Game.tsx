@@ -168,8 +168,8 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         }
       } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
         if (gameProperties.menuMode) { // если режим меню
-          history.goBack(); // то идем НАЗАД
-          // history.push('/leaderboard');
+          // history.goBack(); // то идем НАЗАД
+          history.push('/');
         }
       } else if (key === 'ArrowLeft') { // если стрелка ВЛЕВО
         if (!gameProperties.menuMode) { // не режим меню
