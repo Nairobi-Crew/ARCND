@@ -4,22 +4,33 @@ import { LoginProps } from 'Pages/Login/types';
 import Form from 'UI/Form/Form';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { globalBus } from 'Util/EventBus';
-import { AUTH_SERVICE_EVENTS } from '../../services/types';
+import { getUserData, loginUser, logoutUser } from 'Reducers/auth/actions';
 import './Login.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import { EUserState } from 'Reducers/auth/types';
+import { IAppState } from 'Store/types';
+import { IAuthUserReducer } from 'Reducers/auth/auth';
 
 const Login: React.FC<LoginProps> = ({ caption }) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [passwordMessage, setPasswordMessage] = useState('');
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const authState = createSelector(
+    (state: IAppState) => state.auth,
+    (auth) => auth as IAuthUserReducer,
+  );
+  const auth = useSelector<IAppState>((state) => authState(state)) as IAuthUserReducer;
 
   const loginButtonHandle = () => {
-    globalBus.emit(AUTH_SERVICE_EVENTS.DO_SIGNIN, login, password);
+    dispatch(loginUser(login, password));
   };
 
   const logoutButtonHandle = () => {
-    globalBus.emit(AUTH_SERVICE_EVENTS.DO_LOGOUT);
+    dispatch(logoutUser());
   };
 
   const onLoginChangedHandler = (val: string): void => {
@@ -30,12 +41,15 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   };
 
   useEffect(() => {
-    globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_DONE, () => {
+    if (auth.state === EUserState.LOGGED) {
       history.push('/profile');
-    });
-    globalBus.on(AUTH_SERVICE_EVENTS.SIGNIN_ERROR, ({ data }) => {
-      setPasswordMessage(data.reason);
-    });
+    } else {
+      setPasswordMessage(auth.reason);
+    }
+  }, [auth, history]);
+
+  useEffect(() => {
+    dispatch(getUserData());
   }, []);
 
   return (

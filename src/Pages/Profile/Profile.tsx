@@ -1,17 +1,18 @@
 import { ProfileProps } from 'Pages/Profile/types';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import Form from 'UI/Form/Form';
-import { globalBus } from 'Util/EventBus';
-import { AUTH_SERVICE_EVENTS, USER_SERVICE_EVENTS, UserInfo } from '../../services/types';
+import { createSelector } from 'reselect';
+import { IAppState } from 'Store/types';
+import {useDispatch, useSelector} from 'react-redux';
+import { IAuthUserReducer } from 'Reducers/auth/auth';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
+import {getUserData} from 'Reducers/auth/actions';
 
 const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
-  const [formVisible, setFormVisible] = useState(false);
   const [firstNameField, setFirstName] = useState('');
   const [secondNameField, setSecondName] = useState('');
   const [displayNameField, setDisplayName] = useState('');
@@ -25,63 +26,35 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
 
-  const history = useHistory();
+  const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
+
+  const auth = useSelector((state: IAppState) => authSelector(state)) as IAuthUserReducer;
+
+  const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
-    const params: UserInfo = {
-      first_name: firstNameField,
-      second_name: secondNameField,
-      display_name: displayNameField,
-      phone: phoneField,
-      login: loginField,
-      avatar: avatarField,
-      email: emailField,
-    };
-    globalBus.emit(USER_SERVICE_EVENTS.DO_PROFILE_CHANGE, params);
+
   };
 
-  const saveProfileDone = ({ data, status }) => {
-    console.log('Save profile done', { data, status });
-  };
-
-  const saveProfileError = ({ data, status }) => {
-    console.log('Save profile error', { data, status });
-  };
-
-  const getUserInfoDone = ({ data, status }) => {
-    if (status !== 200) {
-      history.push('/signin');
+  const getUserInfo = () => {
+    if (!auth || !auth.user) {
       return;
     }
-    setLogin(data.login);
-    setFirstName(data.first_name);
-    setSecondName(data.second_name || '');
-    setDisplayName(data.display_name || '');
-    setEmail(data.email);
-    setPhone(data.phone);
-    setAvatar(data.avatar || '');
-    setFormVisible(true);
-  };
-
-  const getUserInfoError = ({ data, status }) => {
-    if (status === 401) {
-      history.push('/signin');
-    }
-    console.log('Get user error', { data, status });
+    setLogin(auth.user.login);
+    setFirstName(auth.user.first_name);
+    setSecondName(auth.user.second_name || '');
+    setDisplayName(auth.user.display_name || '');
+    setEmail(auth.user.email);
+    setPhone(auth.user.phone);
+    setAvatar(auth.user.avatar || '');
   };
 
   useEffect(() => {
-    globalBus.on(USER_SERVICE_EVENTS.PROFILE_DONE, saveProfileDone);
-    globalBus.on(USER_SERVICE_EVENTS.PROFILE_ERROR, saveProfileError);
-    globalBus.emit(AUTH_SERVICE_EVENTS.DO_GET_INFO);
-    globalBus.on(AUTH_SERVICE_EVENTS.GET_INFO_DONE, getUserInfoDone);
-    globalBus.on(AUTH_SERVICE_EVENTS.GET_INFO_ERROR, getUserInfoError);
-    return () => {
-      globalBus.off(USER_SERVICE_EVENTS.PROFILE_DONE, saveProfileDone);
-      globalBus.off(USER_SERVICE_EVENTS.PROFILE_ERROR, saveProfileError);
-      globalBus.off(AUTH_SERVICE_EVENTS.GET_INFO_DONE, getUserInfoDone);
-      globalBus.off(AUTH_SERVICE_EVENTS.GET_INFO_ERROR, getUserInfoError);
-    };
+    getUserInfo();
+  }, [auth]);
+
+  useEffect(() => {
+    dispatch(getUserData());
   }, []);
 
   useEffect(() => {
@@ -90,7 +63,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   return (
     <>
-      <Form caption={caption || 'Профиль'} visible={formVisible}>
+      <Form caption={caption || 'Профиль'}>
         <div style={{ textAlign: 'center' }}>
           {avatarField ? <img src={avatarField} width="50" height="50" alt="Avatar" /> : ''}
 

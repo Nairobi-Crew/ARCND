@@ -13,13 +13,16 @@
         "module": "ES2015",
         "jsx": "react",
         "baseUrl": "./",
+        "moduleResolution": "Node",
         "paths": { // Указываем ссылки до директорий в проекте, чтобы каждый раз в импортах не писать относительные пути
             "App": ["src/App"],
             "Pages/*": ["src/Pages/*"],
             "Components/*": ["src/components/*"],
             "UI/*": ["src/components/ui/*"],
             "Config/*": ["src/config/*"],
-          "Util/*": ["src/util/*"]
+          "Util/*": ["src/util/*"],
+          "Reducers/*": ["src/Store/reducers/*"],
+          "Store/*": ["src/Store/*"]
         }
     },
     "noImplicitAny": true,

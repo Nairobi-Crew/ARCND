@@ -32,7 +32,9 @@ module.exports = {
       UI: resolve('src/components/ui/'),
       Config: resolve('src/config/'),
       Util: resolve('src/util/'),
-      Common: resolve('srs/common'),
+      Common: resolve('src/common/'),
+      Store: resolve('src/Store/'),
+      Reducers: resolve('src/Store/reducers/'),
     },
 
   },

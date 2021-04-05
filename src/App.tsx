@@ -15,11 +15,21 @@ import { CANVAS_MARGIN } from 'Components/Arcanoid/settings';
 import Main from 'Pages/Main/Main';
 import { ILink } from 'Pages/Main/types';
 import ChangePassword from 'Pages/ChangePassword/index';
+import configureStore from 'Store/store';
+import { Provider } from 'react-redux';
+import { initialAppState } from 'Store/types';
+import Logout from 'Pages/Logout/Logout';
 import { authService } from './services/AuthService';
 import { userService } from './services/UserService';
 
 authService.dummy();
 userService.dummy();
+
+const store = configureStore(
+  initialAppState,
+);
+
+export type AppDispatch = typeof store;
 
 const items: ILink[] = [
   {
@@ -52,10 +62,15 @@ const items: ILink[] = [
     href: '/forum',
     name: 'Форум',
   },
+  {
+    auth: false,
+    href: '/signout',
+    name: 'Выход',
+  },
 ];
 
 const App = () => (
-  <>
+  <Provider store={store}>
     <BrowserRouter>
       <Switch>
 
@@ -107,9 +122,15 @@ const App = () => (
           </ErrorBoundary>
         </Route>
 
+        <Route path="/signout">
+          <ErrorBoundary>
+            <Logout />
+          </ErrorBoundary>
+        </Route>
+
         <Route path="/">
           <ErrorBoundary>
-            <Main items={items} auth={true} />
+            <Main items={items} auth />
           </ErrorBoundary>
         </Route>
 
@@ -118,7 +139,7 @@ const App = () => (
         </Route>
       </Switch>
     </BrowserRouter>
-  </>
+  </Provider>
 
 );
 
