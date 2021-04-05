@@ -4,13 +4,13 @@ import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import Form from 'UI/Form/Form';
 import { createSelector } from 'reselect';
-import { IAppState } from 'Store/types';
-import {useDispatch, useSelector} from 'react-redux';
+import { IAppState, IUser } from 'Store/types';
+import { useDispatch, useSelector } from 'react-redux';
 import { IAuthUserReducer } from 'Reducers/auth/auth';
+import { changeProfile } from 'Reducers/user/actions';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
-import {getUserData} from 'Reducers/auth/actions';
 
 const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameField, setFirstName] = useState('');
@@ -33,7 +33,17 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
-
+    const user: IUser = {
+      avatar: avatarField,
+      first_name: firstNameField,
+      second_name: secondNameField,
+      email: emailField,
+      phone: phoneField,
+      display_name: displayNameField,
+      login: loginField,
+      id: auth.user.id,
+    };
+    dispatch(changeProfile(user));
   };
 
   const getUserInfo = () => {
@@ -52,10 +62,6 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   useEffect(() => {
     getUserInfo();
   }, [auth]);
-
-  useEffect(() => {
-    dispatch(getUserData());
-  }, []);
 
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);

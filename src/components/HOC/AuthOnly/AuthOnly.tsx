@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createSelector } from 'reselect';
 import { IAppState } from 'Store/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { EUserState } from 'Reducers/auth/types';
+import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
 import { IAuthUserReducer } from 'Reducers/auth/auth';
 import { Redirect } from 'react-router-dom';
@@ -21,16 +21,16 @@ function AuthOnly<T>(Component: React.ComponentType<T>, redirectTo = '/signin') 
     }, [auth]);
 
     useEffect(() => {
-      if (authState.state === EUserState.UNKNOWN) {
+      if (authState.state === EAuthState.UNKNOWN) {
         dispatch(getUserData());
       }
     }, []);
 
     const { state } = authState;
 
-    if (state === EUserState.LOGGED) {
+    if (state === EAuthState.LOGGED) {
       return (<Component {...props} />);
-    } if (state === EUserState.LOGOUT || state === EUserState.LOGIN_ERROR) {
+    } if (state === EAuthState.LOGOUT || state === EAuthState.LOGIN_ERROR) {
       return <Redirect to={redirectTo} />;
     }
     return (<></>);

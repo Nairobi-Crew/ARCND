@@ -6,7 +6,7 @@ import {createSelector} from 'reselect';
 import {IAppState} from 'Store/types';
 import {useDispatch, useSelector} from 'react-redux';
 import {IAuthUserReducer} from 'Reducers/auth/auth';
-import {EUserState} from 'Reducers/auth/types';
+import {EAuthState} from 'Reducers/auth/types';
 import {getUserData} from 'Reducers/auth/actions';
 
 const Main: React.FC<MainProps> = ({ items }: MainProps) => {
@@ -15,14 +15,14 @@ const Main: React.FC<MainProps> = ({ items }: MainProps) => {
   const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
   const auth = useSelector((state: IAppState) => authSelector(state)) as IAuthUserReducer;
 
-  const [authState, setAuthState] = useState(auth.state === EUserState.LOGGED);
+  const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
 
   useEffect(() => {
     const { state } = auth;
-    if (state === EUserState.UNKNOWN) {
+    if (state === EAuthState.UNKNOWN) {
       dispatch(getUserData());
     } else {
-      setAuthState(auth.state === EUserState.LOGGED);
+      setAuthState(auth.state === EAuthState.LOGGED);
     }
   }, [auth]);
 

@@ -1,16 +1,15 @@
-import { EUserAction, EUserState, IUser } from 'Reducers/auth/types';
-
-export type Nullable<T> = T | null;
+import { EAuthAction, EAuthState } from 'Reducers/auth/types';
+import { IUser, Nullable } from 'Store/types';
 
 export interface IAuthUserReducer {
   user: Nullable<IUser>
   loggedTime: number
-  state: EUserState
+  state: EAuthState
   reason: string
 }
 
 export const defaultAuthReducer: IAuthUserReducer = {
-  state: EUserState.UNKNOWN,
+  state: EAuthState.UNKNOWN,
   loggedTime: 0,
   user: null,
   reason: '',
@@ -21,14 +20,14 @@ export function authReducer(
   action,
 ): IAuthUserReducer {
   switch (action.type) {
-    case EUserAction.AUTH_LOGIN:
-      return { ...state, state: EUserState.LOGGED };
-    case EUserAction.AUTH_LOGOUT:
-      return { ...state, state: EUserState.LOGOUT };
-    case EUserAction.USER_GET_DATA:
+    case EAuthAction.AUTH_LOGIN:
+      return { ...state, state: EAuthState.LOGGED };
+    case EAuthAction.AUTH_LOGOUT:
+      return { ...state, state: EAuthState.LOGOUT };
+    case EAuthAction.USER_GET_DATA:
       return { ...state, user: action.payload.user, state: action.payload.status };
-    case EUserAction.AUTH_LOGIN_ERROR:
-      return { ...state, state: EUserState.LOGIN_ERROR, reason: action.payload.reason };
+    case EAuthAction.AUTH_LOGIN_ERROR:
+      return { ...state, state: EAuthState.LOGIN_ERROR, reason: action.payload.reason };
     default:
       return state;
   }

@@ -1,5 +1,6 @@
 import { API_URL } from 'Config/config';
-import { EUserAction, EUserState, IUser } from 'Reducers/auth/types';
+import { EAuthAction, EAuthState } from 'Reducers/auth/types';
+import { IUser } from 'Store/types';
 
 export const loginUser = (login: string, password: string) => async (dispatch) => {
   const response = await fetch(`${API_URL}auth/signin`, {
@@ -11,10 +12,10 @@ export const loginUser = (login: string, password: string) => async (dispatch) =
     body: JSON.stringify({ login, password }),
   });
   if (response.status === 200) {
-    dispatch({ type: EUserAction.AUTH_LOGIN });
+    dispatch({ type: EAuthAction.AUTH_LOGIN });
   } else {
     const reason = await response.json();
-    dispatch({ type: EUserAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
   }
 };
 
@@ -35,9 +36,9 @@ export const getUserData = () => async (dispatch) => {
       id: json.id || 0,
       login: json.login || '',
     };
-    dispatch({ type: EUserAction.USER_GET_DATA, payload: { user, status: EUserState.LOGGED } });
+    dispatch({ type: EAuthAction.USER_GET_DATA, payload: { user, status: EAuthState.LOGGED } });
   } else {
-    dispatch({ type: EUserAction.AUTH_LOGIN_ERROR, payload: { reason: json.reason || '', status: EUserState.LOGIN_ERROR } });
+    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: json.reason || '', status: EAuthState.LOGIN_ERROR } });
   }
 };
 
@@ -47,9 +48,9 @@ export const logoutUser = () => async (dispatch) => {
     credentials: 'include',
   });
   if (response.status === 200) {
-    dispatch({ type: EUserAction.AUTH_LOGOUT });
+    dispatch({ type: EAuthAction.AUTH_LOGOUT });
   } else {
     const reason = await response.json();
-    dispatch({ type: EUserAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
   }
 };

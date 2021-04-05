@@ -8,7 +8,7 @@ import { getUserData, loginUser, logoutUser } from 'Reducers/auth/actions';
 import './Login.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { EUserState } from 'Reducers/auth/types';
+import { EAuthState } from 'Reducers/auth/types';
 import { IAppState } from 'Store/types';
 import { IAuthUserReducer } from 'Reducers/auth/auth';
 
@@ -41,7 +41,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   };
 
   useEffect(() => {
-    if (auth.state === EUserState.LOGGED) {
+    if (auth.state === EAuthState.LOGGED) {
       history.push('/profile');
     } else {
       setPasswordMessage(auth.reason);
