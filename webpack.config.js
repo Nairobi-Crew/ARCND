@@ -20,7 +20,10 @@ module.exports = {
     historyApiFallback: true,
   },
   mode: isDev ? 'development' : 'production',
-  entry: './src/index.tsx',
+  entry: {
+    main: './src/index.tsx',
+    sw: './src/sw.js'
+  },
   devtool: 'inline-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html'],
@@ -39,7 +42,7 @@ module.exports = {
 
   },
   output: {
-    filename: 'main.[chunkhash].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
