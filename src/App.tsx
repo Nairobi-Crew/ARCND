@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Arcanoid from 'Components/Arcanoid/index';
 import Login from 'Pages/Login/index';
-import Registration from 'Pages/Register/Register';
+import Registration from 'Pages/Register/index';
 import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import Forum from 'Pages/Forums/Forum/index';
 import Profile from 'Pages/Profile/index';
@@ -19,11 +19,6 @@ import configureStore from 'Store/store';
 import { Provider } from 'react-redux';
 import { initialAppState } from 'Store/types';
 import Logout from 'Pages/Logout/Logout';
-import { authService } from './services/AuthService';
-import { userService } from './services/UserService';
-
-authService.dummy();
-userService.dummy();
 
 const store = configureStore(
   initialAppState,

@@ -35,11 +35,11 @@ export const changePassword = (oldPassword: string, newPassword: string) => asyn
     dispatch({ type: EUserAction.USER_CHANGE_PASSWORD });
   } else if (response.status === 400) {
     const data = await response.json();
-    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, reason: data.reason });
+    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, payload: { reason: data.reason } });
   } else if (response.status === 401) {
-    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, reason: 'Unauthorized' });
+    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, payload: { reason: 'Unauthorized' } });
   } else {
-    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, reason: 'Unknown error' });
+    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, payload: { reason: 'Unknown error' } });
   }
 };
 
@@ -92,4 +92,8 @@ export const getUserById = (id: number) => async (dispatch) => {
     const reason = 'Unknown error';
     dispatch({ type: EUserAction.ERROR_USER_GET_INFO_BY, payload: { reason } });
   }
+};
+
+export const clearLastAction = () => (dispatch) => {
+  dispatch({ type: EUserAction.USER_UNKNOWN });
 };

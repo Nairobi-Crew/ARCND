@@ -1,12 +1,13 @@
-import React, { memo } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => (
   <header className="header">
-    <a href="/" className="header__title">
+    <Link to="/" className="header__title">
       <h1>ARCND</h1>
-    </a>
+    </Link>
   </header>
 );
 
-export default memo(Header);
+export default Header;

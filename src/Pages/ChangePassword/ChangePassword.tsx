@@ -4,32 +4,54 @@ import Form from 'UI/Form/Form';
 import React, { useEffect, useState } from 'react';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { globalBus } from 'Util/EventBus';
-import { USER_SERVICE_EVENTS } from '../../services/types';
+import { createSelector } from 'reselect';
+import { IAppState } from 'Store/types';
+import { IUserReducer } from 'Reducers/user/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { EUserAction } from 'Reducers/user/types';
+import { changePassword, clearLastAction } from 'Reducers/user/actions';
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswordProps) => {
   const [oldPassword, setOldPassword] = useState('');
+  const [oldPasswordErrorMessage, setOldPasswordErrorMessage] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
-  const [oldPasswordErrorMessage, setOldPasswordErrorMessage] = useState('');
   const [password1ErrorMessage, setPassword1ErrorMessage] = useState('');
   const [password2ErrorMessage, setPassword2ErrorMessage] = useState('');
   const history = useHistory();
+
+  const userSelector = createSelector(
+    (state: IAppState) => state.user,
+    (user) => user,
+  );
+
+  const user = useSelector(
+    (state: IAppState) => userSelector(state),
+  ) as IUserReducer;
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    globalBus.on(USER_SERVICE_EVENTS.PASSWORD_DONE, () => {
-      history.push('/profile');
-    });
-    globalBus.on(USER_SERVICE_EVENTS.PASSWORD_ERROR, ({ data }) => {
-      setOldPasswordErrorMessage(data as string);
-      // console.log('Password change error', error);
-    });
+    console.log('User change', user);
+    if (user.state === EUserAction.USER_CHANGE_PASSWORD) {
+      dispatch(clearLastAction());
+      history.goBack();
+    } else {
+      setOldPasswordErrorMessage(user.reason);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user.state !== EUserAction.USER_UNKNOWN) {
+      dispatch(clearLastAction());
+      console.log('', user);
+    }
   }, []);
 
   const changePasswordHandler = () => {
-    if (password1 !== password2) {
-      return;
+    if (password1 === password2 && password1ErrorMessage + password2ErrorMessage === '') {
+      dispatch(changePassword(oldPassword, password1));
     }
-    globalBus.emit(USER_SERVICE_EVENTS.DO_PASSWORD_CHANGE, oldPassword, password1);
   };
 
   const onBlurPassword2Handler = () => {

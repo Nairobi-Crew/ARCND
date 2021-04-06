@@ -26,9 +26,14 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
 
-  const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
+  const authSelector = createSelector(
+    (state: IAppState) => state.auth,
+    (auth) => auth,
+  );
 
-  const auth = useSelector((state: IAppState) => authSelector(state)) as IAuthUserReducer;
+  const auth = useSelector(
+    (state: IAppState) => authSelector(state),
+  ) as IAuthUserReducer;
 
   const dispatch = useDispatch();
 
