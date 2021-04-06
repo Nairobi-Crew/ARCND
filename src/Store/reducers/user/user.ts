@@ -29,7 +29,7 @@ export function userReducer(
         ...state, reason: '', user, state: action.type,
       };
     case EUserAction.USER_CHANGE_PASSWORD:
-      return { ...state, reason: '' };
+      return { ...state, reason: '', state: action.type };
     case EUserAction.USER_CHANGE_PROFILE:
       return {
         ...state, reason: '', user: action.payload.user, state: action.type,
@@ -42,6 +42,8 @@ export function userReducer(
       return { ...state, reason: action.payload.reason, state: action.type };
     case EUserAction.ERROR_USER_GET_INFO_BY:
       return { ...state, reason: action.payload.reason, state: action.type };
+    case EUserAction.USER_UNKNOWN:
+      return { ...state, reason: '', state: action.type };
     default:
       return state;
   }
