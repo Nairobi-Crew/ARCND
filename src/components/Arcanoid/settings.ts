@@ -1,6 +1,6 @@
 export const GAME_CANVAS_ID = 'arcanoid';
 
-export const FPS = 60;
+export const FPS = 80;
 
 export const CANVAS_MARGIN = 10;
 

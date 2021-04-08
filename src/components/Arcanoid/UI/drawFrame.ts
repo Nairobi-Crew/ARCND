@@ -7,7 +7,8 @@ const drawFrame = (w: GameWindowProps): void => {
     return;
   }
   ctx.beginPath();
-  ctx.strokeStyle = '#f00';
+  ctx.strokeStyle = '#312b4e';
+  ctx.lineWidth = 1;
   ctx.rect(w.left, w.top, w.width, w.height);
   ctx.stroke();
 };

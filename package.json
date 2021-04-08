@@ -75,7 +75,7 @@
     "start": "webpack --mode=development --watch",
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "jest": "jest",
+    "jest": "npx jest",
     "test": "npm run lint:fix",
     "lint:ts": "eslint --ext js,ts,tsx src",
     "lint:ts-fix": "eslint --fix --ext js,ts,tsx src",
