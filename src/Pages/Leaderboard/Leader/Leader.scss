@@ -1,0 +1,38 @@
+@import "src/common/utils";
+
+.leader {
+  display: flex;
+  align-items: center;
+  height: 96px;
+  border-radius: 96px;
+  padding: 0 24px;
+  box-shadow: $shadow-small;
+
+  @include respond-to(tablet) {
+    height: 64px;
+    border-radius: 64px;
+  }
+
+  &__index {
+    width: 4%;
+    margin-right: 2%;
+    @include f-norm(m);
+  }
+
+  &__score {
+    @include f-norm(m);
+  }
+
+  &__name {
+    margin-right: auto;
+    @include f-bold(m);
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    margin-right: 8%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}

@@ -1,0 +1,103 @@
+@import "./_vars";
+
+$mobile: 600px;
+$s-tablet: 920px;
+$tablet: 1200px;
+
+// Media queries
+
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $mobile - 1px) {
+      @content;
+    }
+  } @else if $media == tablet {
+    @media only screen and (max-width: $tablet - 1px) {
+      @content;
+    }
+  } @else if $media == s_tablet {
+    @media only screen and (max-width: $s-tablet - 1px) {
+      @content;
+    }
+  }
+}
+
+@mixin f-norm($size) {
+  @if $size == xs {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-xs;
+    }
+  } @else if $size == s {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-s;
+    }
+  } @else if $size == m {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-m;
+    }
+  } @else if $size == l {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-l;
+    }
+  } @else if $size == xl {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-xl;
+    }
+  } @else if $size == xxl {
+    font: {
+      family: $ff;
+      weight: 400;
+      size: $f-xxl;
+    }
+  }
+}
+
+@mixin f-bold($size) {
+  @if $size == xs {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-xs;
+    }
+  } @else if $size == s {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-s;
+    }
+  } @else if $size == m {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-m;
+    }
+  } @else if $size == l {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-l;
+    }
+  } @else if $size == xl {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-xl;
+    }
+  } @else if $size == xxl {
+    font: {
+      family: $ff;
+      weight: 600;
+      size: $f-xxl;
+    }
+  }
+}

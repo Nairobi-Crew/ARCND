@@ -1,9 +1,11 @@
 # Logs
+.husky
 .idea
 .DS_Store
 .AppleDouble
 .LSOverride
 .vscode
+dist
 logs
 *.log
 npm-debug.log*

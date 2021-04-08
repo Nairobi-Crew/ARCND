@@ -1,0 +1,49 @@
+@import "src/common/utils";
+
+.message {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &_tools {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    &_item {
+      flex: 1;
+    }
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    &_description {
+      flex: 10;
+      padding: 1em;
+    }
+
+    &_author {
+      flex: 1;
+      padding: 1em;
+    }
+
+    &_time {
+      flex: 1;
+      padding: 1em;
+    }
+  }
+
+  &__body {
+    padding: 1em 0;
+    width: 100%;
+    border-bottom: 1px dotted;
+    border-radius: 0 0 10px 0;
+  }
+}
+
+.half_opacity {
+  opacity: 0.5;
+}

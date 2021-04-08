@@ -1,0 +1,32 @@
+@import "src/common/utils";
+
+$link-color: rgba(200, 200, 255, 1);
+
+.linkBlock {
+  margin: auto;
+  vertical-align: center;
+  text-align: center;
+  height: 100vh;
+
+  .link {
+    font-weight: bold;
+    font-size: 2em;
+    color: $link-color;
+    transition: font-size 0.2s ease-in-out;
+    height: 3.5em;
+    box-sizing: border-box;
+
+    &:hover {
+      font-size: 2.3em;
+      transition: font-size 0.2s ease-in-out;
+    }
+
+    a {
+      color: $link-color;
+
+      &:visited {
+        color: $link-color;
+      }
+    }
+  }
+}
