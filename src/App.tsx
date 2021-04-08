@@ -123,7 +123,7 @@ const App = () => (
           </ErrorBoundary>
         </Route>
 
-        <Route path="/">
+        <Route exact path="/">
           <ErrorBoundary>
             <Main items={items} auth />
           </ErrorBoundary>
