@@ -3,6 +3,8 @@ import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import {globalBus} from 'Util/EventBus';
+import {EVENTS} from 'Components/Arcanoid/settings';
 
 export interface IBrickProps extends IBaseObjectProps {
   width: number
@@ -52,12 +54,14 @@ export class Brick extends BaseObject {
         ball.invertXDirection(); // инвертирование направления
         this.level -= 1; // уменьшение уровня блока
         gameProperties.score += 2; // увеличение счета
+        globalBus.emit(EVENTS.BLOCK, 2);
         return;
       }
     } else if (Math.abs(this.x - ball.x) < ball.radius) { // летит враво и удар по грани
       ball.invertXDirection();
       this.level -= 1;
       gameProperties.score += 2;
+      globalBus.emit(EVENTS.BLOCK, 2);
       return;
     }
     if (ball.speedY < 0) { // летит вверх

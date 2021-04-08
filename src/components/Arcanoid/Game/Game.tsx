@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GameProps, GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
@@ -15,9 +15,27 @@ import { levels } from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { createSelector } from 'reselect';
+import { IAppState } from 'Store/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { IGameReducer } from 'Reducers/game/game';
+import {decLive, endGame, go, incLevel, incScore} from 'Reducers/game/actions';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let canvasId;
+  const gameSelector = createSelector(
+    (state: IAppState) => state.game,
+    (game) => game as IGameReducer,
+  );
+  const game = useSelector<IAppState>((state) => gameSelector(state));
+
+  const [gameState, setGameState] = useState(game);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setGameState(game);
+  }, [game]);
 
   const getWidth = () => { // ширина канваса
     if (canvasId) {
@@ -109,6 +127,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.gameStarted = false; // игра на паузу
       gameProperties.onRocket = true; // шарик на рокетку
       gameProperties.level += 1; // увеличение уровня
+      dispatch(incLevel());
       gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
     }
     ball.nextMove(); // перемещение шарика на следующий кадр
@@ -158,9 +177,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameProperties.gameStarted = !gameProperties.gameStarted; // переключение режима паузы
         gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
       }
-      if (key === ' ') { // пробул
+      if (key === ' ') { // пробел
         if (!gameProperties.gameStarted) { // если игра на паузе
           gameProperties.gameStarted = true; // снимаем с паузы
+          dispatch(go());
           gameProperties.onRocket = false; // отвязка шарика от рокетки
           if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
             ball.invertYDirection();
@@ -196,6 +216,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     const onGoal = () => { // Обработка события ГОЛ
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+        dispatch(endGame());
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
         gameProperties.lives = 3; // теперь жизней 3
         gameProperties.onRocket = true; // шарик приклеен к рокетке
@@ -204,6 +225,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameProperties.level = 1; // уровень 1
         gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
       } else { // если не последняя
+        dispatch(decLive());
         gameProperties.lives -= 1; // уменьшаем количество жизней
         gameProperties.onRocket = true; // шарик на рокетке
         gameProperties.gameStarted = false; // на паузу
@@ -212,6 +234,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
     const onBallReturn = () => { // если шарик отбит ракеткой
       gameProperties.score += 1; // счет увеличивается
+      dispatch(incScore(1));
+    };
+
+    const onBlockCrash = (score: number) => {
+      dispatch(incScore(score));
     };
     // получаем размер поля
     gameObjects.gameWindow = getGameContext();
@@ -226,12 +253,14 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.GOAL, onGoal);
     // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
+    globalBus.on(EVENTS.BLOCK, onBlockCrash);
     loop(); // запуск игрового цикла
     return () => { // очистка обработчиков события
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
+      globalBus.off(EVENTS.BLOCK, onBlockCrash);
     };
   }, []);
 

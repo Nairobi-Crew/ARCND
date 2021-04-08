@@ -45,4 +45,5 @@ export enum EVENTS {
   GOAL = 'too:bad-goal',
   BALL_RETURN = 'good:ball-return',
   GAME_OVER = 'sorry:game-over',
+  BLOCK = 'block:crash'
 }
