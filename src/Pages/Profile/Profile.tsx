@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
 import Form from 'UI/Form/Form';
-import { createSelector } from 'reselect';
-import { IAppState, IUser } from 'Store/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { IAuthUserReducer } from 'Reducers/auth/auth';
+import { IUser } from 'Store/types';
+import { useDispatch } from 'react-redux';
 import { changeProfile } from 'Reducers/user/actions';
+import { EAuthState } from 'Reducers/auth/types';
+import { getUserData } from 'Reducers/auth/actions';
+import { useAuthReselect } from 'Store/hooks';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
@@ -25,16 +26,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [loginMessage, setLoginMessage] = useState('');
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
-
-  const authSelector = createSelector(
-    (state: IAppState) => state.auth,
-    (auth) => auth,
-  );
-
-  const auth = useSelector(
-    (state: IAppState) => authSelector(state),
-  ) as IAuthUserReducer;
-
+  const auth = useAuthReselect();
   const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
@@ -71,6 +63,12 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);
   }, [phoneMessage, emailMessage, loginMessage, firstNameMessage]);
+
+  useEffect(() => {
+    if (auth.state === EAuthState.LOGGED && !auth.user) {
+      dispatch(getUserData());
+    }
+  }, []);
 
   return (
     <>

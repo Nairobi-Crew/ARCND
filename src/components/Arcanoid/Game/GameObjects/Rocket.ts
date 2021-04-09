@@ -1,5 +1,6 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import {
+  EVENTS,
   ROCKET_FILL_STYLE,
   ROCKET_HEIGHT,
   ROCKET_MOVE_STEP,
@@ -10,6 +11,7 @@ import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawRocket from 'Components/Arcanoid/UI/drawRocket';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { globalBus } from 'Util/EventBus';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,
@@ -27,6 +29,10 @@ export class Rocket extends BaseObject {
 
   movedRight: boolean;
 
+  gun = false;
+
+  glue = false;
+
   constructor(props: IRocketProps) {
     super(props);
     if (Rocket.instance) {
@@ -37,6 +43,30 @@ export class Rocket extends BaseObject {
     this.height = props.height;
 
     Rocket.instance = this;
+    globalBus.on(EVENTS.EXPAND, () => {
+      this.changeWidth(1.1);
+      this.glue = false;
+      this.gun = false;
+      gameProperties.onRocket = false;
+    });
+    globalBus.on(EVENTS.COMPRESS, () => {
+      this.glue = false;
+      this.gun = false;
+      gameProperties.onRocket = false;
+      this.changeWidth(0.9);
+    });
+    globalBus.on(EVENTS.GLUE, () => {
+      this.glue = true;
+      this.gun = false;
+    });
+    globalBus.on(EVENTS.GUN, () => {
+      this.gun = true;
+      this.glue = false;
+    });
+  }
+
+  changeWidth(q: number) {
+    this.width = Math.round(this.width * q);
   }
 
   render(gameWindow: GameWindowProps | undefined = undefined): void {
