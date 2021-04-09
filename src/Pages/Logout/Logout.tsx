@@ -12,7 +12,7 @@ const Logout: React.FC = () => {
   const history = useHistory();
   useEffect(() => {
     if (auth.state === EAuthState.LOGOUT) {
-      history.push('/signin');
+      history.push('/');
     }
   }, [auth]);
   useEffect(() => {

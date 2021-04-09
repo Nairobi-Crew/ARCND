@@ -13,13 +13,11 @@ const Thread: React.FC<ThreadProps> = ({ messages }) => {
   useEffect(() => {
     const list = sampleMessages.filter((msg) => msg.topic === threadId);
     setTopics(list);
-    console.log('onChange', list);
-  }, [messages]);
+  }, [messages, threadId]);
 
   useEffect(() => {
     const list = (messages || sampleMessages).filter((msg) => msg.topic === threadId);
     setTopics(list);
-    console.log('onStart', list);
   }, []);
   return (
     <div className="thread">

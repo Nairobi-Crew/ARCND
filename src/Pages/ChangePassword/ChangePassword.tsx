@@ -4,12 +4,10 @@ import Form from 'UI/Form/Form';
 import React, { useEffect, useState } from 'react';
 import Input from 'UI/Input/Input';
 import Button from 'UI/Button/Button';
-import { createSelector } from 'reselect';
-import { IAppState } from 'Store/types';
-import { IUserReducer } from 'Reducers/user/user';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { EUserAction } from 'Reducers/user/types';
 import { changePassword, clearLastAction } from 'Reducers/user/actions';
+import { useUserReselect } from 'Store/hooks';
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswordProps) => {
   const [oldPassword, setOldPassword] = useState('');
@@ -19,20 +17,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswo
   const [password1ErrorMessage, setPassword1ErrorMessage] = useState('');
   const [password2ErrorMessage, setPassword2ErrorMessage] = useState('');
   const history = useHistory();
-
-  const userSelector = createSelector(
-    (state: IAppState) => state.user,
-    (user) => user,
-  );
-
-  const user = useSelector(
-    (state: IAppState) => userSelector(state),
-  ) as IUserReducer;
+  const user = useUserReselect();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('User change', user);
     if (user.state === EUserAction.USER_CHANGE_PASSWORD) {
       dispatch(clearLastAction());
       history.goBack();
@@ -44,7 +33,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswo
   useEffect(() => {
     if (user.state !== EUserAction.USER_UNKNOWN) {
       dispatch(clearLastAction());
-      console.log('', user);
     }
   }, []);
 

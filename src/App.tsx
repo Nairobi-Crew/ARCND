@@ -53,12 +53,12 @@ const items: ILink[] = [
     name: 'Зарегистрироваться',
   },
   {
-    auth: true,
+    auth: false,
     href: '/forum',
     name: 'Форум',
   },
   {
-    auth: false,
+    auth: true,
     href: '/signout',
     name: 'Выход',
   },
@@ -123,7 +123,7 @@ const App = () => (
           </ErrorBoundary>
         </Route>
 
-        <Route path="/">
+        <Route path="/" exact>
           <ErrorBoundary>
             <Main items={items} auth />
           </ErrorBoundary>

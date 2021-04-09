@@ -30,6 +30,8 @@ export class GameProperties {
 
   level = 1;
 
+  lastShoot = null;
+
   ctx: CanvasRenderingContext2D;
 
   menuMode = false;

@@ -1,6 +1,7 @@
 import { GameWindowProps, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
+  EVENTS,
   LEVEL_BLOCK_SPACE,
   LEVEL_BLOCKS_HEIGHT,
   LEVEL_BLOCKS_WIDTH,
@@ -8,6 +9,10 @@ import {
 } from 'Components/Arcanoid/settings';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { typeData } from 'Components/Arcanoid/levels/levelData';
+import Thing from 'Components/Arcanoid/Game/GameObjects/Thing';
+import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
+import { globalBus } from 'Util/EventBus';
+import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -39,18 +44,89 @@ export default class GameFieldObjects {
 
   render(): void {
     let count = 0;
+    const { gameWindow, ctx } = this;
     this.data
       .forEach((item) => {
         if (item.type === 'brick') {
           count += 1;
+          const brick = item.object as Brick;
+          const shoots = this.getObjectsByType('shoot');
+          shoots.forEach(({ object }) => {
+            const shoot = object as Shoot;
+            if (shoot.intersect(brick.x, brick.y, brick.width, brick.height)) {
+              brick.level -= 1;
+              this.removeShoot(shoot);
+            }
+          });
+        }
+        if (item.type === 'thing') {
+          const thing = item.object as Thing;
+          if (!thing.gameWindow || !thing.ctx) {
+            thing.gameWindow = gameWindow;
+            thing.ctx = ctx;
+          }
+          thing.nextMove();
+          if (
+            thing.intersect(
+              rocket.x,
+              gameWindow.bottom - rocket.height - gameWindow.top,
+              rocket.width,
+              rocket.height,
+            )
+          ) {
+            let e = '';
+            switch (thing.thingType) {
+              case 'compress':
+                e = EVENTS.COMPRESS;
+                break;
+              case 'expand':
+                e = EVENTS.EXPAND;
+                break;
+              case 'glue':
+                e = EVENTS.GLUE;
+                break;
+              case 'gun':
+                e = EVENTS.GUN;
+                break;
+              default:
+                break;
+            }
+            if (e !== '') {
+              globalBus.emit(e, thing);
+              this.removeThing(thing);
+            }
+          }
+        }
+        if (item.type === 'shoot') {
+          (item.object as Shoot).nextMove();
         }
         item.object.setContext(this.ctx);
         item.object.render(this.gameWindow);
       });
     this.brickCount = count;
+    this.removeThings(false);
   }
 
-  generateLevel(levelData: string[]): void { // генерация уровня
+  removeThings(all: boolean) {
+    this.data = this.data.filter((item) => !(item.type === 'thing' && (!(item.object as Thing).active || all)));
+  }
+
+  removeThing(thing: Thing) {
+    this.data = this.data.filter((item) => !(item.type === 'thing' && (item.object as Thing) === thing));
+  }
+
+  removeShoot(shoot: Shoot) {
+    this.data = this.data.filter((item) => !(item.type === 'shoot' && (item.object as Shoot) === shoot));
+  }
+
+  getObjectsByType(itemType: string): IGameFieldObjectProps[] {
+    return this.data.filter((item) => item.type === itemType);
+  }
+
+  generateLevel(levelData: string[] | null): void { // генерация уровня
+    if (!levelData) {
+      return;
+    }
     this.data = this.data.filter((x) => x.type !== 'brick');
     const getNextItem = (s) => {
       let currentPos = 0;
