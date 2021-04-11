@@ -6,18 +6,19 @@ $link-color: rgba(200, 200, 255, 1);
   margin: auto;
   vertical-align: center;
   text-align: center;
+  overflow: visible;
   height: 100vh;
 
   .link {
     font-weight: bold;
-    font-size: 2em;
+    font-size: 1.5em;
     color: $link-color;
     transition: font-size 0.2s ease-in-out;
     height: 3.5em;
     box-sizing: border-box;
 
     &:hover {
-      font-size: 2.3em;
+      font-size: 1.8em;
       transition: font-size 0.2s ease-in-out;
     }
 

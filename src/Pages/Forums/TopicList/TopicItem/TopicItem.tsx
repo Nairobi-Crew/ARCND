@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 import { TopicProps } from 'Pages/Forums/TopicList/TopicItem/types';
 import dateFormat from 'Util/dateFormat';
 import './TopicItem.scss';
-import odd from 'Util/odd';
 
-const TopicItem: TopicProps = ({ topic, index }) => {
-  const classes = ['topic__item', odd(index) ? 'half_opacity' : ''];
+const TopicItem: TopicProps = ({ topic }) => {
   const topicLink = `/thread/${topic.id}`;
   return (
-    <div className={classes.join(' ')}>
+    <div className="topic__item">
       <div className="topic__item_header">
         <div className="topic__item_header_description"><Link to={topicLink}>{topic.description}</Link></div>
         <div className="topic__item_header_created"><Link to={topicLink}>{topic.author}</Link></div>

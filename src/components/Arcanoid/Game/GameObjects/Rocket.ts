@@ -75,7 +75,7 @@ export class Rocket extends BaseObject {
       return;
     }
     const { ctx } = this;
-    drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.strokeStyle, this.fillStyle);
+    drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.glue, this.gun);
   }
 
   moveRocket(delta: number): void { // перемещение рактки

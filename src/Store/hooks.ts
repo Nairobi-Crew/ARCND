@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { IAuthUserReducer } from 'Reducers/auth/auth';
 import { IUserReducer } from 'Reducers/user/user';
 import { IGameReducer } from 'Reducers/game/game';
+import { IForumReducer } from 'Reducers/forum/types';
 
 export const useAuthReselect = () => {
   const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
@@ -18,4 +19,26 @@ export const useUserReselect = () => {
 export const useGameReselect = () => {
   const gameSelector = createSelector((state: IAppState) => state.game, (game) => game);
   return useSelector((state: IAppState) => gameSelector(state)) as IGameReducer;
+};
+
+export const useForumReselect = () => {
+  const forumSelector = createSelector((state: IAppState) => state.forum, (forum) => forum);
+  return useSelector((state: IAppState) => forumSelector(state)) as IForumReducer;
+};
+
+export const useForumTopics = () => {
+  const forumSelector = createSelector((state: IAppState) => state.forum, (forum) => ({
+    state: forum.state,
+    topics: forum.topics,
+  }));
+  return useSelector((state: IAppState) => forumSelector(state));
+};
+
+export const useForumMessages = () => {
+  const forumSelector = createSelector((state: IAppState) => state.forum, (forum) => ({
+    state: forum.state,
+    messages: forum.messages,
+    messagesLoaded: forum.messagesLoaded,
+  }));
+  return useSelector((state: IAppState) => forumSelector(state));
 };

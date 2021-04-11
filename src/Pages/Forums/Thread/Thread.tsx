@@ -1,31 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { ThreadProps } from 'Pages/Forums/Thread/types';
 import Message from 'Pages/Forums/Thread/Message/Message';
-import { data, messages as sampleMessages } from 'Pages/Forums/sampleData';
 import Button from 'UI/Button/Button';
 import './Thread.scss';
+import { useForumMessages, useForumTopics } from 'Store/hooks';
+import { fetchMessages } from 'Reducers/forum/actions';
+import { useDispatch } from 'react-redux';
+import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
 
-const Thread: React.FC<ThreadProps> = ({ messages }) => {
+const Thread: React.FC = () => {
   const { threadId } = useParams<{ threadId: string }>();
-  const [topics, setTopics] = useState(messages || []);
+  const [messagesList, setMessagesList] = useState([]);
   const history = useHistory();
-  useEffect(() => {
-    const list = sampleMessages.filter((msg) => msg.topic === threadId);
-    setTopics(list);
-  }, [messages, threadId]);
+  const messages = useForumMessages();
+  const topics = useForumTopics();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const list = (messages || sampleMessages).filter((msg) => msg.topic === threadId);
-    setTopics(list);
+    if (messages.messagesLoaded === threadId) {
+      setMessagesList(messages.messages);
+    } else {
+      dispatch(fetchMessages(threadId));
+    }
   }, []);
+
+  useEffect(() => {
+    if (messages.messagesLoaded === threadId) {
+      setMessagesList(messages.messages);
+    }
+  }, [messages]);
+
   return (
     <div className="thread">
       <div className="thread_title">
         <div>
           <Button onClick={() => history.goBack()}>На форумы</Button>
         </div>
-        {data.find((x) => x.id === threadId)?.description}
+        { topics.topics ? topics.topics.find((x) => x.id === threadId)?.description : null}
       </div>
       <div className="thread_header">
         <div className="thread_header_description">Заголовок</div>
@@ -34,11 +45,12 @@ const Thread: React.FC<ThreadProps> = ({ messages }) => {
       </div>
       <div className="thread_body">
         {
-          topics.map(
+          messagesList.map(
             (message, index) => <Message key={message.id} message={message} index={index} />,
           )
         }
       </div>
+      <EditMessage parentMessage="" topicId={threadId} messageId="" />
     </div>
   );
 };

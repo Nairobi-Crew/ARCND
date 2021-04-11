@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MessageProps } from 'Pages/Forums/Thread/Message/types';
 import './Message.scss';
 import dateFormat from 'Util/dateFormat';
@@ -6,10 +6,12 @@ import odd from 'Util/odd';
 import Button from 'UI/Button/Button';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect } from 'Store/hooks';
+import EditMessage from 'Pages/Forums/Thread/EditMessage/EditMessage';
 
 const Message: React.FC<MessageProps> = ({ message, index }) => {
   const classes: string[] = ['message', odd(index) ? 'half_opacity' : ''];
   const auth = useAuthReselect();
+  const [formReplyVisible, setFormReplyVisible] = useState(false);
   return (
     <div className={classes.join(' ')}>
       <div className="message__header">
@@ -25,7 +27,14 @@ const Message: React.FC<MessageProps> = ({ message, index }) => {
       </div>
       <div className="message_tools">
         <div className="message_tools_item">
-          {auth.state === EAuthState.LOGGED ? <Button>Ответить</Button> : null}
+          {auth.state === EAuthState.LOGGED
+            ? (
+              <>
+                <Button onClick={() => setFormReplyVisible((prevState) => !prevState)}>{formReplyVisible ? 'Отменить' : 'Ответить' }</Button>
+                <EditMessage parentMessage={message.id} topicId={message.topic} messageId="" visible={formReplyVisible} />
+              </>
+            )
+            : null}
         </div>
       </div>
 

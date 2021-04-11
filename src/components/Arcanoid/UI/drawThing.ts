@@ -62,6 +62,7 @@ const drawThing = (
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'black';
   ctx.fillText(letter, startX + halfWidth, startY + halfHeight, THING_WIDTH);
+  ctx.closePath();
 };
 
 export default drawThing;

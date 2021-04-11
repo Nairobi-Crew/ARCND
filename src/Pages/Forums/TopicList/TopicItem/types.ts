@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ITopicsItem } from 'Pages/Forums/types';
+import { ITopicsItem } from 'Reducers/forum/types';
 
 export type OwnTopicProps = {
   topic: ITopicsItem

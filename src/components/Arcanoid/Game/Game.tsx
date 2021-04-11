@@ -6,7 +6,7 @@ import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjec
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { globalBus } from 'Util/EventBus';
 import {
-  EVENTS, FPS, GAME_CANVAS_ID, ROCKET_WIDTH, SHOOT_HEIGHT, SHOOT_INTERVAL,
+  EVENTS, FPS, GAME_CANVAS_ID, GUN_HEIGHT, ROCKET_WIDTH, SHOOT_HEIGHT, SHOOT_INTERVAL, SHOOT_WIDTH,
 } from 'Components/Arcanoid/settings';
 import drawFrame from 'Components/Arcanoid/UI/drawFrame';
 import drawHelp from 'Components/Arcanoid/UI/drawHelp';
@@ -120,9 +120,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.gameStarted = false; // игра на паузу
       gameProperties.onRocket = true; // шарик на рокетку
       gameProperties.level += 1; // увеличение уровня
+      gameObjects.removeShoots();
       dispatch(incLevel());
+      rocket.gun = false;
+      rocket.glue = false;
+      rocket.width = ROCKET_WIDTH;
       const level = Math.min(gameProperties.level - 1, levels.length - 1);
-      console.log('Level for generate', level);
       gameObjects.generateLevel(
         levels[level],
       ); // генерация уровня
@@ -188,10 +191,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           if (rocket.gun) {
             if (Date.now() - shot > SHOOT_INTERVAL) {
               gameProperties.lastShoot = Date.now();
-              const x = rocket.x + Math.round(rocket.width / 2);
+              const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
               const y = rocket.y
                 - SHOOT_HEIGHT - rocket.height
-                - gameObjects.gameWindow.top;
+                - gameObjects.gameWindow.top - GUN_HEIGHT;
               const object = new Shoot({ x, y });
               gameObjects.add({ object, type: 'shoot' });
             }
@@ -229,6 +232,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       rocket.width = ROCKET_WIDTH;
       rocket.glue = false;
       rocket.gun = false;
+      gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
         dispatch(endGame());
@@ -236,9 +240,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
         gameProperties.lives = 3; // теперь жизней 3
         gameProperties.onRocket = true; // шарик приклеен к рокетке
-        gameProperties.gameStarted = false; // игра на паузе
+        // gameProperties.gameStarted = false; // игра на паузе
         gameProperties.score = 0; // счет 0
         gameProperties.level = 1; // уровень 1
+        history.push('/leaderboard');
         gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
       } else { // если не последняя
         dispatch(decLive());
@@ -284,6 +289,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameObjects.add({ object: new Thing({ x, y, thingType }), type: 'thing' });
       }
     };
+
+    const onBlockShoot = () => {
+      gameProperties.score += 1;
+      dispatch(incScore(1));
+    };
     // получаем размер поля
     gameObjects.gameWindow = getGameContext();
     // генерируем уровень
@@ -298,6 +308,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
     globalBus.on(EVENTS.BLOCK, onBlockCrash);
+    globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
     loop(); // запуск игрового цикла
     return () => { // очистка обработчиков события
       window.removeEventListener('keydown', onKeyDown);
@@ -305,6 +316,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
       globalBus.off(EVENTS.BLOCK, onBlockCrash);
+      globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
     };
   }, []);
 
