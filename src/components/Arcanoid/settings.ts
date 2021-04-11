@@ -13,7 +13,7 @@ export const ROCKET_STROKE_STYLE = 'rgb(100, 100, 100)';
 export const ROCKET_FILL_STYLE = 'rgb(200, 155, 200)';
 export const ROCKET_HEIGHT = 20;
 export const ROCKET_WIDTH = 200;
-export const ROCKET_MOVE_STEP = 12;
+export const ROCKET_MOVE_STEP = 14;
 export const RENDER_TIME = 10;
 export const ROCKET_PARTS = 12;
 export const ROCKET_PART_SPEED_MULT = 2;
@@ -39,15 +39,18 @@ export const LEVEL_BLOCKS_WIDTH = 5; // %
 export const LEVEL_BLOCKS_HEIGHT = 5; // %
 export const LEVEL_BLOCK_SPACE = 0.25;
 
-export const THING_SPEED = 3;
+export const THING_SPEED = 2;
 export const THING_WIDTH = 30;
 export const THING_HEIGHT = 20;
 export const THING_FONT = '10px Arial';
 
 export const SHOOT_INTERVAL = 150;
-export const SHOOT_WIDTH = 3;
-export const SHOOT_HEIGHT = 25;
+export const SHOOT_WIDTH = 10;
+export const SHOOT_HEIGHT = 20;
 export const SHOOT_SPEED = 4;
+
+export const GUN_HEIGHT = 20;
+export const GUN_WIDTH = 10;
 
 export const LIVES_BALL_RADIUS = 10;
 // eslint-disable-next-line no-shadow
@@ -60,4 +63,5 @@ export enum EVENTS {
   GLUE = 'take:a:glue',
   EXPAND = 'expand:a:rocket',
   COMPRESS = 'compress:a:rocket',
+  BRICK_CRASH = 'yeah:brick-level'
 }

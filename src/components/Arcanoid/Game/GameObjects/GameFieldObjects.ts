@@ -55,6 +55,7 @@ export default class GameFieldObjects {
             const shoot = object as Shoot;
             if (shoot.intersect(brick.x, brick.y, brick.width, brick.height)) {
               brick.level -= 1;
+              globalBus.emit(EVENTS.BRICK_CRASH);
               this.removeShoot(shoot);
             }
           });
@@ -117,6 +118,10 @@ export default class GameFieldObjects {
 
   removeShoot(shoot: Shoot) {
     this.data = this.data.filter((item) => !(item.type === 'shoot' && (item.object as Shoot) === shoot));
+  }
+
+  removeShoots() {
+    this.data = this.data.filter((item) => !(item.type === 'shoot'));
   }
 
   getObjectsByType(itemType: string): IGameFieldObjectProps[] {

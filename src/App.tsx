@@ -19,6 +19,7 @@ import configureStore from 'Store/store';
 import { Provider } from 'react-redux';
 import { initialAppState } from 'Store/types';
 import Logout from 'Pages/Logout/Logout';
+import NewTopic from 'Pages/Forums/NewTopic/NewTopic';
 
 const store = configureStore(
   initialAppState,
@@ -102,6 +103,19 @@ const App = () => (
         <Route path="/thread/:threadId">
           <ErrorBoundary>
             <Thread />
+          </ErrorBoundary>
+        </Route>
+
+        <Route path="/newtopic">
+          <ErrorBoundary>
+            <NewTopic />
+          </ErrorBoundary>
+        </Route>
+
+        <Route path="/message/:threadId/:messageId">
+          <ErrorBoundary>
+            <>
+            </>
           </ErrorBoundary>
         </Route>
 

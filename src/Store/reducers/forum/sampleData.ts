@@ -1,4 +1,6 @@
-import { Messages, Topics } from 'Pages/Forums/types';
+import { Messages, Topics } from 'Reducers/forum/types';
+
+export const WAIT_FOR_TEST = 500;
 
 export const data: Topics = [
   {
@@ -59,7 +61,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -69,7 +71,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -79,7 +81,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -89,7 +91,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -99,7 +101,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -109,7 +111,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -119,7 +121,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -129,7 +131,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -139,7 +141,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -149,7 +151,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -159,7 +161,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -169,7 +171,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -179,7 +181,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -189,7 +191,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -199,7 +201,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -209,7 +211,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -219,7 +221,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -229,7 +231,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -239,7 +241,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -249,7 +251,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -259,7 +261,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
   {
@@ -269,7 +271,7 @@ export const messages: Messages = [
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: 0,
+    parentMessage: '',
     time: 9000000,
   },
 ];

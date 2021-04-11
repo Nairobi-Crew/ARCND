@@ -17,6 +17,12 @@ const stylesByLevelType = (level: number, type = 0): brickStyle => {
   } else if (level === 3) {
     res.strokeStyle = 'green';
     res.fillStyle = 'lime';
+  } else if (level === 4) {
+    res.strokeStyle = 'navy';
+    res.fillStyle = 'blue';
+  } else if (level === 5) {
+    res.strokeStyle = 'rgb(128, 0, 0)';
+    res.fillStyle = 'rgb(255, 0, 0)';
   }
   return res;
 };
