@@ -14,7 +14,9 @@ const EditMessage: FC<EditMessageProps> = (
   {
     messageId,
     parentMessage,
-    topicId, visible = true,
+    topicId,
+    visible = true,
+    onSave = null,
   },
 ) => {
   const [header, setHeader] = useState('');
@@ -60,7 +62,6 @@ const EditMessage: FC<EditMessageProps> = (
     setParentHeader(parentMsg.header);
     dispatch(clearState());
     if (auth.state !== EAuthState.LOGGED) {
-      // console.log('Unauthorized');
       history.push('/forum');
     }
   }, []);
@@ -76,6 +77,9 @@ const EditMessage: FC<EditMessageProps> = (
       topicId,
       header,
     ));
+    if (onSave) {
+      onSave();
+    }
   };
 
   useEffect(() => {
@@ -93,7 +97,7 @@ const EditMessage: FC<EditMessageProps> = (
     }
   }, [messages]);
   return (
-    <Form caption={topicName} visible={visible}>
+    <Form caption={topicName} visible={visible} header={false} maxHeight={false}>
       { parentMessageMessage !== '' ? (
         <>
           <div>
@@ -114,7 +118,7 @@ const EditMessage: FC<EditMessageProps> = (
         }}
       />
       <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} />
-      <Button onClick={saveButtonHandler}>Сохранить</Button>
+      <Button onClick={saveButtonHandler} disabled={header.trim() === '' || message.trim() === ''}>Сохранить</Button>
     </Form>
   );
 };

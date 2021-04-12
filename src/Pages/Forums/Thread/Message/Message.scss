@@ -1,4 +1,7 @@
 @import "src/common/utils";
+$background: #433b6a;
+$background-even: #433b6a;
+$background-odd: #4d4574;
 
 .message {
   width: 100%;
@@ -12,6 +15,11 @@
 
     &_item {
       flex: 1;
+      font-family: sans-serif;
+
+      &:nth-child(odd) {
+        background-color: $background-odd;
+      }
     }
   }
 
