@@ -29,7 +29,7 @@ export type AppDispatch = typeof store;
 
 const items: ILink[] = [
   {
-    auth: true,
+    auth: false,
     href: '/game',
     name: 'Игра',
   },

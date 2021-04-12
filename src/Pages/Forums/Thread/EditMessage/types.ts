@@ -3,4 +3,5 @@ export type EditMessageProps = {
   topicId: string,
   messageId: string,
   visible?: boolean,
+  onSave?: Function,
 };
