@@ -1,8 +1,7 @@
-import { TCallBack } from '../services/types';
-
+type TCallBack<T extends unknown = unknown> = (...args: T[]) => void;
 type TSubscriptions = Record<string, TCallBack[]>;
 
-const BUS_EMIT_LOG = true;
+const BUS_EMIT_LOG = false;
 
 /**
  * Event bus implementation

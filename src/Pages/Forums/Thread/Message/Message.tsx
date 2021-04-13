@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { MessageProps } from 'Pages/Forums/Thread/Message/types';
 import './Message.scss';
 import dateFormat from 'Util/dateFormat';
-import Button from 'UI/Button/Button';
+import Button from 'UI/Button/index';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect } from 'Store/hooks';
-import EditMessage from 'Pages/Forums/Thread/EditMessage/EditMessage';
+import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
 
 const Message: React.FC<MessageProps> = ({ message }) => {
   const auth = useAuthReselect();
@@ -29,7 +29,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       </div>
       <div className="message_tools">
         <div className="message_tools_item">
-          {auth.state === EAuthState.LOGGED
+          {auth.state === EAuthState.LOGGED && message.parentMessage === ''
             ? (
               <>
                 <Button onClick={() => setFormReplyVisible((prevState) => !prevState)}>{formReplyVisible ? 'Отменить' : 'Ответить' }</Button>

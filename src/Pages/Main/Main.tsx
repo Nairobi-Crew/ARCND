@@ -27,7 +27,13 @@ const Main: React.FC<MainProps> = ({ items }: MainProps) => {
   return (
     <li className="linkBlock">
       {
-        items.filter((item) => !item.auth || authState === item.auth).map(
+        items.filter(
+          (item) => {
+            if (authState) {
+              return !item.unAuth;
+            } return !item.auth;
+          },
+        ).map(
           (link) => (
             <ul key={link.href}>
               <div className="link">

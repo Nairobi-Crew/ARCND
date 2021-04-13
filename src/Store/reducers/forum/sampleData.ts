@@ -1,6 +1,6 @@
 import { Messages, Topics } from 'Reducers/forum/types';
 
-export const WAIT_FOR_TEST = 500;
+export const WAIT_FOR_TEST = 1;
 
 export const data: Topics = [
   {
@@ -25,30 +25,6 @@ export const data: Topics = [
     lastMessageTime: 10000000,
     createTime: 8500000,
     lastMessageUser: 'Nikolay Sidorov',
-    lastMessageUserId: 2,
-  },
-  {
-    id: '3',
-    description: '3 topic',
-    messageCount: 2,
-    author: 'Alexandr Stepanov',
-    authorId: 3,
-    lastMessage: 'Test last message on topic 2',
-    lastMessageTime: 10000000,
-    createTime: 8500000,
-    lastMessageUser: 'Mrak',
-    lastMessageUserId: 2,
-  },
-  {
-    id: '4',
-    description: '4 topic',
-    messageCount: 10,
-    author: 'Ostap Bender',
-    authorId: 3,
-    lastMessage: 'Test last message on topic 4',
-    lastMessageTime: 10000000,
-    createTime: 8500000,
-    lastMessageUser: 'Mark',
     lastMessageUserId: 2,
   },
 ];
@@ -94,184 +70,41 @@ export const messages: Messages = [
     parentMessage: '',
     time: 9000000,
   },
-  {
-    id: '5',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '6',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '7',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '8',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '9',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '10',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '11',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '12',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '13',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '14',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '15',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '16',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '17',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '18',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '19',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '20',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '21',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
-  {
-    id: '22',
-    topic: '1',
-    message: 'Sample message for topic 1',
-    author: 'Oleg',
-    authorId: 1,
-    header: 'header -> Whats up',
-    parentMessage: '',
-    time: 9000000,
-  },
 ];
+
+export const getData = (): Topics => {
+  const m: string | null = localStorage.getItem('topics');
+  let msgs: Topics;
+  if (m === null) {
+    msgs = data;
+    localStorage.setItem('topics', JSON.stringify(msgs));
+  } else {
+    msgs = JSON.parse(m);
+  }
+  return msgs;
+};
+
+export const getMessages = (): Messages => {
+  const m: string | null = localStorage.getItem('messages');
+  let msgs: Messages;
+  if (m === null) {
+    msgs = messages;
+    localStorage.setItem('messages', JSON.stringify(msgs));
+  } else {
+    msgs = JSON.parse(m);
+  }
+  return msgs;
+};
+
+export const saveData = (d: Topics): void => {
+  localStorage.setItem('topics', JSON.stringify(d));
+};
+
+export const saveMessages = (m: Messages): void => {
+  localStorage.setItem('messages', JSON.stringify(m));
+};
+
+export const saveForums = (d: Topics, m: Messages) => {
+  saveData(d);
+  saveMessages(m);
+};

@@ -1,5 +1,14 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 
+/**
+ * Отрисовка выстрела
+ * @param {CanvasRenderingContext2D} ctx - контекст канваса
+ * @param {GameWindowProps} gameWindow - объект с размерами игрового поля
+ * @param {number} x - относительные координаты
+ * @param {number} y - относительные координаты
+ * @param {number} width - ширина
+ * @param {number} height - высота
+ */
 const drawShoot = (
   ctx: CanvasRenderingContext2D,
   gameWindow: GameWindowProps,
@@ -21,7 +30,6 @@ const drawShoot = (
   ctx.beginPath();
   const color1 = 'red';
   const color2 = 'yellow';
-  // const grd = ctx.createLinearGradient(startX, startY, width, height);
   const grd = ctx.createRadialGradient(centerX, centerY, 2, centerX, centerY, halfHeight);
   grd.addColorStop(0, color1);
   grd.addColorStop(1, color2);
@@ -32,7 +40,6 @@ const drawShoot = (
 
   ctx.fillStyle = grd;
   ctx.fillRect(startX, startY, width, height);
-  //ctx.ellipse(centerX, centerY, halfWidth, halfHeight, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.closePath();
 };

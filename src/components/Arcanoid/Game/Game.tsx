@@ -13,7 +13,7 @@ import drawHelp from 'Components/Arcanoid/UI/drawHelp';
 import drawScore from 'Components/Arcanoid/UI/drawScore';
 import drawLevel from 'Components/Arcanoid/UI/drawLevel';
 import drawLives from 'Components/Arcanoid/UI/drawLives';
-import { levels } from 'Components/Arcanoid/levels/levelData';
+import levels from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
@@ -32,7 +32,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   const getWidth = () => { // ширина канваса
     if (canvasId) {
-      return canvasId.width;
+      // return canvasId.width;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -43,7 +43,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   const getHeight = () => { // высота канваса
     if (canvasId) {
-      return canvasId.height;
+      // return canvasId.height;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -122,8 +122,8 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.level += 1; // увеличение уровня
       gameObjects.removeShoots();
       dispatch(incLevel());
-      rocket.gun = false;
-      rocket.glue = false;
+      rocket.gun = 0;
+      rocket.glue = 0;
       rocket.width = ROCKET_WIDTH;
       const level = Math.min(gameProperties.level - 1, levels.length - 1);
       gameObjects.generateLevel(
@@ -131,9 +131,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       ); // генерация уровня
     }
     ball.nextMove(); // перемещение шарика на следующий кадр
-    rocket.nextMove(); // перемещение рокетки на следующий кадр
+    rocket.nextMove(); // перемещение ракетки на следующий кадр
     const context = gameObjects.ctx;
     const gameContext = getGameContext();
+    gameObjects.gameWindow = gameContext;
+
     context.beginPath();
     context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
     gameObjects.render(); // отрисовка кирпичей
@@ -187,8 +189,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           }
         } else {
           gameProperties.onRocket = false;
+          if (rocket.glue) {
+            rocket.glue -= 1;
+          }
           const shot = gameProperties.lastShoot || 0;
           if (rocket.gun) {
+            rocket.gun -= 1;
             if (Date.now() - shot > SHOOT_INTERVAL) {
               gameProperties.lastShoot = Date.now();
               const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
@@ -230,8 +236,8 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     const onGoal = () => { // Обработка события ГОЛ
       gameObjects.removeThings(true);
       rocket.width = ROCKET_WIDTH;
-      rocket.glue = false;
-      rocket.gun = false;
+      rocket.glue = 0;
+      rocket.gun = 0;
       gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
@@ -266,7 +272,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       let thingType: ThingType = 'none';
       let blockType = block.type;
       if (blockType === 9) {
-        blockType = randomRange(2, 6);
+        blockType = randomRange(1, 8);
       }
       switch (blockType) {
         case 2:

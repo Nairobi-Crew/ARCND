@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ForumProps } from 'Pages/Forums/Forum/types';
-import TopicList from 'Pages/Forums/TopicList/TopicList';
-import Button from 'UI/Button/Button';
+import TopicList from 'Pages/Forums/TopicList/index';
+import Button from 'UI/Button/index';
 import './Forum.scss';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect, useForumTopics } from 'Store/hooks';

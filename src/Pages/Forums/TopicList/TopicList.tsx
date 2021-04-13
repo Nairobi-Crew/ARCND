@@ -1,6 +1,6 @@
 import React from 'react';
 import { TopicListProps } from 'Pages/Forums/TopicList/types';
-import TopicItem from 'Pages/Forums/TopicList/TopicItem/TopicItem';
+import TopicItem from 'Pages/Forums/TopicList/TopicItem/index';
 import './TopicList.scss';
 
 const TopicList: React.FC<TopicListProps> = ({ topics }) => (

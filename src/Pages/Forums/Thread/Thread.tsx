@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import Message from 'Pages/Forums/Thread/Message/Message';
-import Button from 'UI/Button/Button';
+import Message from 'Pages/Forums/Thread/Message/index';
+import Button from 'UI/Button/index';
 import './Thread.scss';
 import { useForumMessages, useForumTopics } from 'Store/hooks';
 import { fetchMessages } from 'Reducers/forum/actions';
@@ -15,6 +15,7 @@ const Thread: React.FC = () => {
   const messages = useForumMessages();
   const topics = useForumTopics();
   const dispatch = useDispatch();
+  const [topicDescription, setTopicDescription] = useState('');
 
   useEffect(() => {
     if (messages.messagesLoaded === threadId) {
@@ -30,13 +31,22 @@ const Thread: React.FC = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const found = topics.topics.find((item) => item.id === threadId);
+    if (found) {
+      setTopicDescription(found.description);
+    } else {
+      setTopicDescription('');
+    }
+  }, [topics]);
+
   return (
-    <div className="thread">
+    <div className="thread" key={`${threadId}-${Date.now()}`}>
       <div className="thread_title">
         <div>
           <Button onClick={() => history.goBack()}>На форумы</Button>
         </div>
-        { topics.topics ? topics.topics.find((x) => x.id === threadId)?.description : null}
+        { topicDescription }
       </div>
       <div className="thread_header">
         <div className="thread_header_description">Заголовок</div>
@@ -45,12 +55,26 @@ const Thread: React.FC = () => {
       </div>
       <div className="thread_body">
         {
-          messagesList.map(
-            (message, index) => <Message key={message.id} message={message} index={index} />,
+          messagesList.filter((item) => item.parentMessage === '').map(
+            (message) => (
+              <div key={message.id}>
+                <Message message={message} key={`messageKey-${message.id}`} />
+                <div className="parent_messages">
+                  {messagesList.filter(
+                    (parentMessage) => parentMessage.parentMessage === message.id,
+                  )
+                    .map(
+                      (identMessage) => (
+                        <Message message={identMessage} key={`parentMessageKey-${identMessage.id}`} />
+                      ),
+                    )}
+                </div>
+              </div>
+            ),
           )
         }
       </div>
-      <EditMessage parentMessage="" topicId={threadId} messageId="" />
+      <EditMessage parentMessage="" topicId={threadId} messageId="" key={`editMessageKey-${threadId}`} />
     </div>
   );
 };

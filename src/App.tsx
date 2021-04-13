@@ -19,7 +19,7 @@ import configureStore from 'Store/store';
 import { Provider } from 'react-redux';
 import { initialAppState } from 'Store/types';
 import Logout from 'Pages/Logout/Logout';
-import NewTopic from 'Pages/Forums/NewTopic/NewTopic';
+import NewTopic from 'Pages/Forums/NewTopic/index';
 
 const store = configureStore(
   initialAppState,
@@ -32,36 +32,43 @@ const items: ILink[] = [
     auth: false,
     href: '/game',
     name: 'Игра',
+    unAuth: false,
   },
   {
     auth: false,
     href: '/signin',
     name: 'Вход',
+    unAuth: true,
   },
   {
     auth: true,
     href: '/profile',
     name: 'Профиль',
+    unAuth: false,
   },
   {
     auth: true,
     href: '/changepassword',
     name: 'Сменить пароль',
+    unAuth: false,
   },
   {
     auth: false,
     href: '/signup',
     name: 'Зарегистрироваться',
+    unAuth: true,
   },
   {
     auth: false,
     href: '/forum',
     name: 'Форум',
+    unAuth: false,
   },
   {
     auth: true,
     href: '/signout',
     name: 'Выход',
+    unAuth: false,
   },
 ];
 
@@ -109,13 +116,6 @@ const App = () => (
         <Route path="/newtopic">
           <ErrorBoundary>
             <NewTopic />
-          </ErrorBoundary>
-        </Route>
-
-        <Route path="/message/:threadId/:messageId">
-          <ErrorBoundary>
-            <>
-            </>
           </ErrorBoundary>
         </Route>
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { LoginProps } from 'Pages/Login/types';
-import Form from 'UI/Form/Form';
-import Input from 'UI/Input/Input';
-import Button from 'UI/Button/Button';
+import Form from 'UI/Form/index';
+import Input from 'UI/Input/index';
+import Button from 'UI/Button/index';
 import { getUserData, loginUser, logoutUser } from 'Reducers/auth/actions';
 import './Login.scss';
 import { useDispatch } from 'react-redux';

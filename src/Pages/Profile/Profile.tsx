@@ -1,8 +1,8 @@
 import { ProfileProps } from 'Pages/Profile/types';
 import React, { useEffect, useState } from 'react';
-import Input from 'UI/Input/Input';
-import Button from 'UI/Button/Button';
-import Form from 'UI/Form/Form';
+import Input from 'UI/Input/index';
+import Button from 'UI/Button/index';
+import Form from 'UI/Form/index';
 import { IUser } from 'Store/types';
 import { useDispatch } from 'react-redux';
 import { changeProfile } from 'Reducers/user/actions';

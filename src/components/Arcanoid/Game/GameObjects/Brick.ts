@@ -9,8 +9,8 @@ import { EVENTS } from 'Components/Arcanoid/settings';
 export interface IBrickProps extends IBaseObjectProps {
   width: number
   height: number
-  level?: number
-  type?: number
+  level?: number // уровень. Сколько раз нужно выбить блок, чтобы он исчез
+  type?: number // тип блока, без бонуса или с бонусом, и каким именно бонусом
 }
 
 export class Brick extends BaseObject {
@@ -30,6 +30,10 @@ export class Brick extends BaseObject {
     this.type = props.type || 1;
   }
 
+  /**
+   * Отрисовка блока
+   * @param {GameWindowProps | undefined} gameWindow
+   */
   render(gameWindow: GameWindowProps | undefined = undefined): void {
     super.render(gameWindow);
     if (!this.gameWindow) {
@@ -39,6 +43,9 @@ export class Brick extends BaseObject {
     drawBrick(ctx, gameWindow, this.x, this.y, this.width, this.height, this.level, this.type);
   }
 
+  /**
+   * Проверка пересечения, шарика и блока
+   */
   intersect():void { // проверка пересечения кирпича и шарика
     if (ball.x - ball.radius > this.x + this.width // не перекрываются по оси Х
       || ball.x + ball.radius < this.x) {
