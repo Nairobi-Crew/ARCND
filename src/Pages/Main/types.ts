@@ -3,6 +3,7 @@ export interface ILink {
   href: string
   name: string
   auth: boolean
+  unAuth?: boolean
 }
 export type MainProps = {
   items: ILink[]

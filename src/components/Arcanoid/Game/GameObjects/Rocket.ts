@@ -1,11 +1,9 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import {
-  EVENTS,
-  ROCKET_FILL_STYLE,
+  EVENTS, GLUE_QTY,
   ROCKET_HEIGHT,
   ROCKET_MOVE_STEP,
-  ROCKET_STROKE_STYLE,
-  ROCKET_WIDTH,
+  ROCKET_WIDTH, SHOOT_QTY,
 } from 'Components/Arcanoid/settings';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
@@ -18,20 +16,23 @@ export interface IRocketProps extends IBaseObjectProps {
   height: number,
 }
 
+/**
+ * Объект ракетки для игры
+ */
 export class Rocket extends BaseObject {
   private static instance: Rocket;
 
-  height: number;
+  height: number; // высота
 
-  width: number;
+  width: number; // ширина
 
-  movedLeft: boolean;
+  movedLeft: boolean; // движется влево?
 
-  movedRight: boolean;
+  movedRight: boolean; // движется вправо?
 
-  gun = false;
+  gun = 0; // выстрелов у пушки
 
-  glue = false;
+  glue = 0; // количество клея
 
   constructor(props: IRocketProps) {
     super(props);
@@ -43,32 +44,42 @@ export class Rocket extends BaseObject {
     this.height = props.height;
 
     Rocket.instance = this;
-    globalBus.on(EVENTS.EXPAND, () => {
-      this.changeWidth(1.1);
-      this.glue = false;
-      this.gun = false;
-      gameProperties.onRocket = false;
+    // Шина событий для бонусов
+    globalBus.on(EVENTS.EXPAND, () => { // бонус расширения ракетки
+      this.changeWidth(1.1); // увеличение ширина на 10%
+      this.glue = 0; // отмена бонуса клея
+      this.gun = 0; // отмена бонуса пушки
+      gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
     });
-    globalBus.on(EVENTS.COMPRESS, () => {
-      this.glue = false;
-      this.gun = false;
-      gameProperties.onRocket = false;
-      this.changeWidth(0.9);
+    globalBus.on(EVENTS.COMPRESS, () => { // бонус сужения ракетки
+      this.glue = 0; // отмена бонуса клея
+      this.gun = 0; // отмена бонуса пушки
+      gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
+      this.changeWidth(0.9); // уменьшение ширины до 90%
     });
-    globalBus.on(EVENTS.GLUE, () => {
-      this.glue = true;
-      this.gun = false;
+    globalBus.on(EVENTS.GLUE, () => { // бонус клея
+      this.glue = GLUE_QTY;
+      this.gun = 0; // отмена бонуса пушки
     });
-    globalBus.on(EVENTS.GUN, () => {
-      this.gun = true;
-      this.glue = false;
+    globalBus.on(EVENTS.GUN, () => { // бонус пушки
+      this.gun = SHOOT_QTY; // установка бонуса пушки на количество выстрелов
+      this.glue = 0; // отмена бонуса клея
+      gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
     });
   }
 
+  /**
+   * изменение ширины ракетки
+   * @param {number} q - коеффициент
+   */
   changeWidth(q: number) {
     this.width = Math.round(this.width * q);
   }
 
+  /**
+   * Отрисовка ракетки
+   * @param {GameWindowProps | undefined} gameWindow объект с размерами окна
+   */
   render(gameWindow: GameWindowProps | undefined = undefined): void {
     super.render(gameWindow);
     if (!this.gameWindow || !this.ctx) {
@@ -78,7 +89,12 @@ export class Rocket extends BaseObject {
     drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.glue, this.gun);
   }
 
-  moveRocket(delta: number): void { // перемещение рактки
+  /**
+   * Перемещение ракетки
+   * @param {number} delta величина смещения +/-
+   * - влево, + вправо
+   */
+  moveRocket(delta: number): void {
     this.x += delta;
     if (delta > 0) {
       if (this.x + this.width > this.gameWindow.width) { // не пускать за край вправо
@@ -89,7 +105,10 @@ export class Rocket extends BaseObject {
     }
   }
 
-  nextMove(): void { // следующий кадр ракетки
+  /**
+   *Покадровое определение следующего положения ракетки
+   */
+  nextMove(): void {
     // если шарик на ракетке, то перемещаем и шарик
     if (this.gameWindow && this.ctx && gameProperties.onRocket) {
       ball.x = this.x + Math.round(this.width / 2);
@@ -108,6 +127,4 @@ export const rocket = new Rocket({
   y: window.innerHeight - ROCKET_HEIGHT,
   width: ROCKET_WIDTH,
   height: ROCKET_HEIGHT,
-  fillStyle: ROCKET_FILL_STYLE,
-  strokeStyle: ROCKET_STROKE_STYLE,
 });

@@ -3,8 +3,8 @@ import { EditMessageProps } from 'Pages/Forums/Thread/EditMessage/types';
 import { useAuthReselect, useForumMessages, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
 import { clearState, fetchTopics, saveMessage } from 'Reducers/forum/actions';
-import Form from 'UI/Form';
-import Input from 'UI/Input/Input';
+import Form from 'UI/Form/index';
+import Input from 'UI/Input/index';
 import Button from 'UI/Button';
 import { EAuthState } from 'Reducers/auth/types';
 import { useHistory } from 'react-router-dom';
@@ -60,7 +60,9 @@ const EditMessage: FC<EditMessageProps> = (
     const parentMsg = getMessage(parentMessage);
     setParentMessage(parentMsg.message);
     setParentHeader(parentMsg.header);
-    dispatch(clearState());
+    if (messages.state !== EForumState.UNKNOWN) {
+      dispatch(clearState());
+    }
     if (auth.state !== EAuthState.LOGGED) {
       history.push('/forum');
     }

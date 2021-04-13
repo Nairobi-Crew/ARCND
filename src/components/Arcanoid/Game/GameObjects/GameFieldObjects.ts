@@ -8,7 +8,6 @@ import {
   LEVEL_STRING_LENGTH,
 } from 'Components/Arcanoid/settings';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
-import { typeData } from 'Components/Arcanoid/levels/levelData';
 import Thing from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
@@ -66,6 +65,7 @@ export default class GameFieldObjects {
             thing.gameWindow = gameWindow;
             thing.ctx = ctx;
           }
+          thing.gameWindow = gameWindow;
           thing.nextMove();
           if (
             thing.intersect(
@@ -99,7 +99,9 @@ export default class GameFieldObjects {
           }
         }
         if (item.type === 'shoot') {
-          (item.object as Shoot).nextMove();
+          const shot = (item.object as Shoot);
+          shot.gameWindow = gameWindow;
+          shot.nextMove();
         }
         item.object.setContext(this.ctx);
         item.object.render(this.gameWindow);
@@ -178,7 +180,6 @@ export default class GameFieldObjects {
         if (block === 'space') {
           x += spaceWidth;
         } else if (block === 'brick') {
-          const { strokeStyle, fillStyle } = typeData[level];
           this.brickCount += 1;
           this.data.push(
             {
@@ -192,8 +193,6 @@ export default class GameFieldObjects {
                   type,
                   gameWindow: this.gameWindow,
                   ctx: this.ctx,
-                  strokeStyle,
-                  fillStyle,
                 }),
               type: block,
             },

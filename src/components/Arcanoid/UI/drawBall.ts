@@ -1,14 +1,22 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 
+/**
+ * Отрисовка шарика
+ * @param {CanvasRenderingContext2D} ctx - контекст канваса
+ * @param {GameWindowProps} gameWindow - объект с размерами игрового поля
+ * @param {number} x - отновительные координаты
+ * @param {number} y - отновительные координаты
+ * @param {number} radius - радиус шарика
+ */
 const drawGradientBall = (
-  ctx: CanvasRenderingContext2D, // сонтекст канваса
-  gameWindow: GameWindowProps, // размеры игрового поля и его отступы
-  x: number, y: number, radius: number, // координаты шара и радиус, и стили из оъекта
+  ctx: CanvasRenderingContext2D,
+  gameWindow: GameWindowProps,
+  x: number, y: number, radius: number,
 ) => {
-  const centerX = x + gameWindow.left;
+  const centerX = x + gameWindow.left; // абсолютные координаты центра шарика
   const centerY = y + gameWindow.top;
-  const OneDiv3 = Math.round(radius / 3);
-  const grd = ctx.createRadialGradient(
+  const OneDiv3 = Math.round(radius / 3); // треть от радиуса, для смещения центра градиента
+  const grd = ctx.createRadialGradient( // создание градиента
     centerX,
     centerY,
     radius,
@@ -24,9 +32,7 @@ const drawGradientBall = (
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
 
-  ctx.ellipse(
-    // координаты шара в координатах окна игры,
-    // для преобразования в абсолютные канвасовские добавляем левый отспуп к х и верхний к y
+  ctx.ellipse( // отрисовка шарика в абсолютных координатах
     centerX,
     centerY,
     radius,
@@ -41,7 +47,7 @@ const drawGradientBall = (
 const drawBall = (
   ctx: CanvasRenderingContext2D, // сонтекст канваса
   gameWindow: GameWindowProps, // размеры игрового поля и его отступы
-  x: number, y: number, radius: number, strokeStyle = '', fillStyle = '', // координаты шара и радиус, и стили из оъекта
+  x: number, y: number, radius: number, // координаты шара и радиус
 ) => {
   drawGradientBall(ctx, gameWindow, x, y, radius);
 };

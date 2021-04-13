@@ -2,6 +2,14 @@ import { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { THING_FONT, THING_HEIGHT, THING_WIDTH } from 'Components/Arcanoid/settings';
 
+/**
+ * Отрисовка бонуса
+ * @param {CanvasRenderingContext2D} ctx - контекст канваса
+ * @param {GameWindowProps} gameWindow - объект с размерами игрового окна
+ * @param {number} x - относительные координаты
+ * @param {number} y - относительные координаты
+ * @param {ThingType} type - тип бонуса
+ */
 const drawThing = (
   ctx: CanvasRenderingContext2D,
   gameWindow: GameWindowProps,

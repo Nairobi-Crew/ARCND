@@ -1,9 +1,9 @@
 import { ChangePasswordProps } from 'Pages/ChangePassword/types';
 import { useHistory } from 'react-router-dom';
-import Form from 'UI/Form/Form';
+import Form from 'UI/Form/index';
 import React, { useEffect, useState } from 'react';
-import Input from 'UI/Input/Input';
-import Button from 'UI/Button/Button';
+import Input from 'UI/Input/index';
+import Button from 'UI/Button/index';
 import { useDispatch } from 'react-redux';
 import { EUserAction } from 'Reducers/user/types';
 import { changePassword, clearLastAction } from 'Reducers/user/actions';
