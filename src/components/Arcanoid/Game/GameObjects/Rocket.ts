@@ -80,13 +80,14 @@ export class Rocket extends BaseObject {
    * Отрисовка ракетки
    * @param {GameWindowProps | undefined} gameWindow объект с размерами окна
    */
-  render(gameWindow: GameWindowProps | undefined = undefined): void {
-    super.render(gameWindow);
-    if (!this.gameWindow || !this.ctx) {
+  render(): void {
+    super.render();
+    super.render();
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
       return;
     }
-    const { ctx } = this;
-    drawRocket(ctx, this.gameWindow, this.x, this.y, this.width, this.glue, this.gun);
+    drawRocket(ctx, gameWindow, this.x, this.y, this.width, this.glue, this.gun);
   }
 
   /**
@@ -96,9 +97,10 @@ export class Rocket extends BaseObject {
    */
   moveRocket(delta: number): void {
     this.x += delta;
+    const { gameWindow } = gameProperties;
     if (delta > 0) {
-      if (this.x + this.width > this.gameWindow.width) { // не пускать за край вправо
-        this.x = this.gameWindow.width - this.width;
+      if (this.x + this.width > gameWindow.width) { // не пускать за край вправо
+        this.x = gameWindow.width - this.width;
       }
     } else if (this.x < 0) { // не пускать за край влево
       this.x = 0;
@@ -109,10 +111,11 @@ export class Rocket extends BaseObject {
    *Покадровое определение следующего положения ракетки
    */
   nextMove(): void {
+    const { gameWindow, ctx } = gameProperties;
     // если шарик на ракетке, то перемещаем и шарик
-    if (this.gameWindow && this.ctx && gameProperties.onRocket) {
+    if (gameWindow && ctx && gameProperties.onRocket) {
       ball.x = this.x + Math.round(this.width / 2);
-      ball.y = this.gameWindow.height - this.height - ball.radius;
+      ball.y = gameWindow.height - this.height - ball.radius;
     }
     if (this.movedLeft) { // если двигается влево
       this.moveRocket(-ROCKET_MOVE_STEP);

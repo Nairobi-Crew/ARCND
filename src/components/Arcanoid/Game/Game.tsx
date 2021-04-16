@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { GameProps, GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
@@ -16,7 +17,6 @@ import drawLives from 'Components/Arcanoid/UI/drawLives';
 import levels from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
-import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { useDispatch } from 'react-redux';
 import {
   decLive, endGame, go, incLevel, incScore,
@@ -55,9 +55,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   const history = useHistory();
 
   useEffect(() => { // при изменении контекста канваса, меняем его у
-    gameObjects.setContext(ctx);
-    ball.setContext(ctx);
-    rocket.setContext(ctx);
+    gameProperties.ctx = ctx;
   }, [ctx]);
 
   // устанавливаем размер игрового поля
@@ -70,7 +68,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     bottom: getHeight() - 30,
   });
 
-  gameObjects.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
+  gameProperties.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
 
   const toggleFullScreen = () => { // переключатель в полноэкранный режим
     if (!document.fullscreenElement) {
@@ -82,20 +80,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   // проверка установлен ли канвас в объектах для отрисовки и установка его
   const checkContext = (): boolean => {
-    if (!gameObjects.ctx) {
+    if (!gameProperties.ctx) {
       if (ctx) {
-        gameObjects.ctx = ctx;
-        ball.setContext(ctx);
-        rocket.setContext(ctx);
+        gameProperties.ctx = ctx;
         return true;
       }
       return false;
-    }
-    if (!ball.ctx) {
-      ball.setContext(gameObjects.ctx);
-    }
-    if (!rocket.ctx) {
-      rocket.setContext(gameObjects.ctx);
     }
     return true;
   };
@@ -132,15 +122,15 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     }
     ball.nextMove(); // перемещение шарика на следующий кадр
     rocket.nextMove(); // перемещение ракетки на следующий кадр
-    const context = gameObjects.ctx;
+    const context = gameProperties.ctx;
     const gameContext = getGameContext();
-    gameObjects.gameWindow = gameContext;
+    // gameObjects.gameWindow = gameContext;
 
     context.beginPath();
     context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
     gameObjects.render(); // отрисовка кирпичей
-    ball.render(gameContext); // шарика
-    rocket.render(gameContext); // рокетки
+    ball.render(); // шарика
+    rocket.render(); // рокетки
 
     drawFrame(gameContext); // рамки
     drawHelp(gameContext); // строки состояния
@@ -200,7 +190,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
               const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
               const y = rocket.y
                 - SHOOT_HEIGHT - rocket.height
-                - gameObjects.gameWindow.top - GUN_HEIGHT;
+                - gameProperties.gameWindow.top - GUN_HEIGHT;
               const object = new Shoot({ x, y });
               gameObjects.add({ object, type: 'shoot' });
             }
@@ -300,10 +290,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.score += 1;
       dispatch(incScore(1));
     };
-    // получаем размер поля
-    gameObjects.gameWindow = getGameContext();
     // генерируем уровень
-    gameObjects.generateLevel(levels[gameProperties.level - 1]);
+    gameProperties.level = -1;
+    // gameObjects.generateLevel(levels[gameProperties.level - 1]);
 
     // события на нажатие клавиши
     window.addEventListener('keydown', onKeyDown);

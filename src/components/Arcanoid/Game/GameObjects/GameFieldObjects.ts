@@ -1,4 +1,4 @@
-import { GameWindowProps, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
+import { IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
   EVENTS,
@@ -12,16 +12,13 @@ import Thing from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
   private static instance: GameFieldObjects;
 
   data: IGameFieldObjectProps[] = [];
-
-  gameWindow: GameWindowProps = null; // игровое поле
-
-  ctx: CanvasRenderingContext2D; // контекст канваса
 
   brickCount: number = 0; // количество кирпичей
 
@@ -33,17 +30,13 @@ export default class GameFieldObjects {
     GameFieldObjects.instance = this;
   }
 
-  setContext(c: CanvasRenderingContext2D) {
-    this.ctx = c;
-  }
-
   add(item: IGameFieldObjectProps): void {
     this.data.push(item);
   }
 
   render(): void {
     let count = 0;
-    const { gameWindow, ctx } = this;
+    const { gameWindow } = gameProperties;
     this.data
       .forEach((item) => {
         if (item.type === 'brick') {
@@ -61,11 +54,6 @@ export default class GameFieldObjects {
         }
         if (item.type === 'thing') {
           const thing = item.object as Thing;
-          if (!thing.gameWindow || !thing.ctx) {
-            thing.gameWindow = gameWindow;
-            thing.ctx = ctx;
-          }
-          thing.gameWindow = gameWindow;
           thing.nextMove();
           if (
             thing.intersect(
@@ -100,11 +88,9 @@ export default class GameFieldObjects {
         }
         if (item.type === 'shoot') {
           const shot = (item.object as Shoot);
-          shot.gameWindow = gameWindow;
           shot.nextMove();
         }
-        item.object.setContext(this.ctx);
-        item.object.render(this.gameWindow);
+        item.object.render();
       });
     this.brickCount = count;
     this.removeThings(false);
@@ -165,8 +151,9 @@ export default class GameFieldObjects {
     };
 
     const ld = [...levelData];
-    const blockHeight = Math.round((this.gameWindow.height / 100) * LEVEL_BLOCKS_HEIGHT);
-    const blockWidth = Math.round((this.gameWindow.width / 100) * LEVEL_BLOCKS_WIDTH);
+    const { gameWindow } = gameProperties;
+    const blockHeight = Math.round((gameWindow.height / 100) * LEVEL_BLOCKS_HEIGHT);
+    const blockWidth = Math.round((gameWindow.width / 100) * LEVEL_BLOCKS_WIDTH);
     const spaceWidth = Math.round(blockWidth * LEVEL_BLOCK_SPACE);
     let y = 0;
     this.brickCount = 0;
@@ -191,8 +178,6 @@ export default class GameFieldObjects {
                   height: blockHeight,
                   level,
                   type,
-                  gameWindow: this.gameWindow,
-                  ctx: this.ctx,
                 }),
               type: block,
             },

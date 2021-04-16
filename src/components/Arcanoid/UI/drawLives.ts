@@ -1,11 +1,10 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { LIVES_BALL_RADIUS } from 'Components/Arcanoid/settings';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawLives = (w: GameWindowProps) => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
 
   // eslint-disable-next-line no-shadow
   const drawOneLive = (current: number) => {

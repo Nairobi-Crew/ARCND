@@ -4,7 +4,6 @@ import {
   SCORES_FONT,
   SCORES_STROKE_STYLE, SCORES_TEXT,
 } from 'Components/Arcanoid/settings';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
@@ -12,7 +11,7 @@ import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GamePropert
  * @param {GameWindowProps} w - объект с размерами игрового окна
  */
 const drawScore = (w: GameWindowProps) => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
 
   if (!ctx) {
     return;
