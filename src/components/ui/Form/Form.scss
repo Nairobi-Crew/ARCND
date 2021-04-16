@@ -4,13 +4,19 @@
   &__container {
     display: flex;
     flex-direction: row;
-    height: 100vh;
     align-items: center;
+
+    &_max_height {
+      height: 100vh;
+    }
   }
 
   &__empty_column {
     flex: 1;
-    height: 100vh;
+
+    &_max_height {
+      height: 100vh;
+    }
   }
 
   &__form_column {

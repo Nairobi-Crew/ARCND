@@ -1,13 +1,21 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import {
+  THING_COMPRESS_LETTER,
+  THING_EXPAND_LETTER,
+  THING_GLUE_LETTER,
+  THING_GUN_LETTER,
+  THING_SHOW_TYPE,
+} from 'Components/Arcanoid/settings';
 
 type brickStyle = {
   fillStyle: string
   strokeStyle: string
+  bonusLetter: string
 }
 
 // генерация стилей по уровню кирпича и по типу в перспективе
 const stylesByLevelType = (level: number, type = 0): brickStyle => {
-  const res: brickStyle = { fillStyle: 'red', strokeStyle: 'blue' };
+  const res: brickStyle = { fillStyle: 'red', strokeStyle: 'blue', bonusLetter: '' };
   if (level === 1) {
     res.strokeStyle = 'gray';
     res.fillStyle = 'white';
@@ -17,10 +25,48 @@ const stylesByLevelType = (level: number, type = 0): brickStyle => {
   } else if (level === 3) {
     res.strokeStyle = 'green';
     res.fillStyle = 'lime';
+  } else if (level === 4) {
+    res.strokeStyle = 'navy';
+    res.fillStyle = 'blue';
+  } else if (level === 5) {
+    res.strokeStyle = 'rgb(128, 0, 0)';
+    res.fillStyle = 'rgb(255, 0, 0)';
   }
+
+  switch (type) {
+    case 2:
+      res.bonusLetter = THING_GUN_LETTER;
+      break;
+    case 3:
+      res.bonusLetter = THING_GLUE_LETTER;
+      break;
+    case 4:
+      res.bonusLetter = THING_EXPAND_LETTER;
+      break;
+    case 5:
+      res.bonusLetter = THING_COMPRESS_LETTER;
+      break;
+    case 9:
+      res.bonusLetter = '?';
+      break;
+    default:
+      res.bonusLetter = '';
+  }
+
   return res;
 };
 
+/**
+ * Отрисовка кирпича
+ * @param {CanvasRenderingContext2D} ctx - контекст канваса
+ * @param {GameWindowProps} gameWindow - объект с размерами игрового поля
+ * @param {number} x - относительные координаты
+ * @param {number} y - относительные координаты
+ * @param {number} width - ширина блока
+ * @param height - высота блока
+ * @param {number} level - уровень
+ * @param {number} type - тип бонуса
+ */
 const drawBall = (
   ctx: CanvasRenderingContext2D, // сонтекст канваса
   gameWindow: GameWindowProps, // размеры игрового поля и его отступы
@@ -63,9 +109,26 @@ const drawBall = (
     width,
     height,
   );
+  ctx.stroke(); // рисуем контур
+
+  if (THING_SHOW_TYPE) {
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'black';
+    ctx.fillText(
+      style.bonusLetter,
+      x + gameWindow.left + width / 2, y + gameWindow.top + height / 2,
+    );
+    ctx.strokeText(
+      style.bonusLetter,
+      x + gameWindow.left + width / 2, y + gameWindow.top + height / 2,
+    );
+    ctx.closePath();
+  }
 
   // ctx.fill(); // заливаем
-  ctx.stroke(); // рисуем контур
 };
 
 export default drawBall;

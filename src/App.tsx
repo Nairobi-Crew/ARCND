@@ -19,6 +19,7 @@ import configureStore from 'Store/store';
 import { Provider } from 'react-redux';
 import { initialAppState } from 'Store/types';
 import Logout from 'Pages/Logout/Logout';
+import NewTopic from 'Pages/Forums/NewTopic/index';
 
 const store = configureStore(
   initialAppState,
@@ -28,39 +29,46 @@ export type AppDispatch = typeof store;
 
 const items: ILink[] = [
   {
-    auth: true,
+    auth: false,
     href: '/game',
     name: 'Игра',
+    unAuth: false,
   },
   {
     auth: false,
     href: '/signin',
     name: 'Вход',
+    unAuth: true,
   },
   {
     auth: true,
     href: '/profile',
     name: 'Профиль',
+    unAuth: false,
   },
   {
     auth: true,
     href: '/changepassword',
     name: 'Сменить пароль',
+    unAuth: false,
   },
   {
     auth: false,
     href: '/signup',
     name: 'Зарегистрироваться',
-  },
-  {
-    auth: true,
-    href: '/forum',
-    name: 'Форум',
+    unAuth: true,
   },
   {
     auth: false,
+    href: '/forum',
+    name: 'Форум',
+    unAuth: false,
+  },
+  {
+    auth: true,
     href: '/signout',
     name: 'Выход',
+    unAuth: false,
   },
 ];
 
@@ -105,6 +113,12 @@ const App = () => (
           </ErrorBoundary>
         </Route>
 
+        <Route path="/newtopic">
+          <ErrorBoundary>
+            <NewTopic />
+          </ErrorBoundary>
+        </Route>
+
         <Route path="/game" exact>
           <ErrorBoundary>
             <Arcanoid margin={CANVAS_MARGIN} />
@@ -123,7 +137,7 @@ const App = () => (
           </ErrorBoundary>
         </Route>
 
-        <Route exact path="/">
+        <Route path="/" exact>
           <ErrorBoundary>
             <Main items={items} auth />
           </ErrorBoundary>

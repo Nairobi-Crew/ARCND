@@ -3,13 +3,19 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
 
 const resolve = (p) => path.resolve(__dirname, `${p}`);
 
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
+  watchOptions: {
+    ignored: [
+      '**/node_modules',
+      'resources-manifest.json',
+    ],
+  },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
@@ -19,9 +25,17 @@ module.exports = {
     hot: true,
     open: true,
     historyApiFallback: true,
+    watchOptions: {
+      ignored: [
+        'resources-manifest.json',
+      ],
+    },
   },
   mode: isDev ? 'development' : 'production',
-  entry: './src/index.tsx',
+  entry: {
+    main: './src/index.tsx',
+    sw: './src/sw.js'
+  },
   devtool: 'inline-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html'],
@@ -40,7 +54,7 @@ module.exports = {
 
   },
   output: {
-    filename: 'main.[chunkhash].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {
@@ -79,14 +93,20 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyPlugin({
-      patterns: [{ from: 'static', to: './' }],
-    }),
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      favicon: './public/favicon.ico',
     }),
+    new ResourcesManifestPlugin(
+      {
+        match: {
+          TO_CACHE: /.+.(js|css|png|jpe?g|gif|svg|webp)$/,
+        },
+        swPath: 'src/service-worker.js',
+      },
+    ),
   ],
 };

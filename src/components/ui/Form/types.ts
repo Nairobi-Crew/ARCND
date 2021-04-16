@@ -7,6 +7,8 @@ export type OwnFormProps = {
   classList?: string[]
   caption?: string
   visible?: boolean
+  header?: boolean
+  maxHeight?: boolean
 } & FormHTMLAttributes<HTMLFormElement>;
 
 export type FormProps = FC<OwnFormProps>;

@@ -4,7 +4,12 @@ import './Form.scss';
 import Header from 'UI/Header/Header';
 
 const Form: FormProps = ({
-  children, onSubmit, caption, visible,
+  children,
+  onSubmit,
+  caption,
+  visible,
+  header = true,
+  maxHeight = true,
 }) => {
   const [formVisible, setFormVisible] = useState(visible === undefined || visible === true ? '' : 'hidden');
   const onSubmitHandler = (evt) => {
@@ -22,10 +27,17 @@ const Form: FormProps = ({
     }
   }, [visible]);
 
+  const classes = ['form__container', formVisible];
+  const classes_empty_column = ['form__empty_column'];
+  if (maxHeight) {
+    classes.push('form__container_max_height');
+    classes_empty_column.push('form__empty_column_max_height');
+  }
+
   return (
-    <div className={['form__container', formVisible].join(' ')}>
-      <div className="form__empty_column">
-        <Header />
+    <div className={classes.join(' ')}>
+      <div className={classes_empty_column.join(' ')}>
+        { header ? <Header /> : null }
       </div>
       <div className="form__form_column">
         <h1 className="form__form_column caption">{caption}</h1>

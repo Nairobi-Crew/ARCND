@@ -20,8 +20,22 @@ export interface IMessagesItem {
   header: string
   message: string
   time: number
-  parentMessage: number
+  parentMessage: string
   topic: string
 }
 
 export type Messages = IMessagesItem[];
+
+export interface IForumReducer {
+  state: EForumState
+  topics: Topics
+  messages: Messages
+  messagesLoaded: string
+}
+
+export enum EForumState {
+  UNKNOWN = 'FORUM:UNKNOWN',
+  FETCH_START = 'FORUM:FETCH_START',
+  FETCHED_TOPICS = 'FORUM:FETCHED_TOPICS',
+  FETCHED_MESSAGES = 'FORUM:FETCHED_MESSAGES',
+}

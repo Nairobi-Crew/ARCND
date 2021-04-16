@@ -1,9 +1,7 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
-  BALL_FILL_STYLE,
   BALL_SPEED_LIMIT,
-  BALL_STROKE_STYLE,
   EVENTS,
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
@@ -48,7 +46,7 @@ export class Ball extends BaseObject {
       return;
     }
     const { ctx } = this;
-    drawBall(ctx, this.gameWindow, this.x, this.y, this.radius, this.strokeStyle, this.fillStyle);
+    drawBall(ctx, this.gameWindow, this.x, this.y, this.radius);
   }
 
   changeXSpeed(speed: number, fromCurrent = false): void { // изменение скорости по оси Х
@@ -76,6 +74,9 @@ export class Ball extends BaseObject {
   }
 
   nextMove(): void { // обсчет кадра
+    if (gameProperties.onRocket) {
+      return;
+    }
     let needInvert = false;
     if (
       !gameProperties.moved
@@ -162,8 +163,6 @@ export const ball = new Ball({
   x: 950, // координаты по умолчанию
   y: 500,
   radius: 15, // радиус
-  fillStyle: BALL_FILL_STYLE, // стили. заполнения
-  strokeStyle: BALL_STROKE_STYLE, // и обводки
   speedX: 5, // сророст и по осям
   speedY: 5,
 });

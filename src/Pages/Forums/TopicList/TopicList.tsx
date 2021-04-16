@@ -1,6 +1,6 @@
 import React from 'react';
 import { TopicListProps } from 'Pages/Forums/TopicList/types';
-import TopicItem from 'Pages/Forums/TopicList/TopicItem/TopicItem';
+import TopicItem from 'Pages/Forums/TopicList/TopicItem/index';
 import './TopicList.scss';
 
 const TopicList: React.FC<TopicListProps> = ({ topics }) => (
@@ -15,9 +15,9 @@ const TopicList: React.FC<TopicListProps> = ({ topics }) => (
       <div className="topic_list_message">Последнее сообщение</div>
     </div>
     {
-      topics.map((topic, idx) => (
+      topics ? topics.map((topic, idx) => (
         <TopicItem topic={topic} key={topic.id} index={idx} />
-      ))
+      )) : null
     }
   </>
 );

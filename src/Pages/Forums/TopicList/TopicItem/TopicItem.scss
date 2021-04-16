@@ -1,13 +1,20 @@
 @import "src/common/vars";
 
+$background: #433b6a;
+$background-even: #433b6a;
+$background-odd: #4d4574;
+
 .topic__item {
-  background-color: $background-color;
-  border: 1px solid;
-  border-top: 0;
+  font-family: sans-serif;
+
+  &:nth-child(odd) {
+    background-color: $background-odd;
+  }
+
   width: 100%;
   display: flex;
   flex-direction: column;
-  font-size: 1.1em;
+  font-size: 1em;
 
   & a {
     color: #bbf;

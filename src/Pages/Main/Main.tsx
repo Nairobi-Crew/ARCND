@@ -1,20 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {MainProps} from 'Pages/Main/types';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { MainProps } from 'Pages/Main/types';
+import { Link } from 'react-router-dom';
 import './Main.scss';
-import {createSelector} from 'reselect';
-import {IAppState} from 'Store/types';
-import {useDispatch, useSelector} from 'react-redux';
-import {IAuthUserReducer} from 'Reducers/auth/auth';
-import {EAuthState} from 'Reducers/auth/types';
-import {getUserData} from 'Reducers/auth/actions';
+import { useDispatch } from 'react-redux';
+import { EAuthState } from 'Reducers/auth/types';
+import { getUserData } from 'Reducers/auth/actions';
+import { useAuthReselect } from 'Store/hooks';
 
 const Main: React.FC<MainProps> = ({ items }: MainProps) => {
   const dispatch = useDispatch();
-
-  const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
-  const auth = useSelector((state: IAppState) => authSelector(state)) as IAuthUserReducer;
-
+  const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
 
   useEffect(() => {
@@ -32,7 +27,13 @@ const Main: React.FC<MainProps> = ({ items }: MainProps) => {
   return (
     <li className="linkBlock">
       {
-        items.filter((item) => !item.auth || authState === item.auth).map(
+        items.filter(
+          (item) => {
+            if (authState) {
+              return !item.unAuth;
+            } return !item.auth;
+          },
+        ).map(
           (link) => (
             <ul key={link.href}>
               <div className="link">
