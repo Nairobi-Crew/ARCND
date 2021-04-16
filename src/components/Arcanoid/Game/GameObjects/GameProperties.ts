@@ -2,8 +2,6 @@ export interface IGameProperties {
   moved: boolean
   gameStarted: boolean
   onRocket: boolean
-  glue: boolean
-  gun: boolean
   score: number
   lives: number
   level: number
@@ -11,28 +9,29 @@ export interface IGameProperties {
   menuMode: boolean
 }
 
+/**
+ * Синглтон для хранения текущих параметров игры
+ */
 export class GameProperties {
   private static instance;
 
-  moved = false;
+  moved = false; //
 
-  gameStarted = false;
+  gameStarted = false; // игра началась
 
-  onRocket = true;
+  onRocket = true; // шарик на рокетке
 
-  glue = false;
+  score = 0; // счет
 
-  gun = false;
+  lives = 3; // жизни
 
-  score = 0;
+  level = 1; // текущий уровень
 
-  lives = 3;
+  lastShoot = null; // время последнего выстрела
 
-  level = 1;
+  ctx: CanvasRenderingContext2D; // контекст канваса
 
-  ctx: CanvasRenderingContext2D;
-
-  menuMode = false;
+  menuMode = false; // режим отображения меню
 
   constructor(props: IGameProperties) {
     if (GameProperties.instance) {
@@ -40,8 +39,6 @@ export class GameProperties {
     }
     this.ctx = props.ctx;
     this.gameStarted = props.gameStarted;
-    this.glue = props.glue;
-    this.gun = props.gun;
     this.level = props.level;
     this.lives = props.lives;
     this.menuMode = props.menuMode;
@@ -55,8 +52,6 @@ export class GameProperties {
 export const gameProperties = new GameProperties({
   ctx: null,
   gameStarted: false,
-  glue: false,
-  gun: false,
   level: 1,
   lives: 3,
   menuMode: false,

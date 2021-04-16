@@ -1,4 +1,4 @@
-import { IMessagesItem } from 'Pages/Forums/types';
+import { IMessagesItem } from 'Reducers/forum/types';
 
 export type ThreadProps = {
   messages?: IMessagesItem[]

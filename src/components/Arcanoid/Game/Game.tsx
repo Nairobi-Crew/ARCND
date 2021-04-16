@@ -5,23 +5,34 @@ import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { globalBus } from 'Util/EventBus';
-import { EVENTS, FPS, GAME_CANVAS_ID } from 'Components/Arcanoid/settings';
+import {
+  EVENTS, FPS, GAME_CANVAS_ID, GUN_HEIGHT, ROCKET_WIDTH, SHOOT_HEIGHT, SHOOT_INTERVAL, SHOOT_WIDTH,
+} from 'Components/Arcanoid/settings';
 import drawFrame from 'Components/Arcanoid/UI/drawFrame';
 import drawHelp from 'Components/Arcanoid/UI/drawHelp';
 import drawScore from 'Components/Arcanoid/UI/drawScore';
 import drawLevel from 'Components/Arcanoid/UI/drawLevel';
 import drawLives from 'Components/Arcanoid/UI/drawLives';
-import { levels } from 'Components/Arcanoid/levels/levelData';
+import levels from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { useDispatch } from 'react-redux';
+import {
+  decLive, endGame, go, incLevel, incScore,
+} from 'Reducers/game/actions';
+import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
+import { randomRange } from 'Components/Arcanoid/util/random';
+import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let canvasId;
 
+  const dispatch = useDispatch();
+
   const getWidth = () => { // ширина канваса
     if (canvasId) {
-      return canvasId.width;
+      // return canvasId.width;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -32,7 +43,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   const getHeight = () => { // высота канваса
     if (canvasId) {
-      return canvasId.height;
+      // return canvasId.height;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -109,12 +120,22 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.gameStarted = false; // игра на паузу
       gameProperties.onRocket = true; // шарик на рокетку
       gameProperties.level += 1; // увеличение уровня
-      gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
+      gameObjects.removeShoots();
+      dispatch(incLevel());
+      rocket.gun = 0;
+      rocket.glue = 0;
+      rocket.width = ROCKET_WIDTH;
+      const level = Math.min(gameProperties.level - 1, levels.length - 1);
+      gameObjects.generateLevel(
+        levels[level],
+      ); // генерация уровня
     }
     ball.nextMove(); // перемещение шарика на следующий кадр
-    rocket.nextMove(); // перемещение рокетки на следующий кадр
+    rocket.nextMove(); // перемещение ракетки на следующий кадр
     const context = gameObjects.ctx;
     const gameContext = getGameContext();
+    gameObjects.gameWindow = gameContext;
+
     context.beginPath();
     context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
     gameObjects.render(); // отрисовка кирпичей
@@ -158,12 +179,31 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameProperties.gameStarted = !gameProperties.gameStarted; // переключение режима паузы
         gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
       }
-      if (key === ' ') { // пробул
+      if (key === ' ') { // пробел
         if (!gameProperties.gameStarted) { // если игра на паузе
           gameProperties.gameStarted = true; // снимаем с паузы
+          dispatch(go());
           gameProperties.onRocket = false; // отвязка шарика от рокетки
           if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
             ball.invertYDirection();
+          }
+        } else {
+          gameProperties.onRocket = false;
+          if (rocket.glue) {
+            rocket.glue -= 1;
+          }
+          const shot = gameProperties.lastShoot || 0;
+          if (rocket.gun) {
+            rocket.gun -= 1;
+            if (Date.now() - shot > SHOOT_INTERVAL) {
+              gameProperties.lastShoot = Date.now();
+              const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
+              const y = rocket.y
+                - SHOOT_HEIGHT - rocket.height
+                - gameObjects.gameWindow.top - GUN_HEIGHT;
+              const object = new Shoot({ x, y });
+              gameObjects.add({ object, type: 'shoot' });
+            }
           }
         }
       } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
@@ -194,16 +234,25 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     };
 
     const onGoal = () => { // Обработка события ГОЛ
+      gameObjects.removeThings(true);
+      rocket.width = ROCKET_WIDTH;
+      rocket.glue = 0;
+      rocket.gun = 0;
+      gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+        dispatch(endGame());
+        rocket.width = ROCKET_WIDTH;
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
         gameProperties.lives = 3; // теперь жизней 3
         gameProperties.onRocket = true; // шарик приклеен к рокетке
-        gameProperties.gameStarted = false; // игра на паузе
+        // gameProperties.gameStarted = false; // игра на паузе
         gameProperties.score = 0; // счет 0
         gameProperties.level = 1; // уровень 1
+        history.push('/leaderboard');
         gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
       } else { // если не последняя
+        dispatch(decLive());
         gameProperties.lives -= 1; // уменьшаем количество жизней
         gameProperties.onRocket = true; // шарик на рокетке
         gameProperties.gameStarted = false; // на паузу
@@ -212,6 +261,44 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
     const onBallReturn = () => { // если шарик отбит ракеткой
       gameProperties.score += 1; // счет увеличивается
+      if (rocket.glue) {
+        gameProperties.onRocket = true;
+      }
+      dispatch(incScore(1));
+    };
+
+    const onBlockCrash = (score: number, block: Brick) => {
+      dispatch(incScore(score));
+      let thingType: ThingType = 'none';
+      let blockType = block.type;
+      if (blockType === 9) {
+        blockType = randomRange(1, 8);
+      }
+      switch (blockType) {
+        case 2:
+          thingType = 'gun';
+          break;
+        case 3:
+          thingType = 'glue';
+          break;
+        case 4:
+          thingType = 'expand';
+          break;
+        case 5:
+          thingType = 'compress';
+          break;
+        default:
+      }
+      if (thingType !== 'none') {
+        const x = block.x + Math.round(block.width / 2);
+        const y = block.y + Math.round(block.height / 2);
+        gameObjects.add({ object: new Thing({ x, y, thingType }), type: 'thing' });
+      }
+    };
+
+    const onBlockShoot = () => {
+      gameProperties.score += 1;
+      dispatch(incScore(1));
     };
     // получаем размер поля
     gameObjects.gameWindow = getGameContext();
@@ -226,12 +313,16 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.GOAL, onGoal);
     // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
+    globalBus.on(EVENTS.BLOCK, onBlockCrash);
+    globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
     loop(); // запуск игрового цикла
     return () => { // очистка обработчиков события
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
+      globalBus.off(EVENTS.BLOCK, onBlockCrash);
+      globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
     };
   }, []);
 

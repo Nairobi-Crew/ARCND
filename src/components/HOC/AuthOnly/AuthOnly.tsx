@@ -30,7 +30,7 @@ function AuthOnly<T>(Component: React.ComponentType<T>, redirectTo = '/signin') 
 
     if (state === EAuthState.LOGGED) {
       return (<Component {...props} />);
-    } if (state === EAuthState.LOGOUT || state === EAuthState.LOGIN_ERROR) {
+    } if ((state === EAuthState.LOGOUT || state === EAuthState.LOGIN_ERROR) && redirectTo !== '') {
       return <Redirect to={redirectTo} />;
     }
     return (<></>);

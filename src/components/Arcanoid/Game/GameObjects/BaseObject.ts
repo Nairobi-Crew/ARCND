@@ -58,15 +58,6 @@ export default class BaseObject {
     }
   }
 
-  offScreen(): boolean {
-    return (
-      this.x >= 0
-      && this.x <= this.gameWindow.width
-      && this.y >= 0
-      && this.y <= this.gameWindow.height
-    );
-  }
-
   move(deltaX: number, deltaY: number) {
     this.x += deltaX;
     this.y += deltaY;

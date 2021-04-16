@@ -1,13 +1,18 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 
+/**
+ * Рисование рамки вокруг игрового поля
+ * @param {GameWindowProps} w
+ */
 const drawFrame = (w: GameWindowProps): void => {
   const { ctx } = gameObjects;
   if (!ctx) {
     return;
   }
   ctx.beginPath();
-  ctx.strokeStyle = '#f00';
+  ctx.strokeStyle = '#312b4e';
+  ctx.lineWidth = 1;
   ctx.rect(w.left, w.top, w.width, w.height);
   ctx.stroke();
 };

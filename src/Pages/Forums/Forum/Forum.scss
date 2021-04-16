@@ -7,6 +7,8 @@
   height: 100vh;
   padding: 1em;
   flex-direction: column;
+  overflow: auto;
+  font-family: sans-serif;
 
   &_tools {
     width: 100%;
@@ -72,4 +74,14 @@
       }
     }
   }
+}
+
+.align-left {
+  display: inline-block;
+}
+
+.align-right {
+  display: inline-block;
+  margin-right: 10px;
+  float: right;
 }

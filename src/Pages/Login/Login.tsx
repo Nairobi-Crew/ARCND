@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { LoginProps } from 'Pages/Login/types';
-import Form from 'UI/Form/Form';
-import Input from 'UI/Input/Input';
-import Button from 'UI/Button/Button';
+import Form from 'UI/Form/index';
+import Input from 'UI/Input/index';
+import Button from 'UI/Button/index';
 import { getUserData, loginUser, logoutUser } from 'Reducers/auth/actions';
 import './Login.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
+import { useDispatch } from 'react-redux';
 import { EAuthState } from 'Reducers/auth/types';
-import { IAppState } from 'Store/types';
-import { IAuthUserReducer } from 'Reducers/auth/auth';
+import { useAuthReselect } from 'Store/hooks';
 
 const Login: React.FC<LoginProps> = ({ caption }) => {
   const [login, setLogin] = useState('');
@@ -18,13 +16,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   const [passwordMessage, setPasswordMessage] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
-
-  const authState = createSelector(
-    (state: IAppState) => state.auth,
-    (auth) => auth as IAuthUserReducer,
-  );
-  const auth = useSelector<IAppState>((state) => authState(state)) as IAuthUserReducer;
-
+  const auth = useAuthReselect();
   const loginButtonHandle = () => {
     dispatch(loginUser(login, password));
   };
@@ -42,7 +34,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
 
   useEffect(() => {
     if (auth.state === EAuthState.LOGGED) {
-      history.push('/profile');
+      history.push('/');
     } else {
       setPasswordMessage(auth.reason);
     }
@@ -72,8 +64,8 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
           errorMessage={passwordMessage}
         />
         <Button onClick={loginButtonHandle} buttonType="round">login</Button>
-        <Button className="logout_button" onClick={logoutButtonHandle} buttonType="round">logout</Button>
-        <a className="login__link" href="/signup">Sign up</a>
+        {auth.state === EAuthState.LOGGED ? <Button className="logout_button" onClick={logoutButtonHandle} buttonType="round">logout</Button> : null}
+        <Link className="login__link" to="/signup">Sign up</Link>
       </Form>
     </>
   );

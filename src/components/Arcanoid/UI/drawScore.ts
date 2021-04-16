@@ -7,6 +7,10 @@ import {
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
+/**
+ * Отрисовка счета
+ * @param {GameWindowProps} w - объект с размерами игрового окна
+ */
 const drawScore = (w: GameWindowProps) => {
   const { ctx } = gameObjects;
 

@@ -1,4 +1,4 @@
-import { Topics } from 'Pages/Forums/types';
+import { Topics } from 'Reducers/forum/types';
 
 export type TopicListProps = {
   caption?: string
