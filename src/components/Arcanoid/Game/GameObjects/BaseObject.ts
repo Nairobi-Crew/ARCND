@@ -11,8 +11,9 @@ export interface IBaseObjectProps {
 
 export type DrawObjectProps = IBaseObjectProps;
 
+// класс базового объекта. от него наследуем все, что отрисовывать по requestAnimationFrame
 export default class BaseObject {
-  gameWindow: GameWindowProps;
+  gameWindow: GameWindowProps; // размер игрового окна и отступы
 
   fillStyle: string;
 

@@ -3,6 +3,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const resolve = (p) => path.resolve(__dirname, `${p}`);
 
@@ -21,6 +22,7 @@ module.exports = {
   },
   mode: isDev ? 'development' : 'production',
   entry: './src/index.tsx',
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html'],
     alias: {
@@ -31,7 +33,9 @@ module.exports = {
       UI: resolve('src/components/ui/'),
       Config: resolve('src/config/'),
       Util: resolve('src/util/'),
-      Common: resolve('srs/common')
+      Common: resolve('src/common/'),
+      Store: resolve('src/Store/'),
+      Reducers: resolve('src/Store/reducers/'),
     },
 
   },
@@ -47,7 +51,7 @@ module.exports = {
         exclude: /node_modules/,
       }, {
         test: /\.(scss|css)$/,
-        use: [MiniCssExtractPlugin.loader,'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
 
       {
@@ -75,6 +79,9 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [{ from: 'static', to: './' }],
+    }),
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),

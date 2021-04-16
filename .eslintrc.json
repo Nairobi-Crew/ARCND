@@ -2,17 +2,21 @@
   "extends": ["airbnb"],
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "react-hooks"
   ],
   "parserOptions": {
     "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
     "sourceType": "module" // Allows for the use of imports
   },
   "rules": {
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "camelcase": "off",
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-param-reassign": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react/jsx-filename-extension": [
       2,
       {

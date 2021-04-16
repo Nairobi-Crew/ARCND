@@ -1,5 +1,5 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import {gameObjects} from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 
 const drawFrame = (w: GameWindowProps): void => {
   const { ctx } = gameObjects;
@@ -7,8 +7,9 @@ const drawFrame = (w: GameWindowProps): void => {
     return;
   }
   ctx.beginPath();
-  ctx.strokeStyle = '#f00';
-  ctx.rect(w.top, w.left, w.width, w.height);
+  ctx.strokeStyle = '#312b4e';
+  ctx.lineWidth = 1;
+  ctx.rect(w.left, w.top, w.width, w.height);
   ctx.stroke();
 };
 
