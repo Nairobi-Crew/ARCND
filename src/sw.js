@@ -4,19 +4,19 @@ const URLS = [
   '/index.html',
 ];
 
-addEventListener("install", event => {
+addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log("Opened cache");
         return cache.addAll(URLS);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         throw err;
-      })
+      }),
   );
-})
+});
 
 addEventListener('fetch', (event) => {
   event.respondWith(
@@ -24,32 +24,27 @@ addEventListener('fetch', (event) => {
       .then((response) => {
         if (response !== undefined) {
           return response;
-        } else {
-          return fetch(event.request)
-            .then((response) => {
-              let responseClone = response.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseClone);
-                });
-              return response;
-            }).catch((err) => {
-              return console.log(err);
-            });
         }
-      })
+        return fetch(event.request)
+          .then((response) => {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseClone);
+              });
+            return response;
+          }).catch((err) => console.log(err));
+      }),
   );
 });
 
-addEventListener("activate", (event) => {
+addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then(cacheNames => {
-        return Promise.all(
-          cacheNames
-            .filter(name => true)
-            .map(name => caches.delete(name))
-        )
-      })
+      .then((cacheNames) => Promise.all(
+        cacheNames
+          .filter((name) => true)
+          .map((name) => caches.delete(name)),
+      )),
   );
 });

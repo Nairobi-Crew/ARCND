@@ -10,12 +10,13 @@
 
   &__title {
     @include f-bold(xxl);
+
     margin-bottom: 40px;
   }
 
-
   &__subtitle {
     @include f-norm(l);
+
     margin-bottom: 40px;
   }
 

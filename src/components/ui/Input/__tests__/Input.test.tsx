@@ -37,5 +37,4 @@ describe('Render Input', () => {
     expect(wrapper.find('.input__error-message').at(0).text()).toEqual(message);
     expect(wrapper.prop('errorMessage')).toEqual(message);
   });
-  
 });

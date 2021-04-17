@@ -1,8 +1,14 @@
 {
+  "plugins": [
+    "stylelint-scss"
+  ],
   "extends": "stylelint-config-standard",
   "rules": {
-    "color-hex-case": "lower"
-  },
+    "color-hex-case": "lower",
+      "at-rule-no-unknown": [true, {
+        "ignoreAtRules": ["mixin","if","else","include"]
+      }]
+    },
   "ignoreFiles": [
     "dist/*"
   ]

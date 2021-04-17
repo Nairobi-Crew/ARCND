@@ -24,6 +24,7 @@ import {
 import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { randomRange } from 'Components/Arcanoid/util/random';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
+import {pushResult} from "Reducers/leaderboard/actions";
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let canvasId;
@@ -242,6 +243,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
         dispatch(endGame());
+        dispatch(pushResult({score: gameProperties.score, avatar: '', level:gameProperties.level, name:'name'}));
         rocket.width = ROCKET_WIDTH;
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
         gameProperties.lives = 3; // теперь жизней 3
