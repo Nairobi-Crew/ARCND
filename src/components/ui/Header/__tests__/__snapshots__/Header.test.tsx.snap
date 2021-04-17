@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Header Render correct 1`] = `
+<header
+  className="header"
+>
+  <a
+    className="header__title"
+    href="/"
+    onClick={[Function]}
+  >
+    <h1>
+      ARCND
+    </h1>
+  </a>
+</header>
+`;

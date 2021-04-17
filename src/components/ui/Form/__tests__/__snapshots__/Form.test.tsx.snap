@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Form Render form correct 1`] = `
+<div
+  className="form__container  form__container_max_height"
+>
+  <div
+    className="form__empty_column form__empty_column_max_height"
+  >
+    <header
+      className="header"
+    >
+      <a
+        className="header__title"
+        href="/"
+        onClick={[Function]}
+      >
+        <h1>
+          ARCND
+        </h1>
+      </a>
+    </header>
+  </div>
+  <div
+    className="form__form_column"
+  >
+    <h1
+      className="form__form_column caption"
+    />
+    <form
+      onSubmit={[Function]}
+    >
+      <div
+        className="input"
+      >
+        <label
+          className="input__label"
+        >
+          <input
+            className="input__input"
+            onInput={[Function]}
+            placeholder="Test"
+            value="Test value"
+          />
+          <span
+            className="input__label-text"
+          >
+            Test
+          </span>
+        </label>
+        <span
+          className="input__error-message"
+        />
+      </div>
+    </form>
+  </div>
+  <div
+    className="form__empty_column"
+  />
+</div>
+`;
