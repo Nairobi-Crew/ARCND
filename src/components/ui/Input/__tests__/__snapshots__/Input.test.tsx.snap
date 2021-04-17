@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Input Render correct 1`] = `
+<div
+  className="input"
+>
+  <label
+    className="input__label"
+  >
+    <input
+      className="input__input"
+      disabled={false}
+      onChange={[Function]}
+      onInput={[Function]}
+      value="TestValue"
+    />
+    <span
+      className="input__label-text"
+    />
+  </label>
+  <span
+    className="input__error-message"
+  >
+    Test error message
+  </span>
+</div>
+`;

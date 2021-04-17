@@ -11,11 +11,15 @@ $tablet: 1200px;
     @media only screen and (max-width: $mobile - 1px) {
       @content;
     }
-  } @else if $media == tablet {
+  }
+
+  @else if $media == tablet {
     @media only screen and (max-width: $tablet - 1px) {
       @content;
     }
-  } @else if $media == s_tablet {
+  }
+
+  @else if $media == s_tablet {
     @media only screen and (max-width: $s-tablet - 1px) {
       @content;
     }
@@ -29,31 +33,41 @@ $tablet: 1200px;
       weight: 400;
       size: $f-xs;
     }
-  } @else if $size == s {
+  }
+
+  @else if $size == s {
     font: {
       family: $ff;
       weight: 400;
       size: $f-s;
     }
-  } @else if $size == m {
+  }
+
+  @else if $size == m {
     font: {
       family: $ff;
       weight: 400;
       size: $f-m;
     }
-  } @else if $size == l {
+  }
+
+  @else if $size == l {
     font: {
       family: $ff;
       weight: 400;
       size: $f-l;
     }
-  } @else if $size == xl {
+  }
+
+  @else if $size == xl {
     font: {
       family: $ff;
       weight: 400;
       size: $f-xl;
     }
-  } @else if $size == xxl {
+  }
+
+  @else if $size == xxl {
     font: {
       family: $ff;
       weight: 400;
@@ -69,31 +83,41 @@ $tablet: 1200px;
       weight: 600;
       size: $f-xs;
     }
-  } @else if $size == s {
+  }
+
+  @else if $size == s {
     font: {
       family: $ff;
       weight: 600;
       size: $f-s;
     }
-  } @else if $size == m {
+  }
+
+  @else if $size == m {
     font: {
       family: $ff;
       weight: 600;
       size: $f-m;
     }
-  } @else if $size == l {
+  }
+
+  @else if $size == l {
     font: {
       family: $ff;
       weight: 600;
       size: $f-l;
     }
-  } @else if $size == xl {
+  }
+
+  @else if $size == xl {
     font: {
       family: $ff;
       weight: 600;
       size: $f-xl;
     }
-  } @else if $size == xxl {
+  }
+
+  @else if $size == xxl {
     font: {
       family: $ff;
       weight: 600;

@@ -1,22 +1,21 @@
-import React, {Component} from 'react';
-import {State} from 'Components/ErrorBoundary/types';
-import {globalBus} from 'Util/EventBus';
-import { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
+import { State } from 'Components/ErrorBoundary/types';
+import { globalBus } from 'Util/EventBus';
 
-globalBus.on('COMPONENT_ERROR',(error, errorInfo)=> {
-  console.error({error,errorInfo})
-})
+globalBus.on('COMPONENT_ERROR', (error, errorInfo) => {
+  console.error({ error, errorInfo });
+});
 
 class ErrorBoundary extends Component<{ children: ReactNode }> {
-  state: State = {hasError: false};
+  state: State = { hasError: false };
 
   static getDerivedStateFromError(error) {
     // Обновить состояние с тем, чтобы следующий рендер показал запасной UI.
-    return {hasError: true};
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, errorInfo) {
-    this.setState({hasError: error})
+    this.setState({ hasError: error });
     globalBus.emit('COMPONENT_ERROR', error, errorInfo);
   }
 
@@ -31,4 +30,4 @@ class ErrorBoundary extends Component<{ children: ReactNode }> {
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;
