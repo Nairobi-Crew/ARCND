@@ -3,7 +3,7 @@ import { IUser, Nullable } from 'Store/types';
 
 export interface ILeaderboardReducer {
   state: ELeaderboardAction
-  leaders: ILeaderResult[]
+  leaders: {data:ILeaderResult}[]
 }
 
 export const defaultLeaderboardReducer: ILeaderboardReducer = {
