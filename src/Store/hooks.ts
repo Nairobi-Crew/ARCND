@@ -42,3 +42,10 @@ export const useForumMessages = () => {
   }));
   return useSelector((state: IAppState) => forumSelector(state));
 };
+
+export const useLeaderboardLeaders = () => {
+  const leaderboardSelector = createSelector((state: IAppState) => state.leader, ({state,leaders}) => ({
+  state,leaders
+  }));
+  return useSelector((state: IAppState) => leaderboardSelector(state));
+};

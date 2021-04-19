@@ -1,59 +1,30 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {LeaderboardProps} from 'Pages/Leaderboard/types';
-import Leader from "Pages/Leaderboard/Leader/Leader";
-import './Leaderboard.scss'
+import Leader from 'Pages/Leaderboard/Leader/Leader';
+import './Leaderboard.scss';
+import {useDispatch} from "react-redux";
+import {getLeaders} from 'Reducers/leaderboard/actions';
+import {useLeaderboardLeaders} from "Store/hooks";
+import {ELeaderboardAction} from "Reducers/leaderboard/types";
 
 const Leaderboard: LeaderboardProps = ({...props}) => {
-  const leaders = [
-    {
-      name: 'name1',
-      index: '1',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
 
-    {
-      name: 'name2',
-      index: '2',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
+  const dispatch = useDispatch();
 
-    {
-      name: 'name3',
-      index: '3',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
+  const leaders = useLeaderboardLeaders();
+  useEffect(() => {
+    if (leaders.state === ELeaderboardAction.UNKNOWN) {
+      dispatch(getLeaders({cursor: 0, limit: 10}))
+    }
+  }, [leaders]);
 
-    {
-      name: 'name4',
-      index: '4',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
-    {
-      name: 'name5',
-      index: '5',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
-    {
-      name: 'name6',
-      index: '6',
-      avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-      score: '1000',
-    },
 
-  ]
   return (
     <ul className="leaderboard">
-      {leaders.map(({name, index, avatar, score}) =>
-        <Leader key={name} name={name} index={index} avatar={avatar} score={score} />)
-      }
-
+      {leaders.leaders
+        .map(({name, avatar, score,}, i) => <Leader key={name} name={name} index={i + 1} avatar="https://images.squarespace-cdn.com/content/v1/5489bd9ae4b08b416ef124ea/1551796492448-G53ZGIG9MD8JBDP34A19/ke17ZwdGBToddI8pDm48kCAgykdLW9iAzCXIGQWv3UZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1UbNWIFdbAwZkj6QBZiniZ69MY7oti88DqO2IXex58sFjOpYghpI-Ha_TwZsqqmJXng/placeholder.png" score={score} />)}
     </ul>
   );
-}
+};
 
 export default Leaderboard;
