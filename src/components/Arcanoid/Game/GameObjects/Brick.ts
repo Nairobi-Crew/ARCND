@@ -1,5 +1,4 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
@@ -34,12 +33,13 @@ export class Brick extends BaseObject {
    * Отрисовка блока
    * @param {GameWindowProps | undefined} gameWindow
    */
-  render(gameWindow: GameWindowProps | undefined = undefined): void {
-    super.render(gameWindow);
-    if (!this.gameWindow) {
+  render(): void {
+    super.render();
+    super.render();
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
       return;
     }
-    const { ctx } = this;
     drawBrick(ctx, gameWindow, this.x, this.y, this.width, this.height, this.level, this.type);
   }
 

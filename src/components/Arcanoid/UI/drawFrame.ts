@@ -1,12 +1,12 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
  * Рисование рамки вокруг игрового поля
  * @param {GameWindowProps} w
  */
 const drawFrame = (w: GameWindowProps): void => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
   if (!ctx) {
     return;
   }

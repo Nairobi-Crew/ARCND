@@ -1,12 +1,12 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawMenu = (gameWindow: GameWindowProps) => {
   const menuWidth = Math.round(gameWindow.width / 8);
   const menuHeight = Math.round(gameWindow.height / 8);
   const centerX = Math.round((gameWindow.left + gameWindow.width) / 2);
   const centerY = Math.round((gameWindow.top + gameWindow.height) / 2);
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
   ctx.beginPath();
   ctx.shadowBlur = 10;
   ctx.shadowOffsetX = 10;

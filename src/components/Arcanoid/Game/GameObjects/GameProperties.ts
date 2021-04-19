@@ -1,3 +1,5 @@
+import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+
 export interface IGameProperties {
   moved: boolean
   gameStarted: boolean
@@ -6,6 +8,7 @@ export interface IGameProperties {
   lives: number
   level: number
   ctx: CanvasRenderingContext2D
+  gameWindow: GameWindowProps;
   menuMode: boolean
 }
 
@@ -31,6 +34,8 @@ export class GameProperties {
 
   ctx: CanvasRenderingContext2D; // контекст канваса
 
+  gameWindow: GameWindowProps;
+
   menuMode = false; // режим отображения меню
 
   constructor(props: IGameProperties) {
@@ -45,6 +50,7 @@ export class GameProperties {
     this.moved = props.moved;
     this.score = props.score;
     this.onRocket = props.onRocket;
+    this.gameWindow = props.gameWindow;
     GameProperties.instance = this;
   }
 }
@@ -58,4 +64,5 @@ export const gameProperties = new GameProperties({
   moved: true,
   score: 0,
   onRocket: true,
+  gameWindow: undefined,
 });
