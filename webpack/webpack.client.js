@@ -1,15 +1,16 @@
 const webpack = require('webpack');
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require('path');
 
-const resolve = (p) => path.resolve(__dirname, `${p}`);
-
-const isDev = process.env.NODE_ENV === 'development';
+const config = require('./webpack.common').createConfig({
+  target: 'client',
+});
 
 module.exports = {
+  ...config,
   watchOptions: {
     ignored: [
       '**/node_modules',
@@ -31,37 +32,12 @@ module.exports = {
       ],
     },
   },
-  mode: isDev ? 'development' : 'production',
-  entry: './src/index.tsx',
-  devtool: 'inline-source-map',
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.css', '.scss', '.html'],
-    alias: {
-      App: resolve('src/App/'),
-      Pages: resolve('src/Pages/'),
-      '@': resolve('src/'),
-      Components: resolve('src/components/'),
-      UI: resolve('src/components/ui/'),
-      Config: resolve('src/config/'),
-      Util: resolve('src/util/'),
-      Common: resolve('src/common/'),
-      Store: resolve('src/Store/'),
-      Reducers: resolve('src/Store/reducers/'),
-      Server: resolve('src/server/'),
-    },
 
-  },
-  output: {
-    filename: 'main.[chunkhash].js',
-    path: path.resolve(__dirname, 'dist'),
-  },
   module: {
+    ...config.module,
+
     rules: [
-      {
-        test: /\.ts(x)?$/,
-        use: ['ts-loader'],
-        exclude: /node_modules/,
-      },
+      ...config.module.rules,
       {
         test: /\.(scss|css)$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
@@ -90,15 +66,19 @@ module.exports = {
       },
     ],
   },
+
   plugins: [
+    ...config.plugins,
+
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'style.[contenthash].css',
+      // filename: 'style.[contenthash].css',
+      filename: 'style.css',
     }),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      favicon: './public/favicon.ico',
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: './public/index.html',
+    //   favicon: './public/favicon.ico',
+    // }),
     new ResourcesManifestPlugin(
       {
         match: {

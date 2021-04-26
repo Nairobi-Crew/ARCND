@@ -1,38 +1,62 @@
 {
-    "compilerOptions": {
-        "target": "es2020",
-        "lib": [
-            "dom",
-            "es2020",
-            "scripthost",
-            "es2015.proxy"
-        ],
-        "esModuleInterop": false,
-        "outDir": "static/build",
-        "rootDir": "src",
-        "allowSyntheticDefaultImports": true,
-        "module": "ES2015",
-        "jsx": "react",
-        "baseUrl": "./",
-        "moduleResolution": "Node",
-        "paths": { // Указываем ссылки до директорий в проекте, чтобы каждый раз в импортах не писать относительные пути
-            "App": ["src/App"],
-            "Pages/*": ["src/Pages/*"],
-            "Components/*": ["src/components/*"],
-            "UI/*": ["src/components/ui/*"],
-            "Config/*": ["src/config/*"],
-          "Util/*": ["src/util/*"],
-          "Reducers/*": ["src/Store/reducers/*"],
-          "Store/*": ["src/Store/*"]
-        }
-    },
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "alwaysStrict": true,
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": [
+      "dom",
+      "es2020",
+      "scripthost",
+      "es2015.proxy"
+    ],
+    "esModuleInterop": false,
+    "outDir": "static/build",
+    "rootDir": "src",
+    "allowSyntheticDefaultImports": true,
+    "module": "es2015",
+    "jsx": "react",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "paths": {
+      // Указываем ссылки до директорий в проекте, чтобы каждый раз в импортах не писать относительные пути
+      "App": [
+        "src/App"
+      ],
+      "Pages/*": [
+        "src/Pages/*"
+      ],
+      "Components/*": [
+        "src/components/*"
+      ],
+      "UI/*": [
+        "src/components/ui/*"
+      ],
+      "Config/*": [
+        "src/config/*"
+      ],
+      "Util/*": [
+        "src/util/*"
+      ],
+      "Reducers/*": [
+        "src/Store/reducers/*"
+      ],
+      "Store/*": [
+        "src/Store/*"
+      ],
+      "Common/*": [
+        "src/common/*"
+      ],
+      "Server/*": [
+        "src/server/*"
+      ]
+    }
+  },
+  "noImplicitAny": true,
+  "noUnusedLocals": true,
+  "noUnusedParameters": true,
+  "alwaysStrict": true,
+  "sourceMap": true,
+  "strictNullChecks": true,
+  "exclude": [
+    "node_modules"
+  ]
 }

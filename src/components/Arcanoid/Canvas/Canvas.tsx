@@ -6,8 +6,8 @@ import './Canvas.scss';
 
 const Canvas: React.FC<CanvasProps> = () => { // компонент канваса
   const [gameContext, setGameContext] = useState(null); // контекст канваса
-  const [width, setWidth] = useState(window.innerWidth); // размер канваса по умолчанию
-  const [height, setHeight] = useState(window.innerHeight);
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0); // размер канваса по умолчанию
+  const [height, setHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(); // ссылка на канвас
 
   useEffect(() => { // эффект для первой отрисовки
@@ -17,14 +17,18 @@ const Canvas: React.FC<CanvasProps> = () => { // компонент канвас
     }
 
     const onResize = () => { // на ресайз окна обработчик
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
+      setWidth(typeof window !== 'undefined' ? window.innerWidth : 0);
+      setHeight(typeof window !== 'undefined' ? window.innerHeight : 0);
     };
 
-    window.addEventListener('resize', onResize); // подписывание на ресайз
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', onResize); // подписывание на ресайз
+    }
 
     return () => {
-      window.removeEventListener('resize', onResize); // отписывание от события
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', onResize); // отписывание от события
+      }
     };
   }, []);
 

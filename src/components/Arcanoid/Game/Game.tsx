@@ -295,9 +295,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     // gameObjects.generateLevel(levels[gameProperties.level - 1]);
 
     // события на нажатие клавиши
-    window.addEventListener('keydown', onKeyDown);
-    // события на отпускание клавиши
-    window.addEventListener('keyup', onKeyUp);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', onKeyDown);
+      // события на отпускание клавиши
+      window.addEventListener('keyup', onKeyUp);
+    }
     // события на ГОЛ
     globalBus.on(EVENTS.GOAL, onGoal);
     // события на отбивание шарика
@@ -306,8 +308,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
     loop(); // запуск игрового цикла
     return () => { // очистка обработчиков события
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+      }
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
       globalBus.off(EVENTS.BLOCK, onBlockCrash);

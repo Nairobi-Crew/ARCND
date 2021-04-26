@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MainProps } from 'Pages/Main/types';
 import { Link } from 'react-router-dom';
 import './Main.scss';
 import { useDispatch } from 'react-redux';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
 import { useAuthReselect } from 'Store/hooks';
+import routes from 'Config/routes';
 
-const Main: React.FC<MainProps> = ({ items }: MainProps) => {
+const Main: React.FC = () => {
   const dispatch = useDispatch();
   const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
@@ -27,17 +27,21 @@ const Main: React.FC<MainProps> = ({ items }: MainProps) => {
   return (
     <li className="linkBlock">
       {
-        items.filter(
+        routes.filter(
           (item) => {
-            if (authState) {
-              return !item.unAuth;
-            } return !item.auth;
+            if (item.visibility === 'never') {
+              return false;
+            } if (item.visibility === 'always') {
+              return true;
+            } if (authState) {
+              return item.visibility !== 'unauth';
+            } return item.visibility !== 'auth';
           },
         ).map(
           (link) => (
-            <ul key={link.href}>
+            <ul key={link.path}>
               <div className="link">
-                <Link to={link.href}>{link.name}</Link>
+                <Link to={link.path}>{link.title}</Link>
               </div>
             </ul>
           ),
