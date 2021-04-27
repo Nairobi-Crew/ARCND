@@ -1,8 +1,8 @@
-const VERSION = 253;
+const VERSION = 359;
 const APP_NAME = 'Arcanoid-Game';
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 const BUILD_FOLDER = '';
-const PRECACHE_MANIFEST = `${BUILD_FOLDER}/resources-manifest.json`;
+const PRECACHE_MANIFEST = `${BUILD_FOLDER}/client/resources-manifest.json`;
 
 function cacheOrNetwork(event) {
   const clonedRequest = event.request.clone();

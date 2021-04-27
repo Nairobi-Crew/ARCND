@@ -13,7 +13,7 @@ function renderTemplate({
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="/client/${cssPath}"/>
+        <link rel="stylesheet" href="/${cssPath}"/>
 
         <title>Sprint 7</title>
       </head>
@@ -24,8 +24,25 @@ function renderTemplate({
         <div id="root">${content}</div>
 
         <script type="application/json" id="data">${data.replace(/</g, '&lt;')}</script>
-        <script src="/client/service-worker.js"></script>
-        <script src="/client/${jsPath}"></script>
+        <script src="/${jsPath}"></script>
+        <script>
+        function startServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('client/service-worker.js').then((registration) => {
+              // eslint-disable-next-line no-console
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch((error) => {
+              // eslint-disable-next-line no-console
+              console.log('Client ServiceWorker registration failed: ', error);
+            });
+          });
+        }
+}
+
+startServiceWorker();
+
+        </script>
       </body>
   </html>`;
 }

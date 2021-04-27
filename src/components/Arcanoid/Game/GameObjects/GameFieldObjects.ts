@@ -120,6 +120,7 @@ export default class GameFieldObjects {
     if (!levelData) {
       return;
     }
+    console.log('Generate level');
     this.data = this.data.filter((x) => x.type !== 'brick');
     const getNextItem = (s) => {
       let currentPos = 0;

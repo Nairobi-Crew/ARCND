@@ -7,19 +7,56 @@ import { initialAppState } from 'Store/types';
 import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
-import path from 'path';
+import { API_PATH, SERVER_API_URL } from 'Config/config';
+import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
+import Cookies from 'Server/fetch/Cookies';
+import cookieParser from 'cookie-parser';
+import webpack, { Configuration } from 'webpack';
+import webpackDev from 'webpack-dev-middleware';
+import webpackHot from 'webpack-hot-middleware';
+import FormData from 'form-data';
+import clientConfig from '../../webpack.client';
+
+(global as any).FormData = FormData;
 
 const app = express();
-
+app.use(cookieParser());
+const json = express.json();
 const PORT = process.env.PORT || 3000;
-let staticPath = path.join(__dirname, 'dist');
-staticPath = 'dist';
-console.log('Static path:', staticPath);
-app.use(express.static(staticPath));
-// app.get(/\.(js|css|map|ico)$/, express.static(path.resolve(__dirname, 'dist')));
+
+const compiler = webpack(clientConfig as Configuration);
+
+app.use(
+  webpackDev(
+    compiler,
+    {
+      serverSideRender: true,
+      writeToDisk: true,
+      publicPath: clientConfig.publicPath,
+    },
+  ),
+);
+app.use(webpackHot(compiler));
+
+app.use(express.static('dist'));
+app.post(`${API_PATH}signin`, json, (req, res) => {
+  if (!req.body) {
+    res.status(400).send({ reason: 'Error in parameters' });
+    return;
+  }
+  const { login, password } = req.body;
+  const loginOptions: TFetchOptions<{ login, password }> = {
+    data: { login, password },
+  };
+  Fetch.post(`${SERVER_API_URL}signin`, loginOptions).then(async (answer) => {
+    Cookies.setCookies(answer, res);
+    res.status(200).send(await answer.text());
+  }).catch((error) => {
+    res.status(error.status).send({ reason: error.statusText });
+  });
+});
 
 app.get('*', async (req: Request, res: Response) => {
-  console.log('Accept connection', req.url);
   const context = {};
   const store = configureStore(
     initialAppState,
@@ -35,9 +72,10 @@ app.get('*', async (req: Request, res: Response) => {
 
   const html = renderTemplate(
     {
-      cssPath: 'style.css',
+      cssPath: 'main.css',
       jsPath: 'main.js',
       content,
+      data: JSON.stringify(store.getState()),
     },
   );
 
@@ -45,5 +83,6 @@ app.get('*', async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server started on port ${PORT}`);
 });
