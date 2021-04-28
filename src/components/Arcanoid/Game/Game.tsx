@@ -25,9 +25,13 @@ import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { randomRange } from 'Components/Arcanoid/util/random';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import isClient from 'Util/isClient';
+import { addLeader } from 'Reducers/leader/actions';
+import { useUserReselect } from 'Store/hooks';
+import { getAvatar, getDisplayName } from 'Store/util';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   const dispatch = useDispatch();
+  const user = useUserReselect();
 
   let canvasId;
 
@@ -257,6 +261,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+        dispatch(addLeader({
+          name: getDisplayName(user.user),
+          avatar: getAvatar(user.user),
+          level: gameProperties.level,
+          score_arcnd: gameProperties.score,
+        }));
         dispatch(endGame());
         rocket.width = ROCKET_WIDTH;
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
@@ -348,6 +358,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       globalBus.off(EVENTS.BLOCK, onBlockCrash);
       globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

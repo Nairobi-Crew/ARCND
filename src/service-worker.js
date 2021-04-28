@@ -1,4 +1,4 @@
-const VERSION = 501;
+const VERSION = 543;
 const APP_NAME = 'Arcanoid-Game';
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 const BUILD_FOLDER = '';
@@ -9,6 +9,7 @@ function cacheOrNetwork(event) {
   return caches.match(event.request).then((resp) => resp || fetch(clonedRequest));
 }
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('install', (event) => {
   event.waitUntil(
     new Promise((resolve) => {
@@ -18,11 +19,13 @@ self.addEventListener('install', (event) => {
           .then((resp) => resp.json())
           .then((jsonResp) => cache.addAll(['/', ...jsonResp.TO_CACHE.map((name) => `${BUILD_FOLDER}/${name}`)]))
           .then(resolve))
+      // eslint-disable-next-line no-console
         .catch((err) => console.error('SW errors', err));
     }),
   );
 });
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then(
@@ -32,7 +35,9 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('fetch', (event) => {
+  // eslint-disable-next-line no-restricted-globals
   if (event.request.url.indexOf(location.origin) === 0) {
     event.respondWith(cacheOrNetwork(event));
   }

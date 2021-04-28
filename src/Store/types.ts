@@ -3,6 +3,7 @@ import { defaultUserReducer, IUserReducer } from 'Reducers/user/user';
 import { defaultGameReducer, IGameReducer } from 'Reducers/game/game';
 import { defaultForumReducer } from 'Reducers/forum/forum';
 import { IForumReducer } from 'Reducers/forum/types';
+import { defaultLeaderReducer, ILeaderReducer } from 'Reducers/leader/leader';
 
 export type Nullable<T> = T | null;
 
@@ -11,6 +12,7 @@ export interface IAppState {
   user: IUserReducer,
   game: IGameReducer,
   forum: IForumReducer,
+  leader: ILeaderReducer,
 }
 
 export const initialAppState: IAppState = {
@@ -18,6 +20,7 @@ export const initialAppState: IAppState = {
   user: defaultUserReducer,
   game: defaultGameReducer,
   forum: defaultForumReducer,
+  leader: defaultLeaderReducer,
 };
 
 export interface IUser {

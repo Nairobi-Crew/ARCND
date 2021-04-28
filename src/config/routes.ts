@@ -8,6 +8,7 @@ import Forum from 'Pages/Forums/Forum';
 import Logout from 'Pages/Logout/Logout';
 import Page404 from 'Pages/404/404';
 import Main from 'Pages/Main';
+import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 
 export interface ILink {
   title: string
@@ -28,7 +29,7 @@ const routes: ILink[] = [
     key: 'game',
   },
   {
-    visibility: 'always',
+    visibility: 'unauth',
     exact: false,
     path: '/signin',
     title: 'Вход',
@@ -73,6 +74,14 @@ const routes: ILink[] = [
     path: '/signout',
     title: 'Выход',
     component: Logout,
+    key: 'logout',
+  },
+  {
+    visibility: 'always',
+    exact: false,
+    path: '/leaderboard',
+    title: 'Лидеры',
+    component: Leaderboard,
     key: 'logout',
   },
   {

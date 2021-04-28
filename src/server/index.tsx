@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
 import {
-  API_PATH, AUTH_PATH, SERVER_API_URL, USER_PATH,
+  API_PATH, AUTH_PATH, LEADER_PATH, SERVER_API_URL, USER_PATH,
 } from 'Config/config';
 import cookieParser from 'cookie-parser';
 import webpack, { Configuration } from 'webpack';
@@ -18,6 +18,8 @@ import FormData from 'form-data';
 import authRoutes, { getUserInfo } from 'Server/routes/auth';
 import userRoutes from 'Server/routes/user';
 import { EAuthState } from 'Reducers/auth/types';
+import { useUserReselect } from 'Store/hooks';
+import leaderRoutes from 'Server/routes/leader';
 import clientConfig from '../../webpack.client';
 
 (global as any).FormData = FormData;
@@ -47,8 +49,12 @@ const AUTH_SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
 const USER_URL = `${API_PATH}${USER_PATH}`;
 const USER_SERVER_URL = `${SERVER_API_URL}${USER_PATH}`;
 
+const LEADER_URL = `${API_PATH}${LEADER_PATH}`;
+const LEADER_SERVER_URL = `${SERVER_API_URL}${LEADER_PATH}`;
+
 authRoutes(app, json, AUTH_URL, AUTH_SERVER_URL);
 userRoutes(app, json, USER_URL, USER_SERVER_URL);
+leaderRoutes(app, json, LEADER_URL, LEADER_SERVER_URL);
 
 app.get('*', async (req: Request, res: Response) => {
   const { url, method } = req;
@@ -62,8 +68,9 @@ app.get('*', async (req: Request, res: Response) => {
 
   try {
     const user = await getUserInfo(`${AUTH_SERVER_URL}/user`, req);
+    const a = useUserReselect();
     initialAppState.auth.state = EAuthState.LOGGED;
-    initialAppState.auth.user = user;
+    a.user = user;
   } catch (e) {
     // Not logged
   }
