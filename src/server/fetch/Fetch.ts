@@ -36,11 +36,15 @@ class Fetch {
   }
 
   static fetch<T>(url: string, options: TFetchOptions<T> = { method: 'GET' }): Promise<FetchResponse> {
-    const { method, data, headers } = options;
-    let body = (data as unknown)as string;
+    let { headers } = options;
+    const { method, data } = options;
+    let body = (options.data as unknown)as string;
     if (method !== 'GET') {
       if (!(data instanceof FormData)) {
-        headers['Content-type'] = 'application/json';
+        headers = {
+          ...headers,
+          'Content-Type': 'application/json',
+        };
         body = JSON.stringify(data);
       }
     }
@@ -49,7 +53,9 @@ class Fetch {
         return res;
       }
       return Promise.reject(res);
-    }).catch((err) => Promise.reject(err));
+    }).catch((err) => {
+      return Promise.reject(err);
+    });
   }
 }
 

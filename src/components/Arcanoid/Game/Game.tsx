@@ -185,9 +185,6 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   onResize();
 
   useEffect(() => {
-    if (isClient()) {
-      return () => {};
-    }
     const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
       const { key, keyCode } = e;
       if (keyCode === 13) { // Энтер - переключение полноэкранного режима

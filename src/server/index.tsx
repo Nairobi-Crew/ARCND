@@ -7,7 +7,7 @@ import { initialAppState } from 'Store/types';
 import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
-import { API_PATH, SERVER_API_URL } from 'Config/config';
+import { API_PATH, AUTH_PATH, SERVER_API_URL } from 'Config/config';
 import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
 import Cookies from 'Server/fetch/Cookies';
 import cookieParser from 'cookie-parser';
@@ -39,7 +39,10 @@ app.use(
 app.use(webpackHot(compiler));
 
 app.use(express.static('dist'));
-app.post(`${API_PATH}signin`, json, (req, res) => {
+const AUTH_URL = `${API_PATH}${AUTH_PATH}`;
+const SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
+
+app.post(`${AUTH_URL}/signin`, json, (req, res) => {
   if (!req.body) {
     res.status(400).send({ reason: 'Error in parameters' });
     return;
@@ -48,15 +51,49 @@ app.post(`${API_PATH}signin`, json, (req, res) => {
   const loginOptions: TFetchOptions<{ login, password }> = {
     data: { login, password },
   };
-  Fetch.post(`${SERVER_API_URL}signin`, loginOptions).then(async (answer) => {
-    Cookies.setCookies(answer, res);
-    res.status(200).send(await answer.text());
-  }).catch((error) => {
-    res.status(error.status).send({ reason: error.statusText });
-  });
+  const serverAddress = `${SERVER_URL}/signin`;
+  Fetch.post(serverAddress, loginOptions)
+    .then(async (answer) => {
+      Cookies.setCookies(answer, res);
+      res.status(200).send(await answer.text());
+    })
+    .catch((error) => {
+      res.status(error.status).send({ reason: error.statusText });
+    });
+});
+
+app.get(`${AUTH_URL}/user`, json, (req, res) => {
+  const Cookie = Cookies.getCookies(req);
+  const getUserOptions: TFetchOptions<string> = {
+    headers: { Cookie },
+  };
+  Fetch.get(`${SERVER_URL}/user`, getUserOptions)
+    .then(async (answer) => {
+      res.status(200).send(await answer.json());
+    })
+    .catch((error) => {
+      res.status(error.status).send({ reason: error.statusText });
+    });
+});
+
+app.post(`${AUTH_URL}/logout`, (req, res) => {
+  const Cookie = Cookies.getCookies(req);
+
+  const LogoutUserOptions: TFetchOptions<string> = {
+    headers: { Cookie },
+  };
+  Fetch.post(`${SERVER_URL}/logout`, LogoutUserOptions)
+    .then(async (answer) => {
+      res.clearCookie('authCookie');
+      res.clearCookie('uuid');
+      res.status(200).send(await answer.text());
+    })
+    .catch((error) => res.status(error.status).send({ reason: error.statusText }));
 });
 
 app.get('*', async (req: Request, res: Response) => {
+  const { url, method } = req;
+  console.log('Request *', { url, method });
   const context = {};
   const store = configureStore(
     initialAppState,

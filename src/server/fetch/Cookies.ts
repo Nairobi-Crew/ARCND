@@ -2,10 +2,6 @@ import setCookie from 'set-cookie-parser';
 import { Request, Response } from 'express';
 import { Response as FetchResponse } from 'node-fetch';
 
-type TCookie = {
-  [index: string]: string
-}
-
 class Cookies {
   static setCookies(fetchAnswer: FetchResponse, res: Response): void {
     const { headers } = fetchAnswer;
@@ -15,17 +11,8 @@ class Cookies {
     }
   }
 
-  static getCookies(req: Request): TCookie[] {
-    const r: TCookie[] = [];
-    const cookie = req?.headers?.cookie;
-    if (cookie) {
-      const cookieList = cookie.split(',');
-      cookieList.forEach((c) => {
-        const [name, value] = c.split('=');
-        r[name] = value;
-      });
-    }
-    return r;
+  static getCookies(req: Request) {
+    return req?.headers?.cookie;
   }
 }
 
