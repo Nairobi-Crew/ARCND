@@ -2,7 +2,6 @@ import { API_PATH, AUTH_PATH } from 'Config/config';
 import { EAuthAction, EAuthState } from 'Reducers/auth/types';
 import { IUser } from 'Store/types';
 
-// const API = API_URL;
 const API = `${API_PATH}${AUTH_PATH}`;
 export const loginUser = (login: string, password: string) => async (dispatch) => {
   const response = await fetch(`${API}/signin`, {

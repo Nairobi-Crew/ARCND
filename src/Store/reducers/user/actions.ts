@@ -1,9 +1,10 @@
 import { IUser } from 'Store/types';
-import { API_URL } from 'Config/config';
+import { API_PATH, USER_PATH } from 'Config/config';
 import { EUserAction } from 'Reducers/user/types';
 
+const API = `${API_PATH}${USER_PATH}`;
 export const changeProfile = (user: IUser) => async (dispatch) => {
-  const response = await fetch(`${API_URL}user/profile`,
+  const response = await fetch(`${API}/profile`,
     {
       method: 'PUT',
       credentials: 'include',
@@ -22,7 +23,7 @@ export const changeProfile = (user: IUser) => async (dispatch) => {
 };
 
 export const changePassword = (oldPassword: string, newPassword: string) => async (dispatch) => {
-  const response = await fetch(`${API_URL}user/password`,
+  const response = await fetch(`${API}/password`,
     {
       method: 'PUT',
       body: JSON.stringify({ oldPassword, newPassword }),
@@ -50,7 +51,7 @@ export const changeAvatar = (avatar: Blob) => async (dispatch) => {
     fileReader.onloadend = async () => { // при окончании загрузки файла
       const a = new FormData();
       a.append('avatar', avatar);
-      const response = await fetch(`${API_URL}user/profile/avatar`,
+      const response = await fetch(`${API}user/profile/avatar`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -74,7 +75,7 @@ export const changeAvatar = (avatar: Blob) => async (dispatch) => {
 };
 
 export const getUserById = (id: number) => async (dispatch) => {
-  const response = await fetch(`${API_URL}user/${id}`,
+  const response = await fetch(`${API}/${id}`,
     {
       method: 'GET',
       credentials: 'include',

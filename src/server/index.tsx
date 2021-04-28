@@ -7,14 +7,17 @@ import { initialAppState } from 'Store/types';
 import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
-import { API_PATH, AUTH_PATH, SERVER_API_URL } from 'Config/config';
-import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
-import Cookies from 'Server/fetch/Cookies';
+import {
+  API_PATH, AUTH_PATH, SERVER_API_URL, USER_PATH,
+} from 'Config/config';
 import cookieParser from 'cookie-parser';
 import webpack, { Configuration } from 'webpack';
 import webpackDev from 'webpack-dev-middleware';
 import webpackHot from 'webpack-hot-middleware';
 import FormData from 'form-data';
+import authRoutes, { getUserInfo } from 'Server/routes/auth';
+import userRoutes from 'Server/routes/user';
+import { EAuthState } from 'Reducers/auth/types';
 import clientConfig from '../../webpack.client';
 
 (global as any).FormData = FormData;
@@ -25,7 +28,6 @@ const json = express.json();
 const PORT = process.env.PORT || 3000;
 
 const compiler = webpack(clientConfig as Configuration);
-
 app.use(
   webpackDev(
     compiler,
@@ -37,67 +39,34 @@ app.use(
   ),
 );
 app.use(webpackHot(compiler));
-
 app.use(express.static('dist'));
+
 const AUTH_URL = `${API_PATH}${AUTH_PATH}`;
-const SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
+const AUTH_SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
 
-app.post(`${AUTH_URL}/signin`, json, (req, res) => {
-  if (!req.body) {
-    res.status(400).send({ reason: 'Error in parameters' });
-    return;
-  }
-  const { login, password } = req.body;
-  const loginOptions: TFetchOptions<{ login, password }> = {
-    data: { login, password },
-  };
-  const serverAddress = `${SERVER_URL}/signin`;
-  Fetch.post(serverAddress, loginOptions)
-    .then(async (answer) => {
-      Cookies.setCookies(answer, res);
-      res.status(200).send(await answer.text());
-    })
-    .catch((error) => {
-      res.status(error.status).send({ reason: error.statusText });
-    });
-});
+const USER_URL = `${API_PATH}${USER_PATH}`;
+const USER_SERVER_URL = `${SERVER_API_URL}${USER_PATH}`;
 
-app.get(`${AUTH_URL}/user`, json, (req, res) => {
-  const Cookie = Cookies.getCookies(req);
-  const getUserOptions: TFetchOptions<string> = {
-    headers: { Cookie },
-  };
-  Fetch.get(`${SERVER_URL}/user`, getUserOptions)
-    .then(async (answer) => {
-      res.status(200).send(await answer.json());
-    })
-    .catch((error) => {
-      res.status(error.status).send({ reason: error.statusText });
-    });
-});
-
-app.post(`${AUTH_URL}/logout`, (req, res) => {
-  const Cookie = Cookies.getCookies(req);
-
-  const LogoutUserOptions: TFetchOptions<string> = {
-    headers: { Cookie },
-  };
-  Fetch.post(`${SERVER_URL}/logout`, LogoutUserOptions)
-    .then(async (answer) => {
-      res.clearCookie('authCookie');
-      res.clearCookie('uuid');
-      res.status(200).send(await answer.text());
-    })
-    .catch((error) => res.status(error.status).send({ reason: error.statusText }));
-});
+authRoutes(app, json, AUTH_URL, AUTH_SERVER_URL);
+userRoutes(app, json, USER_URL, USER_SERVER_URL);
 
 app.get('*', async (req: Request, res: Response) => {
   const { url, method } = req;
+  // eslint-disable-next-line no-console
   console.log('Request *', { url, method });
+
   const context = {};
   const store = configureStore(
     initialAppState,
   );
+
+  try {
+    const user = await getUserInfo(`${AUTH_SERVER_URL}/user`, req);
+    initialAppState.auth.state = EAuthState.LOGGED;
+    initialAppState.auth.user = user;
+  } catch (e) {
+    // Not logged
+  }
 
   const content = renderToString(
     <Provider store={store}>
@@ -107,16 +76,14 @@ app.get('*', async (req: Request, res: Response) => {
     </Provider>,
   );
 
-  const html = renderTemplate(
+  res.send(renderTemplate(
     {
       cssPath: 'main.css',
       jsPath: 'main.js',
       content,
       data: JSON.stringify(store.getState()),
     },
-  );
-
-  res.send(html);
+  ));
 });
 
 app.listen(PORT, () => {
