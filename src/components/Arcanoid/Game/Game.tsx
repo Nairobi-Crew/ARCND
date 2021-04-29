@@ -26,12 +26,13 @@ import { randomRange } from 'Components/Arcanoid/util/random';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import isClient from 'Util/isClient';
 import { addLeader } from 'Reducers/leader/actions';
-import { useUserReselect } from 'Store/hooks';
+import { useAuthReselect } from 'Store/hooks';
 import { getAvatar, getDisplayName } from 'Store/util';
+import { getUserData } from 'Reducers/auth/actions';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   const dispatch = useDispatch();
-  const user = useUserReselect();
+  const auth = useAuthReselect();
 
   let canvasId;
 
@@ -261,12 +262,14 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+
         dispatch(addLeader({
-          name: getDisplayName(user.user),
-          avatar: getAvatar(user.user),
+          name: getDisplayName(auth.user),
+          avatar: getAvatar(auth.user),
           level: gameProperties.level,
           score_arcnd: gameProperties.score,
         }));
+
         dispatch(endGame());
         rocket.width = ROCKET_WIDTH;
         globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
@@ -326,6 +329,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.score += 1;
       dispatch(incScore(1));
     };
+
+    // console.log('Get user data', auth);
+    dispatch(getUserData());
 
     // генерируем уровень
     gameProperties.level = -1;

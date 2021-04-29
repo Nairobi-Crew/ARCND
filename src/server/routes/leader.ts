@@ -10,7 +10,7 @@ const leaderRoutes = (app, json, url, serverUrl) => {
     const profileOptions: TFetchOptions<unknown> = {
       data: req.body,
       headers: {
-        Cookie: Cookies.getCookies(req),
+        cookie: Cookies.getCookies(req),
       },
     };
     const serverAddress = `${serverUrl}/all`;
@@ -24,20 +24,21 @@ const leaderRoutes = (app, json, url, serverUrl) => {
   });
 
   app.post(`${url}`, json, (req, res) => {
-    if (!req.body) {
+    const { body } = req;
+    if (!body) {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
     const profileOptions: TFetchOptions<unknown> = {
-      data: req.body,
+      data: body,
       headers: {
-        Cookie: Cookies.getCookies(req),
+        cookie: Cookies.getCookies(req),
       },
     };
     const serverAddress = `${serverUrl}`;
     Fetch.post(serverAddress, profileOptions)
-      .then(async (answer) => {
-        res.status(200).send(await answer.json());
+      .then(() => {
+        res.status(200).send('OK');
       })
       .catch((error) => {
         res.status(error.status).send(error.statusText);

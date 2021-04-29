@@ -120,11 +120,12 @@ export default class GameFieldObjects {
     if (!levelData) {
       return;
     }
-    console.log('Generate level');
+    // console.log('Generate level');
     this.data = this.data.filter((x) => x.type !== 'brick');
     const getNextItem = (s) => {
       let currentPos = 0;
       return () => {
+        // noinspection LoopStatementThatDoesntLoopJS
         while (currentPos < s.length) {
           const char = s.substr(currentPos, 1);
           currentPos += 1;

@@ -9,8 +9,17 @@ export const getUserInfo = (url, req: Request): Promise<IUser> => new Promise((r
     headers: { Cookie },
   };
   Fetch.get(url, getUserOptions)
-    .then(async (answer) => resolve(await answer.json() as IUser))
-    .catch((error) => reject(error));
+    .then(async (answer) => {
+      try {
+        const answer_json = await answer.json();
+        resolve(answer_json as IUser);
+      } catch (e) {
+        reject(e);
+      }
+    })
+    .catch((error) => {
+      reject(error);
+    });
 });
 
 const authRoutes = (app, json, url, serverUrl) => {
@@ -55,7 +64,10 @@ const authRoutes = (app, json, url, serverUrl) => {
         res.clearCookie('uuid');
         res.status(200).send(await answer.text());
       })
-      .catch((error) => res.status(error.status).send(error.statusText));
+      .catch(() => {
+        res.status(200).send('Ok');
+        // res.status(error.status).send(error.statusText)
+      });
   });
 };
 

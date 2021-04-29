@@ -53,9 +53,7 @@ class Fetch {
         return res;
       }
       return Promise.reject(res);
-    }).catch((err) => {
-      return Promise.reject(err);
-    });
+    }).catch((err) => Promise.reject(err));
   }
 }
 

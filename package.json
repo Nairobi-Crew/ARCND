@@ -29,7 +29,8 @@
     "regenerator-runtime": "^0.11.1",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "webpack-dev-middleware": "^3.7.3",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack-hot-middleware": "^2.25.0",
+    "webpack-hot-server-middleware": "^0.6.1"
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
@@ -106,17 +107,12 @@
   },
   "scripts": {
     "ssr-start:server": "nodemon ./dist/server.js --watch ./dist/server.js",
-    "ssr-start:webpack": "cross-env NODE_ENV=development webpack --config webpack.server.js --watch",
+    "ssr-start:webpack": "cross-env NODE_ENV=development webpack --config webpack.server.js --watch --hot",
     "ssr-start": "npm-run-all --parallel ssr-start:*",
     "start": "cross-env NODE_ENV=development webpack --config webpack.server.js && node ./dist/server.js",
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "webpack serve --mode=development --config webpack.config.js",
     "jest": "npx jest",
     "test": "npm run lint:fix",
-    "build:client": "webpack --mode development --config webpack/webpack.client.js",
-    "build:server": "webpack --mode development --config webpack/webpack.server.js",
-    "start:server": "nodemon dist/server/main.js",
-    "start:server:dev": "node dist/server/main.js",
     "lint:ts": "eslint --ext js,ts,tsx src",
     "lint:ts-fix": "eslint --fix --ext js,ts,tsx src",
     "lint:styles": "stylelint \"src/**/*.scss\"",
