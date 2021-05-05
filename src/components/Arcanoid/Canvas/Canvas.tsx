@@ -6,8 +6,6 @@ import './Canvas.scss';
 
 const Canvas: React.FC<CanvasProps> = () => { // компонент канваса
   const [gameContext, setGameContext] = useState(null); // контекст канваса
-  const [width, setWidth] = useState(window.innerWidth); // размер канваса по умолчанию
-  const [height, setHeight] = useState(window.innerHeight);
   const canvasRef = useRef<HTMLCanvasElement | null>(); // ссылка на канвас
 
   useEffect(() => { // эффект для первой отрисовки
@@ -15,21 +13,10 @@ const Canvas: React.FC<CanvasProps> = () => { // компонент канвас
     if (ctx) {
       setGameContext(ctx);
     }
-
-    const onResize = () => { // на ресайз окна обработчик
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    };
-
-    window.addEventListener('resize', onResize); // подписывание на ресайз
-
-    return () => {
-      window.removeEventListener('resize', onResize); // отписывание от события
-    };
   }, []);
 
   return (
-    <canvas id={GAME_CANVAS_ID} ref={canvasRef} width={width} height={height}>
+    <canvas id={GAME_CANVAS_ID} ref={canvasRef}>
       <Game ctx={gameContext} />
     </canvas>
   );

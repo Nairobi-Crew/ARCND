@@ -4,6 +4,7 @@ import { userReducer } from 'Reducers/user/user';
 import { gameReducer } from 'Reducers/game/game';
 import { forumReducer } from 'Reducers/forum/forum';
 import {leaderboardReducer} from "Reducers/leaderboard/leaderboard";
+import { leaderReducer } from 'Reducers/leader/leader';
 
 export default combineReducers({
   auth: authReducer,

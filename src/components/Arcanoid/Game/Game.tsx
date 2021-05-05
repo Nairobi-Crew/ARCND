@@ -24,16 +24,22 @@ import {
 import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { randomRange } from 'Components/Arcanoid/util/random';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
+import isClient from 'Util/isClient';
+import { addLeader } from 'Reducers/leader/actions';
+import { useAuthReselect } from 'Store/hooks';
+import { getAvatar, getDisplayName } from 'Store/util';
+import { getUserData } from 'Reducers/auth/actions';
 import {pushResult} from "Reducers/leaderboard/actions";
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
+  const dispatch = useDispatch();
+  const auth = useAuthReselect();
+
   let canvasId;
 
-  const dispatch = useDispatch();
-
   const getWidth = () => { // ширина канваса
-    if (canvasId) {
-      // return canvasId.width;
+    if (!isClient()) {
+      return 0;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -43,8 +49,8 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   };
 
   const getHeight = () => { // высота канваса
-    if (canvasId) {
-      // return canvasId.height;
+    if (!isClient()) {
+      return 0;
     }
     canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
     if (canvasId) {
@@ -91,6 +97,22 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     return true;
   };
 
+  const doResizeCanvas = (): boolean => {
+    if (isClient()) {
+      const canvas = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
+      if (!canvas) {
+        return false;
+      }
+      const { width, height } = canvas;
+      const firstRender = ((width || 300) + (height || 150)) === 450;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gameProperties.gameWindow = getGameContext();
+      return firstRender;
+    }
+    return false;
+  };
+
   const drawGame = () => { // отрисовка кадра игры
     if (!checkContext()) { // проверка канваса
       return;
@@ -117,6 +139,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       rocket.glue = 0;
       rocket.width = ROCKET_WIDTH;
       const level = Math.min(gameProperties.level - 1, levels.length - 1);
+      doResizeCanvas();
       gameObjects.generateLevel(
         levels[level],
       ); // генерация уровня
@@ -158,6 +181,14 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       drawGame(); // рисуем кадр
     }
   }
+
+  const onResize = () => {
+    if (doResizeCanvas()) {
+      loop();
+    }
+  };
+
+  onResize();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
@@ -232,6 +263,14 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameObjects.removeShoots();
       if (gameProperties.lives === 1) { // если жизнь последняя
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+
+        dispatch(addLeader({
+          name: getDisplayName(auth.user),
+          avatar: getAvatar(auth.user),
+          level: gameProperties.level,
+          score_arcnd: gameProperties.score,
+        }));
+
         dispatch(endGame());
         dispatch(pushResult({score: gameProperties.score, avatar: '', level:gameProperties.level, name:'name'}));
         rocket.width = ROCKET_WIDTH;
@@ -292,29 +331,42 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       gameProperties.score += 1;
       dispatch(incScore(1));
     };
+
+    // console.log('Get user data', auth);
+    dispatch(getUserData());
+
     // генерируем уровень
     gameProperties.level = -1;
     // gameObjects.generateLevel(levels[gameProperties.level - 1]);
 
     // события на нажатие клавиши
-    window.addEventListener('keydown', onKeyDown);
-    // события на отпускание клавиши
-    window.addEventListener('keyup', onKeyUp);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', onKeyDown);
+      // события на отпускание клавиши
+      window.addEventListener('keyup', onKeyUp);
+      window.addEventListener('resize', onResize);
+    }
     // события на ГОЛ
     globalBus.on(EVENTS.GOAL, onGoal);
     // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
     globalBus.on(EVENTS.BLOCK, onBlockCrash);
     globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
-    loop(); // запуск игрового цикла
+    if (isClient()) {
+      loop(); // запуск игрового цикла
+    }
     return () => { // очистка обработчиков события
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        window.removeEventListener('resize', onResize);
+      }
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
       globalBus.off(EVENTS.BLOCK, onBlockCrash);
       globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

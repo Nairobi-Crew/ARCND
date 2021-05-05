@@ -126,8 +126,8 @@ export class Rocket extends BaseObject {
 }
 
 export const rocket = new Rocket({
-  x: Math.round(window.innerWidth / 2),
-  y: window.innerHeight - ROCKET_HEIGHT,
+  x: Math.round(typeof window !== 'undefined' ? window.innerWidth / 2 : 0),
+  y: typeof window !== 'undefined' ? window.innerHeight - ROCKET_HEIGHT : 0,
   width: ROCKET_WIDTH,
   height: ROCKET_HEIGHT,
 });
