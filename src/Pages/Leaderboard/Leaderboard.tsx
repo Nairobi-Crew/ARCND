@@ -1,23 +1,70 @@
-import React, {useEffect} from 'react';
-import {LeaderboardProps} from 'Pages/Leaderboard/types';
+import React, { useEffect, useState } from 'react';
+import { LeaderboardProps } from 'Pages/Leaderboard/types';
 import Leader from 'Pages/Leaderboard/Leader/Leader';
 import './Leaderboard.scss';
-import {useDispatch} from "react-redux";
-import {getLeaders} from 'Reducers/leaderboard/actions';
-import {useLeaderboardLeaders} from "Store/hooks";
-import {ELeaderboardAction} from "Reducers/leaderboard/types";
+import { useLeaderReselect } from 'Store/hooks';
+import { ELeaderState } from 'Reducers/leader/types';
+import { useDispatch } from 'react-redux';
+import { getLeaders } from 'Reducers/leader/actions';
 
-const Leaderboard: LeaderboardProps = ({...props}) => {
+const Leaderboard: LeaderboardProps = () => {
+  // const leaders = [
+  //   {
+  //     name: 'name1',
+  //     index: '1',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //
+  //   {
+  //     name: 'name2',
+  //     index: '2',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //
+  //   {
+  //     name: 'name3',
+  //     index: '3',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //
+  //   {
+  //     name: 'name4',
+  //     index: '4',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //   {
+  //     name: 'name5',
+  //     index: '5',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //   {
+  //     name: 'name6',
+  //     index: '6',
+  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
+  //     score: '1000',
+  //   },
+  //
+  // ];
 
+  const [leaders, setLeaders] = useState([]);
+  const leaderboard = useLeaderReselect();
   const dispatch = useDispatch();
 
-  const leaders = useLeaderboardLeaders();
   useEffect(() => {
-    if (leaders.state === ELeaderboardAction.UNKNOWN) {
-      dispatch(getLeaders({cursor: 0, limit: 10}))
+    if (leaderboard.state === ELeaderState.READY) {
+      setLeaders(leaderboard.users);
     }
-  }, [leaders]);
+  }, [leaderboard]);
 
+  useEffect(() => {
+    dispatch(getLeaders());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ul className="leaderboard">
@@ -27,7 +74,7 @@ const Leaderboard: LeaderboardProps = ({...props}) => {
         <Leader
           key={`${name}-${score_arcnd}`}
           name={name}
-          index={((index + 1) as unknown) as string}
+          index={((index + 1) as unknown) as number}
           avatar={avatar}
           score={score_arcnd}
         />
