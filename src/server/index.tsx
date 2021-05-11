@@ -24,22 +24,17 @@ import leaderRoutes from 'Server/routes/leader';
 import path from 'path';
 // import { syncForumModels } from 'Server/db/models/forum';
 import forumRoutes from 'Server/routes/forum';
+import { syncForumModels } from 'Server/db/models/forum';
+// eslint-disable-next-line import/extensions
 // @ts-ignore
 // eslint-disable-next-line import/extensions
 import clientConfig from '../../webpack.client.js';
-// import {syncUserModel} from 'Server/db/models/user';
-// import {TopicModel} from 'Server/db/models/forum';
-// import { syncMessageModel } from 'Server/db/models/forum';
 
-// syncMessageModel(true).then(() => console.log('Message model sync OK')).catch(() => console.log('Error sync Message model'));
-
-// syncUserModel(true).then(() => console.log('User sync'));
-
-// syncForumModels(true).then(() => {
-//   // eslint-disable-next-line no-console
-//   console.log('Synchronized');
-// // eslint-disable-next-line no-console
-// }).catch(() => console.log('Synchronization failed'));
+syncForumModels(false).then(() => {
+  // eslint-disable-next-line no-console
+  console.log('Synchronized');
+// eslint-disable-next-line no-console
+}).catch(() => console.log('Synchronization failed'));
 
 (global as any).FormData = FormData;
 

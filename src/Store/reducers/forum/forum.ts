@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import {
   EForumState, IForumReducer, IMessagesItem, ITopicsItem,
 } from 'Reducers/forum/types';
@@ -22,6 +23,7 @@ export function forumReducer(
   action: ForumAction,
 ): IForumReducer {
   let newState;
+  let messages = [];
   switch (action.type) {
     case EForumState.UNKNOWN:
       newState = { ...state, state: action.type };
@@ -45,13 +47,36 @@ export function forumReducer(
       };
       break;
     case EForumState.NEW_TOPIC:
-      // eslint-disable-next-line no-case-declarations
       const { topics } = state;
       topics.push(action.payload.topic);
       newState = {
         ...state,
         state: EForumState.FETCHED_TOPICS,
         topics,
+      };
+      break;
+    case EForumState.NEW_MESSAGE:
+      messages = state.messages;
+      messages.push(action.payload);
+      newState = {
+        ...state,
+        messages,
+        state: EForumState.FETCHED_MESSAGES,
+      };
+      break;
+    case EForumState.SAVE_MESSAGE:
+      messages = state.messages;
+      const message = action.payload;
+      const found = messages.find((msg) => msg.id === message.id);
+      if (found) {
+        found.topic = message.topic;
+        found.header = message.header;
+        found.message = message.message;
+      }
+      newState = {
+        ...state,
+        messages,
+        state: EForumState.FETCHED_MESSAGES,
       };
       break;
     default:

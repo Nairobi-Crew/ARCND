@@ -39,7 +39,7 @@ export const fetchMessages = (thread: number) => async (dispatch: Dispatch<Forum
     method: 'GET',
     credentials: 'include',
   }).then((rawMessages) => {
-    rawMessages.json().then((messages: IMessagesItem[]) => {
+    rawMessages.json().then((messages) => {
       dispatch({
         type: EForumState.FETCHED_MESSAGES,
         payload: {
@@ -59,66 +59,53 @@ export const fetchMessages = (thread: number) => async (dispatch: Dispatch<Forum
 
 export const saveMessage = (
   _id: number,
-  _time: number,
-  text: string,
-  parent: number,
-  authorId: number,
-  author: string,
+  message: string,
+  parentMessage: number,
   topic: number,
   header: string,
 ) => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
-  let id = _id;
-  let time = _time;
-  if (id === 0) {
-    id = 0;
-    time = Date.now();
-  }
-  const msg: IMessagesItem = {
-    id,
-    message: text,
-    parentMessage: parent,
-    authorId,
-    author,
-    time,
-    topic,
-    header,
-  };
-
-  const m = getMessages();
-  if (_id === 0) {
-    m.push(msg);
-    const d = getData();
-    const foundTopic = d.find((item) => item.id === topic);
-    if (foundTopic) {
-      foundTopic.lastMessage = text;
-      foundTopic.lastMessageTime = time;
-      foundTopic.lastMessageUser = author;
-      foundTopic.lastMessageUserId = authorId;
-      foundTopic.messageCount = m.filter((item) => item.topic === topic).length;
-      saveData(d);
-    }
-  } else {
-    const founded = m.find((item) => item.id === _id);
-    if (founded) {
-      Object.assign(founded, msg);
-    }
-  }
-
-  saveMessages(m);
-  setTimeout(() => {
-    const filteredMessages = getMessages().filter((item) => item.topic === topic);
-    dispatch(
-      {
-        type: EForumState.FETCHED_MESSAGES,
-        payload:
-          {
-            messages: filteredMessages,
-            loaded: topic,
-          },
-      },
-    );
-  }, WAIT_FOR_TEST);
+  fetch(`${FORUM_URL}/thread/${_id}`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message,
+      parentMessage,
+      topic,
+      header,
+    }),
+  }).then((response) => {
+    response.json().then((parsedMessage) => {
+      const msg: IMessagesItem = {
+        id: parsedMessage.id,
+        message,
+        parentMessage,
+        authorId: parsedMessage.authorId,
+        author: parsedMessage.author,
+        time: parsedMessage.time,
+        topic,
+        header,
+      };
+      if (_id === 0) {
+        dispatch({
+          type: EForumState.NEW_MESSAGE,
+          payload: msg,
+        });
+      } else {
+        dispatch({
+          type: EForumState.SAVE_MESSAGE,
+          payload: msg,
+        });
+      }
+    }).catch((error) => {
+      console.log('Error parse answer', error);
+    });
+  }).catch((error) => {
+    console.log('Error get answer from server', error);
+  });
 };
 
 export const addTopic = (description: string) => async (dispatch: Dispatch<ForumAction>) => {

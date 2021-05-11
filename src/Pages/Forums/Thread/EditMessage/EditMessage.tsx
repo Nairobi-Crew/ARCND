@@ -27,7 +27,6 @@ const EditMessage: FC<EditMessageProps> = (
   const topics = useForumTopics();
   const messages = useForumMessages();
   const dispatch = useDispatch();
-  const [time, setTime] = useState(0);
   const auth = useAuthReselect();
   const history = useHistory();
 
@@ -55,7 +54,6 @@ const EditMessage: FC<EditMessageProps> = (
     const msg = getMessage(messageId);
     setMessage(msg.message);
     setHeader(msg.header);
-    setTime(msg.time);
 
     const parentMsg = getMessage(parentMessage);
     setParentMessage(parentMsg.message);
@@ -71,11 +69,8 @@ const EditMessage: FC<EditMessageProps> = (
   const saveButtonHandler = () => {
     dispatch(saveMessage(
       messageId,
-      time,
       message,
       parentMessage,
-      auth?.user?.id ? auth?.user?.id : 0,
-      `${auth?.user?.first_name} ${auth.user?.second_name}`,
       topicId,
       header,
     ));

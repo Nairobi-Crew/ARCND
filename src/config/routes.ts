@@ -106,7 +106,7 @@ const routes: ILink[] = [
     visibility: 'never',
     exact: false,
     title: '',
-    path: '/thread/:id',
+    path: '/thread/:threadId',
     key: 'thread',
     component: Thread,
   },

@@ -1,9 +1,11 @@
 /* eslint-disable no-tabs,no-await-in-loop,no-console */
 import { Express } from 'express';
-import { MessageModel, TopicCreationAttributes, TopicModel } from 'Server/db/models/forum';
+import {
+  MessageCreationAttributes, MessageModel, TopicCreationAttributes, TopicModel,
+} from 'Server/db/models/forum';
 import { getUser, getUserById } from 'Server/db/users';
 import { UserModel } from 'Server/db/models/user';
-import {IMessagesItem, ITopicsItem} from 'Reducers/forum/types';
+import { IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as sq from 'sequelize';
 import { getDisplayName } from 'Store/util';
@@ -177,6 +179,9 @@ const forumRoutes = (app: Express, json: any, url: string) => {
     }
   });
 
+  /**
+   * список сообщений из топика
+   */
   app.get(`${url}/thread/:id`, json, async (req, res) => {
     const topicId = parseInt(req.params.id, 10) || 0;
     if (topicId === 0) {
@@ -185,24 +190,23 @@ const forumRoutes = (app: Express, json: any, url: string) => {
     }
 
     try {
-      const rawMessages = await MessageModel.findAll({
+      const rawMessages = cloneObject(await MessageModel.findAll({
         where: {
           topicId,
         },
-      });
-      console.log('Messages', rawMessages);
+      }));
       const messages: IMessagesItem[] = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const message of rawMessages) {
         messages.push({
-          id: message.id as number,
+          id: parseInt(message.id, 10),
           topic: topicId,
-          authorId: message.userId,
-          parentMessage: message.parent,
+          authorId: parseInt(message.userId, 10),
+          parentMessage: parseInt(message.parent, 10),
           header: message.title,
           message: message.message,
-          author: getDisplayName(await getUserById(req, message.userId), 'Unknown'),
-          time: message.date.getTime(),
+          author: getDisplayName(cloneObject(await getUserById(req, message.userId)), 'Unknown'),
+          time: new Date(message.date).getTime(),
         });
       }
       res.status(200).send(messages);
@@ -210,6 +214,60 @@ const forumRoutes = (app: Express, json: any, url: string) => {
       console.log(`Error fetch messages ${topicId}`, e);
       res.status(500).send(e);
     }
+  });
+
+  /**
+   * Запись сообщения
+   */
+  app.post(`${url}/thread/:id`, json, async (req, res) => {
+    const id = parseInt(req.params.id, 10) || 0;
+    const date = new Date(Date.now());
+    console.log('Body', req.body);
+    const {
+      message, parentMessage, topic, header,
+    } = req.body;
+    let user;
+    try {
+      user = cloneObject(await getUser(req));
+    } catch (e) {
+      console.log('Error check user');
+      res.status(401).send({});
+    }
+    const msg: MessageCreationAttributes = {
+      message: message as string,
+      topicId: topic,
+      title: header as string,
+      userId: user.id,
+      parent: parentMessage,
+    };
+    console.log('New message', msg);
+    let newMessage;
+    try {
+      if (id === 0) {
+        newMessage = cloneObject(await MessageModel.create({ ...msg, date }));
+      } else {
+        newMessage = cloneObject(await MessageModel.update(msg, {
+          where: {
+            id,
+          },
+        }));
+      }
+    } catch (e) {
+      console.log('Error save message', e);
+      res.status(500).send(e);
+      return;
+    }
+    const answer: IMessagesItem = {
+      id: parseInt(newMessage.id, 10),
+      topic: parseInt(newMessage.topic, 10),
+      message: newMessage.message,
+      time: new Date(newMessage.date).getTime(),
+      header: newMessage.title,
+      parentMessage: parseInt(newMessage.parent, 10),
+      authorId: parseInt(newMessage.userId, 10),
+      author: getDisplayName(user, 'Unknown'),
+    };
+    res.status(200).send(answer);
   });
 };
 
