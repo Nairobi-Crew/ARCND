@@ -1,13 +1,14 @@
 import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
 import Cookies from 'Server/fetch/Cookies';
+import { Express } from 'express';
 
-const leaderRoutes = (app, json, url, serverUrl) => {
+const leaderRoutes = (app: Express, json: any, url: string, serverUrl: string) => {
   app.post(`${url}/all`, json, (req, res) => {
     if (!req.body) {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const profileOptions: TFetchOptions<unknown> = {
+    const profileOptions: TFetchOptions = {
       data: req.body,
       headers: {
         cookie: Cookies.getCookies(req),
@@ -29,7 +30,7 @@ const leaderRoutes = (app, json, url, serverUrl) => {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const profileOptions: TFetchOptions<unknown> = {
+    const profileOptions: TFetchOptions = {
       data: body,
       headers: {
         cookie: Cookies.getCookies(req),

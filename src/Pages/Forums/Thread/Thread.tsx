@@ -7,10 +7,11 @@ import { useForumMessages, useForumTopics } from 'Store/hooks';
 import { fetchMessages } from 'Reducers/forum/actions';
 import { useDispatch } from 'react-redux';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
+import { IMessagesItem } from 'Reducers/forum/types';
 
 const Thread: React.FC = () => {
-  const { threadId } = useParams<{ threadId: string }>();
-  const [messagesList, setMessagesList] = useState([]);
+  const threadId = parseInt(useParams<{ threadId: string }>().threadId, 10);
+  const [messagesList, setMessagesList] = useState<IMessagesItem[]>([]);
   const history = useHistory();
   const messages = useForumMessages();
   const topics = useForumTopics();
@@ -55,16 +56,16 @@ const Thread: React.FC = () => {
       </div>
       <div className="thread_body">
         {
-          messagesList.filter((item) => item.parentMessage === '').map(
-            (message) => (
+          messagesList.filter((item: IMessagesItem) => item.parentMessage === 0).map(
+            (message: IMessagesItem) => (
               <div key={message.id}>
                 <Message message={message} key={`messageKey-${message.id}`} />
                 <div className="parent_messages">
                   {messagesList.filter(
-                    (parentMessage) => parentMessage.parentMessage === message.id,
+                    (parentMessage: IMessagesItem) => (parentMessage.parentMessage || '-1') === message.id,
                   )
                     .map(
-                      (identMessage) => (
+                      (identMessage: IMessagesItem) => (
                         <Message message={identMessage} key={`parentMessageKey-${identMessage.id}`} />
                       ),
                     )}
@@ -74,7 +75,7 @@ const Thread: React.FC = () => {
           )
         }
       </div>
-      <EditMessage parentMessage="" topicId={threadId} messageId="" key={`editMessageKey-${threadId}`} />
+      <EditMessage parentMessage={0} topicId={threadId} messageId={0} key={`editMessageKey-${threadId}`} />
     </div>
   );
 };

@@ -4,41 +4,41 @@ export type THeader = {
   [index: string]: string
 }
 
-export type TFetchOptions<T> = {
+export type TFetchOptions = {
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
-  data?: T
+  data?: any
   headers?: THeader
 }
 
 class Fetch {
-  static get<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static get(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'GET';
     return Fetch.fetch(url, getOptions);
   }
 
-  static post<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static post(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'POST';
     return Fetch.fetch(url, getOptions);
   }
 
-  static put<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static put(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'PUT';
     return Fetch.fetch(url, getOptions);
   }
 
-  static delete<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static delete(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'DELETE';
     return Fetch.fetch(url, getOptions);
   }
 
-  static fetch<T>(url: string, options: TFetchOptions<T> = { method: 'GET' }): Promise<FetchResponse> {
+  static fetch(url: string, options: TFetchOptions = { method: 'GET' }): Promise<FetchResponse> {
     let { headers } = options;
     const { method, data } = options;
-    let body = (options.data as unknown)as string;
+    let body = data;
     if (method !== 'GET') {
       if (!(data instanceof FormData)) {
         headers = {

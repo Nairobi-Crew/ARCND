@@ -5,7 +5,6 @@ import {
   ROCKET_MOVE_STEP,
   ROCKET_WIDTH, SHOOT_QTY,
 } from 'Components/Arcanoid/settings';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawRocket from 'Components/Arcanoid/UI/drawRocket';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
@@ -98,6 +97,9 @@ export class Rocket extends BaseObject {
   moveRocket(delta: number): void {
     this.x += delta;
     const { gameWindow } = gameProperties;
+    if (!gameWindow) {
+      return;
+    }
     if (delta > 0) {
       if (this.x + this.width > gameWindow.width) { // не пускать за край вправо
         this.x = gameWindow.width - this.width;

@@ -1,9 +1,14 @@
 import { API_PATH, AUTH_PATH } from 'Config/config';
 import { EAuthAction, EAuthState } from 'Reducers/auth/types';
 import { IUser } from 'Store/types';
+import { Dispatch } from 'react';
+import { AuthAction } from 'Reducers/auth/auth';
 
 const API = `${API_PATH}${AUTH_PATH}`;
-export const loginUser = (login: string, password: string) => async (dispatch) => {
+export const loginUser = (
+  login: string,
+  password: string,
+) => async (dispatch: Dispatch<AuthAction>) => {
   const response = await fetch(`${API}/signin`, {
     method: 'POST',
     credentials: 'include',
@@ -20,7 +25,7 @@ export const loginUser = (login: string, password: string) => async (dispatch) =
   }
 };
 
-export const getUserData = () => async (dispatch) => {
+export const getUserData = () => async (dispatch: Dispatch<AuthAction>) => {
   const response = await fetch(`${API}/user`, {
     method: 'GET',
     credentials: 'include',
@@ -43,7 +48,7 @@ export const getUserData = () => async (dispatch) => {
   }
 };
 
-export const logoutUser = () => async (dispatch) => {
+export const logoutUser = () => async (dispatch: Dispatch<AuthAction>) => {
   const response = await fetch(`${API}/logout`, {
     method: 'POST',
     credentials: 'include',

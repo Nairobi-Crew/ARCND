@@ -1,5 +1,3 @@
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-
 export interface IBaseObjectProps {
   x?: number
   y?: number

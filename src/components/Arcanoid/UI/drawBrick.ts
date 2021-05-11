@@ -73,7 +73,7 @@ const drawBall = (
   x: number,
   y: number,
   width: number,
-  height,
+  height: number,
   level: number,
   type: number, // координаты шара и радиус, и стили из оъекта
 ) => {

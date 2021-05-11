@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { getUserData } from 'Reducers/auth/actions';
 import { useHistory } from 'react-router-dom';
 import { EForumState } from 'Reducers/forum/types';
-import { clearState, fetchTopics } from 'Reducers/forum/actions';
+import { clearState, fetchTopicsAction } from 'Reducers/forum/actions';
 
 const Forum: React.FC<ForumProps> = ({ caption }) => {
   const auth = useAuthReselect();
@@ -21,7 +21,7 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
       dispatch(getUserData());
     }
     if (data.state === EForumState.UNKNOWN) {
-      dispatch(fetchTopics());
+      dispatch(fetchTopicsAction());
     }
   }, []);
   useEffect(() => {

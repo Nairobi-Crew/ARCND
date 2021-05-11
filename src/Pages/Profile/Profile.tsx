@@ -38,7 +38,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
       phone: phoneField,
       display_name: displayNameField,
       login: loginField,
-      id: auth.user.id,
+      id: auth?.user?.id,
     };
     dispatch(changeProfile(user));
   };

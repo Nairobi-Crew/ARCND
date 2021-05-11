@@ -7,8 +7,8 @@ export interface IGameProperties {
   score: number
   lives: number
   level: number
-  ctx: CanvasRenderingContext2D
-  gameWindow: GameWindowProps;
+  ctx: CanvasRenderingContext2D | undefined
+  gameWindow: GameWindowProps | undefined
   menuMode: boolean
 }
 
@@ -16,7 +16,7 @@ export interface IGameProperties {
  * Синглтон для хранения текущих параметров игры
  */
 export class GameProperties {
-  private static instance;
+  private static instance: GameProperties;
 
   moved = false; //
 
@@ -30,11 +30,11 @@ export class GameProperties {
 
   level = 1; // текущий уровень
 
-  lastShoot = null; // время последнего выстрела
+  lastShoot = 0; // время последнего выстрела
 
-  ctx: CanvasRenderingContext2D; // контекст канваса
+  ctx: CanvasRenderingContext2D | undefined; // контекст канваса
 
-  gameWindow: GameWindowProps;
+  gameWindow: GameWindowProps | undefined;
 
   menuMode = false; // режим отображения меню
 
@@ -56,7 +56,7 @@ export class GameProperties {
 }
 
 export const gameProperties = new GameProperties({
-  ctx: null,
+  ctx: undefined,
   gameStarted: false,
   level: 1,
   lives: 3,

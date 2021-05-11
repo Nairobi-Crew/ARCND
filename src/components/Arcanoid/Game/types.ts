@@ -1,7 +1,7 @@
 import BaseObject from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 
 export type GameProps = {
-  ctx: CanvasRenderingContext2D
+  ctx?: CanvasRenderingContext2D
 }
 
 // размер игрового окна

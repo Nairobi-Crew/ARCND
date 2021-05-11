@@ -13,7 +13,6 @@ import Form from 'UI/Form';
 const NewTopic: FC = () => {
   const auth = useAuthReselect();
   const [header, setHeader] = useState('');
-  const [user, setUser] = useState(auth.user);
   const dispatch = useDispatch();
   const topics = useForumTopics();
   const history = useHistory();
@@ -25,17 +24,13 @@ const NewTopic: FC = () => {
   }, []);
 
   useEffect(() => {
-    setUser(auth.user);
-  }, [auth]);
-
-  useEffect(() => {
     if (topics.state === EForumState.FETCHED_TOPICS) {
       history.push('/forum');
     }
   }, [topics]);
 
   const onSaveMessageHandler = () => {
-    dispatch(addTopic(user.id, `${user.first_name} ${user.second_name}`, header));
+    dispatch(addTopic(header));
   };
 
   const onCancelMessageHandler = () => {

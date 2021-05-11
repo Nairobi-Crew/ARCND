@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { EditMessageProps } from 'Pages/Forums/Thread/EditMessage/types';
 import { useAuthReselect, useForumMessages, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
-import { clearState, fetchTopics, saveMessage } from 'Reducers/forum/actions';
+import { clearState, fetchTopicsAction, saveMessage } from 'Reducers/forum/actions';
 import Form from 'UI/Form/index';
 import Input from 'UI/Input/index';
 import Button from 'UI/Button';
@@ -31,11 +31,11 @@ const EditMessage: FC<EditMessageProps> = (
   const auth = useAuthReselect();
   const history = useHistory();
 
-  const getMessage = (id) => {
+  const getMessage = (id: number) => {
     let msg = '';
     let hdr = '';
     let tm = 0;
-    if (id !== '') {
+    if (id !== 0) {
       if (messages.messages) {
         const foundedMessage = messages.messages.find((item) => item.id === id);
         if (foundedMessage) {
@@ -50,7 +50,7 @@ const EditMessage: FC<EditMessageProps> = (
 
   useEffect(() => {
     if (topics.topics && topics.topics.length === 0) {
-      dispatch(fetchTopics());
+      dispatch(fetchTopicsAction());
     }
     const msg = getMessage(messageId);
     setMessage(msg.message);
@@ -74,8 +74,8 @@ const EditMessage: FC<EditMessageProps> = (
       time,
       message,
       parentMessage,
-      auth.user.id,
-      `${auth.user.first_name} ${auth.user.second_name}`,
+      auth?.user?.id ? auth?.user?.id : 0,
+      `${auth?.user?.first_name} ${auth.user?.second_name}`,
       topicId,
       header,
     ));

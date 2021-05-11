@@ -8,19 +8,38 @@ import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
 import {
-  API_PATH, AUTH_PATH, LEADER_PATH, SERVER_API_URL, USER_PATH,
+  API_PATH, AUTH_PATH, FORUM_PATH, LEADER_PATH, SERVER_API_URL, USER_PATH,
 } from 'Config/config';
 import cookieParser from 'cookie-parser';
 import webpack, { Configuration } from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotModdleware from 'webpack-hot-middleware';
-import FormData from 'form-data';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+// @ts-ignore
+// eslint-disable-next-line import/no-extraneous-dependencies
+import * as FormData from 'form-data';
 import authRoutes, { getUserInfo } from 'Server/routes/auth';
 import userRoutes from 'Server/routes/user';
 import { EAuthState } from 'Reducers/auth/types';
 import leaderRoutes from 'Server/routes/leader';
 import path from 'path';
-import clientConfig from '../../webpack.client';
+// import { syncForumModels } from 'Server/db/models/forum';
+import forumRoutes from 'Server/routes/forum';
+// @ts-ignore
+// eslint-disable-next-line import/extensions
+import clientConfig from '../../webpack.client.js';
+// import {syncUserModel} from 'Server/db/models/user';
+// import {TopicModel} from 'Server/db/models/forum';
+// import { syncMessageModel } from 'Server/db/models/forum';
+
+// syncMessageModel(true).then(() => console.log('Message model sync OK')).catch(() => console.log('Error sync Message model'));
+
+// syncUserModel(true).then(() => console.log('User sync'));
+
+// syncForumModels(true).then(() => {
+//   // eslint-disable-next-line no-console
+//   console.log('Synchronized');
+// // eslint-disable-next-line no-console
+// }).catch(() => console.log('Synchronization failed'));
 
 (global as any).FormData = FormData;
 
@@ -34,19 +53,14 @@ app.use(
   webpackDevMiddleware(
     compiler,
     {
-      watchOptions: {
-        poll: 100,
-        ignored: /node_modules/,
-      },
       serverSideRender: true,
       writeToDisk: true,
       publicPath: clientConfig.publicPath,
-      hot: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
     },
   ),
 );
-app.use(webpackHotModdleware(compiler));
+app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, './dist')));
 
 const AUTH_URL = `${API_PATH}${AUTH_PATH}`;
@@ -58,37 +72,17 @@ const USER_SERVER_URL = `${SERVER_API_URL}${USER_PATH}`;
 const LEADER_URL = `${API_PATH}${LEADER_PATH}`;
 const LEADER_SERVER_URL = `${SERVER_API_URL}${LEADER_PATH}`;
 
+const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
+
 authRoutes(app, json, AUTH_URL, AUTH_SERVER_URL);
 userRoutes(app, json, USER_URL, USER_SERVER_URL);
 leaderRoutes(app, json, LEADER_URL, LEADER_SERVER_URL);
+forumRoutes(app, json, FORUM_URL);
 
 app.get('*', async (req: Request, res: Response) => {
-  const { url, method } = req;
+  // const { url, method } = req;
   // eslint-disable-next-line no-console
-  console.log('Request *', { url, method });
-  // if (path.extname(req.url) === '.json') {
-  //   const file = path.join(__dirname, req.url);
-  //   fs.readFile(file, 'utf8', (err, data) => {
-  //     if (err) {
-  //       console.log('Error get JSON file', file);
-  //     } else {
-  //       res.send(data);
-  //       console.log('Get json', { file, data });
-  //     }
-  //   });
-  //   // res.sendFile(file);
-  //   return;
-  // }
-
-  // let p = req.path;
-  // p = p.substr(-1) === '/' ? p.substr(0, p.length - 1) : p;
-  // const lastComp = p.split('/');
-  // const name = lastComp[lastComp.length - 1].includes('.');
-  // if (name) {
-  //   console.log('Go to next');
-  //   next();
-  //   return;
-  // }
+  // console.log('Request *', { url, method });
 
   const context = {};
   const store = configureStore(

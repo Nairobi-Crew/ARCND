@@ -2,50 +2,76 @@ import { EForumState, IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
 import {
   getData, getMessages, saveData, saveMessages, WAIT_FOR_TEST,
 } from 'Reducers/forum/sampleData';
-import getRandomId from 'Util/getRandomId';
+import { Dispatch } from 'react';
+import { ForumAction } from 'Reducers/forum/forum';
+import { API_PATH, FORUM_PATH } from 'Config/config';
 
-export const clearState = () => (dispatch) => {
+const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
+export const clearState = () => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.UNKNOWN });
 };
 
-export const fetchTopics = () => async (dispatch) => {
+export const fetchTopics = (): Promise<ITopicsItem[]> => new Promise((resolve, reject) => {
+  fetch(`${FORUM_URL}/`, {
+    method: 'GET',
+    headers: {
+      credentials: 'include',
+    },
+  }).then((topics) => {
+    topics.json().then((items) => {
+      resolve(items);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+});
+
+export const fetchTopicsAction = () => async (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
-  setTimeout(() => {
-    dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: getData() } });
-  }, WAIT_FOR_TEST);
+  fetchTopics().then((items) => {
+    dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: items } });
+  }).catch(() => dispatch({ type: EForumState.UNKNOWN }));
 };
 
-export const fetchMessages = (thread: string) => async (dispatch) => {
+export const fetchMessages = (thread: number) => async (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
-  setTimeout(() => {
-    const filteredMessages = getMessages().filter(
-      (item) => item.topic === thread,
-    );
-    dispatch({
-      type: EForumState.FETCHED_MESSAGES,
-      payload: {
-        messages: filteredMessages,
-        loaded: thread,
-      },
+  fetch(`${FORUM_URL}/thread/${thread}`, {
+    method: 'GET',
+    credentials: 'include',
+  }).then((rawMessages) => {
+    rawMessages.json().then((messages: IMessagesItem[]) => {
+      dispatch({
+        type: EForumState.FETCHED_MESSAGES,
+        payload: {
+          messages,
+          loaded: thread,
+        },
+      });
+    }).catch((error) => {
+      dispatch({ type: EForumState.UNKNOWN });
+      console.log('Error parsing answer', error);
     });
-  }, WAIT_FOR_TEST);
+  }).catch((error) => {
+    dispatch({ type: EForumState.UNKNOWN });
+    console.log('Error fetch messages', error);
+  });
 };
 
 export const saveMessage = (
-  _id: string,
+  _id: number,
   _time: number,
   text: string,
-  parent: string,
+  parent: number,
   authorId: number,
   author: string,
-  topic: string,
+  topic: number,
   header: string,
-) => (dispatch) => {
+) => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
   let id = _id;
   let time = _time;
-  if (id === '') {
-    id = getRandomId();
+  if (id === 0) {
+    id = 0;
     time = Date.now();
   }
   const msg: IMessagesItem = {
@@ -60,7 +86,7 @@ export const saveMessage = (
   };
 
   const m = getMessages();
-  if (_id === '') {
+  if (_id === 0) {
     m.push(msg);
     const d = getData();
     const foundTopic = d.find((item) => item.id === topic);
@@ -95,36 +121,35 @@ export const saveMessage = (
   }, WAIT_FOR_TEST);
 };
 
-export const addTopic = (authorId, author, description) => async (dispatch) => {
-  const id = getRandomId();
-  const now = Date.now();
-  const topic: ITopicsItem = {
-    id,
-    createTime: now,
-    authorId,
-    author,
-    description,
-    lastMessage: '',
-    lastMessageUser: '',
-    lastMessageUserId: 0,
-    lastMessageTime: 0,
-    messageCount: 0,
-  };
-
-  const d = getData();
-  d.push(topic);
-  saveData(d);
-
+export const addTopic = (description: string) => async (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
-  setTimeout(() => {
-    dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: getData() } });
-  }, WAIT_FOR_TEST);
+  fetch(`${FORUM_URL}/`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: description,
+    }),
+  })
+    .then((rawTopic) => {
+      rawTopic.json()
+        .then((topic) => {
+          dispatch({ type: EForumState.NEW_TOPIC, payload: { topic } });
+        })
+        .catch((error) => console.log('Error', error));
+    })
+    .catch(() => {
+      dispatch({ type: EForumState.UNKNOWN });
+    });
 };
 
-export const removeTopic = (id) => (dispatch) => {
+export const removeTopic = (id: number) => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
   const d = getData();
-  const found = d.indexOf(d.find((item) => item.id === id));
+  const topic = d.find((item) => item.id === id);
+  const found = topic ? d.indexOf(topic) : -1;
   if (found > -1) {
     d.splice(found, 1);
   }
@@ -134,10 +159,11 @@ export const removeTopic = (id) => (dispatch) => {
   }, WAIT_FOR_TEST);
 };
 
-export const removeMessage = (id) => (dispatch) => {
+export const removeMessage = (id: number) => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
   const m = getMessages();
-  const found = m.indexOf(m.find((item) => item.id === id));
+  const topic = m.find((item) => item.id === id);
+  const found = topic ? m.indexOf(topic) : -1;
   if (found > -1) {
     m.splice(found, 1);
   }

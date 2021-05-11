@@ -1,15 +1,25 @@
-import { EForumState, IForumReducer } from 'Reducers/forum/types';
+import {
+  EForumState, IForumReducer, IMessagesItem, ITopicsItem,
+} from 'Reducers/forum/types';
 
 export const defaultForumReducer : IForumReducer = {
   state: EForumState.UNKNOWN,
   messages: [],
   topics: [],
-  messagesLoaded: '',
+  messagesLoaded: 0,
 };
+
+export type ForumAction = {
+  type: string
+  messages?: IMessagesItem[]
+  topics?: ITopicsItem[]
+  messagesLoaded?: string
+  payload?: any
+}
 
 export function forumReducer(
   state: IForumReducer = defaultForumReducer,
-  action,
+  action: ForumAction,
 ): IForumReducer {
   let newState;
   switch (action.type) {
@@ -32,6 +42,16 @@ export function forumReducer(
         messages: action.payload.messages,
         messagesLoaded: action.payload.loaded,
         state: action.type,
+      };
+      break;
+    case EForumState.NEW_TOPIC:
+      // eslint-disable-next-line no-case-declarations
+      const { topics } = state;
+      topics.push(action.payload.topic);
+      newState = {
+        ...state,
+        state: EForumState.FETCHED_TOPICS,
+        topics,
       };
       break;
     default:

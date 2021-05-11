@@ -16,15 +16,23 @@ const TopicItem: TopicProps = ({ topic }) => {
       </div>
       <div className="topic__item_message">
         <Link to={topicLink}>
-          {dateFormat(topic.lastMessageTime, 'dd-mm')}
-          &nbsp;в &nbsp;
-          {dateFormat(topic.lastMessageTime, 'HH:MM')}
-          ,&nbsp;
-          {topic.lastMessageUser}
-          &nbsp;
-          написал:
-          <br />
-          {topic.lastMessage}
+          {
+            topic.lastMessage
+              ? (
+                <>
+                  {dateFormat(topic.lastMessageTime as number, 'dd-mm')}
+            &nbsp;в &nbsp;
+                  {dateFormat(topic.lastMessageTime as number, 'HH:MM')}
+                  ,&nbsp;
+                  {topic.lastMessageUser}
+                  &nbsp;
+                  написал:
+                  <br />
+                  {topic.lastMessage}
+                </>
+              )
+              : null
+          }
         </Link>
       </div>
     </div>

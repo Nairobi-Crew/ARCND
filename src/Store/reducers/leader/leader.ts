@@ -17,9 +17,15 @@ export const defaultLeaderReducer: ILeaderReducer = {
   users: [],
 };
 
+export type LeaderAction = {
+  state?: ELeaderState
+  type: string
+  payload?: any
+}
+
 export function leaderReducer(
   state: ILeaderReducer = defaultLeaderReducer,
-  action,
+  action: LeaderAction,
 ): ILeaderReducer {
   const newState = { ...state };
   switch (action.type) {

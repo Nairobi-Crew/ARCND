@@ -15,9 +15,18 @@ export const defaultAuthReducer: IAuthUserReducer = {
   reason: '',
 };
 
+export type AuthAction = {
+  state?: EAuthState
+  loggedTime?: 0
+  user?: IUser
+  reason?: string
+  payload?: any
+  type: string
+}
+
 export function authReducer(
   state: IAuthUserReducer = defaultAuthReducer,
-  action,
+  action: AuthAction,
 ): IAuthUserReducer {
   switch (action.type) {
     case EAuthAction.AUTH_LOGIN:

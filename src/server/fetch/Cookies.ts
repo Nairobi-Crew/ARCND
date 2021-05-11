@@ -12,7 +12,10 @@ class Cookies {
   }
 
   static getCookies(req: Request) {
-    return req?.headers?.cookie;
+    if (req.headers.cookie) {
+      return req.headers.cookie;
+    }
+    return '';
   }
 }
 

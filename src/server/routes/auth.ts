@@ -1,11 +1,14 @@
 import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
 import Cookies from 'Server/fetch/Cookies';
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { IUser } from 'Store/types';
 
-export const getUserInfo = (url, req: Request): Promise<IUser> => new Promise((resolve, reject) => {
+export const getUserInfo = (
+  url: string,
+  req: Request,
+): Promise<IUser> => new Promise((resolve, reject) => {
   const Cookie = Cookies.getCookies(req);
-  const getUserOptions: TFetchOptions<string> = {
+  const getUserOptions: TFetchOptions = {
     headers: { Cookie },
   };
   Fetch.get(url, getUserOptions)
@@ -22,14 +25,14 @@ export const getUserInfo = (url, req: Request): Promise<IUser> => new Promise((r
     });
 });
 
-const authRoutes = (app, json, url, serverUrl) => {
+const authRoutes = (app: Express, json: any, url: string, serverUrl: string) => {
   app.post(`${url}/signin`, json, (req, res) => {
     if (!req.body) {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
     const { login, password } = req.body;
-    const loginOptions: TFetchOptions<{ login, password }> = {
+    const loginOptions: TFetchOptions = {
       data: { login, password },
     };
     const serverAddress = `${serverUrl}/signin`;
@@ -39,7 +42,7 @@ const authRoutes = (app, json, url, serverUrl) => {
         res.status(200).send(await answer.text());
       })
       .catch((error) => {
-        res.status(error.status).send(error.statusText);
+        res.status(error.status || 500).send(error.statusText);
       });
   });
 
@@ -48,14 +51,15 @@ const authRoutes = (app, json, url, serverUrl) => {
     getUserInfo(su, req)
       .then((user) => res.status(200).send(user))
       .catch((error) => {
-        res.status(error.status).send(error.statusText);
+        console.log('Error get user info', error);
+        res.status(error.status || 500).send(error.statusText);
       });
   });
 
   app.post(`${url}/logout`, (req, res) => {
     const Cookie = Cookies.getCookies(req);
 
-    const LogoutUserOptions: TFetchOptions<string> = {
+    const LogoutUserOptions: TFetchOptions = {
       headers: { Cookie },
     };
     Fetch.post(`${serverUrl}/logout`, LogoutUserOptions)

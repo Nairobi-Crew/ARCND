@@ -4,7 +4,7 @@ export const WAIT_FOR_TEST = 1;
 
 export const data: Topics = [
   {
-    id: '1',
+    id: 1,
     description: 'First topic',
     messageCount: 20,
     author: 'Oleg',
@@ -16,7 +16,7 @@ export const data: Topics = [
     lastMessageUserId: 2,
   },
   {
-    id: '2',
+    id: 2,
     description: 'Second topic',
     messageCount: 20,
     author: 'Alexandr Stepanov',
@@ -31,43 +31,43 @@ export const data: Topics = [
 
 export const messages: Messages = [
   {
-    id: '1',
-    topic: '1',
+    id: 1,
+    topic: 1,
     message: 'Sample message for topic 1',
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: '',
+    parentMessage: 0,
     time: 9000000,
   },
   {
-    id: '2',
-    topic: '1',
+    id: 2,
+    topic: 1,
     message: 'Sample message for topic 1',
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: '',
+    parentMessage: 0,
     time: 9000000,
   },
   {
-    id: '3',
-    topic: '1',
+    id: 3,
+    topic: 1,
     message: 'Sample message for topic 1',
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: '',
+    parentMessage: 0,
     time: 9000000,
   },
   {
-    id: '4',
-    topic: '1',
+    id: 4,
+    topic: 1,
     message: 'Sample message for topic 1',
     author: 'Oleg',
     authorId: 1,
     header: 'header -> Whats up',
-    parentMessage: '',
+    parentMessage: 0,
     time: 9000000,
   },
 ];

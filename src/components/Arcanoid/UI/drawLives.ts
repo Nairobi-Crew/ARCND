@@ -10,6 +10,9 @@ const drawLives = (w: GameWindowProps) => {
   const drawOneLive = (current: number) => {
     const baseX = w.right - (current * 30) + 10;
     const baseY = Math.round(w.top / 2);
+    if (!ctx) {
+      return;
+    }
     ctx.beginPath();
     ctx.fillStyle = ball.fillStyle;
     ctx.strokeStyle = ball.strokeStyle;

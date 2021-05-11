@@ -3,7 +3,7 @@ import { FC } from 'react';
 export type OwnLeaderProps = {
   avatar?: string;
   name?: string;
-  score?: string;
+  score?: number;
   index?: string;
 }
 

@@ -1,13 +1,14 @@
 import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
 import Cookies from 'Server/fetch/Cookies';
+import { Express } from 'express';
 
-const userRoutes = (app, json, url, serverUrl) => {
+const userRoutes = (app: Express, json: any, url: string, serverUrl: string) => {
   app.put(`${url}/profile`, json, (req, res) => {
     if (!req.body) {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const profileOptions: TFetchOptions<unknown> = {
+    const profileOptions: TFetchOptions = {
       data: req.body,
       headers: {
         Cookie: Cookies.getCookies(req),
@@ -28,7 +29,7 @@ const userRoutes = (app, json, url, serverUrl) => {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const profileOptions: TFetchOptions<unknown> = {
+    const profileOptions: TFetchOptions = {
       data: req.body,
       headers: {
         Cookie: Cookies.getCookies(req),
@@ -49,7 +50,7 @@ const userRoutes = (app, json, url, serverUrl) => {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const avatarOptions: TFetchOptions<unknown> = {
+    const avatarOptions: TFetchOptions = {
       data: req.body,
       headers: {
         Cookie: Cookies.getCookies(req),
@@ -71,7 +72,7 @@ const userRoutes = (app, json, url, serverUrl) => {
       res.status(400).send({ reason: 'Error in parameters' });
       return;
     }
-    const getInfo: TFetchOptions<unknown> = {
+    const getInfo: TFetchOptions = {
       headers: {
         Cookie: Cookies.getCookies(req),
       },

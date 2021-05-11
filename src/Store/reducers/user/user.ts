@@ -13,9 +13,17 @@ export const defaultUserReducer: IUserReducer = {
   state: EUserAction.USER_UNKNOWN,
 };
 
+export type UserAction = {
+  reason?: string
+  user?: IUser
+  state?: EUserAction
+  type: string
+  payload?: any
+}
+
 export function userReducer(
   state: IUserReducer = defaultUserReducer,
-  action,
+  action: UserAction,
 ): IUserReducer {
   switch (action.type) {
     case EUserAction.USER_GET_INFO_BY:
@@ -23,8 +31,11 @@ export function userReducer(
         ...state, reason: '', user: action.payload.user, state: action.type,
       };
     case EUserAction.USER_CHANGE_AVATAR:
+      // eslint-disable-next-line no-case-declarations
       const { user } = state;
-      user.avatar = action.payload.user.avatar;
+      if (user) {
+        user.avatar = action.payload.user.avatar;
+      }
       return {
         ...state, reason: '', user, state: action.type,
       };

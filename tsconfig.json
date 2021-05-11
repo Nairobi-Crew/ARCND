@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "target": "es2020",
     "lib": [
       "dom",
@@ -48,14 +50,14 @@
       "Server/*": [
         "src/server/*"
       ]
-    }
+    },
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "strictNullChecks": true
   },
-  "noImplicitAny": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "alwaysStrict": true,
-  "sourceMap": true,
-  "strictNullChecks": true,
   "exclude": [
     "node_modules"
   ]

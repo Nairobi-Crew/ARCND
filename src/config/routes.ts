@@ -9,6 +9,8 @@ import Logout from 'Pages/Logout/Logout';
 import Page404 from 'Pages/404/404';
 import Main from 'Pages/Main';
 import Leaderboard from 'Pages/Leaderboard/Leaderboard';
+import NewTopic from 'Pages/Forums/NewTopic';
+import Thread from 'Pages/Forums/Thread';
 
 export interface ILink {
   title: string
@@ -91,6 +93,22 @@ const routes: ILink[] = [
     title: 'Main',
     component: Main,
     key: 'Main',
+  },
+  {
+    visibility: 'never',
+    exact: false,
+    title: '',
+    path: '/newtopic',
+    key: 'newtopic',
+    component: NewTopic,
+  },
+  {
+    visibility: 'never',
+    exact: false,
+    title: '',
+    path: '/thread/:id',
+    key: 'thread',
+    component: Thread,
   },
   {
     visibility: 'always',

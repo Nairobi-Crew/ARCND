@@ -147,6 +147,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     rocket.nextMove(); // перемещение ракетки на следующий кадр
     const context = gameProperties.ctx;
     const gameContext = getGameContext();
+    if (!context || !gameContext) {
+      return;
+    }
     // gameObjects.gameWindow = gameContext;
 
     context.beginPath();
@@ -217,13 +220,15 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           if (rocket.gun) {
             rocket.gun -= 1;
             if (Date.now() - shot > SHOOT_INTERVAL) {
-              gameProperties.lastShoot = Date.now();
-              const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
-              const y = rocket.y
-                - SHOOT_HEIGHT - rocket.height
-                - gameProperties.gameWindow.top - GUN_HEIGHT;
-              const object = new Shoot({ x, y });
-              gameObjects.add({ object, type: 'shoot' });
+              if (gameProperties && gameProperties.gameWindow) {
+                gameProperties.lastShoot = Date.now();
+                const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
+                const y = rocket.y
+                  - SHOOT_HEIGHT - rocket.height
+                  - gameProperties.gameWindow.top - GUN_HEIGHT;
+                const object = new Shoot({ x, y });
+                gameObjects.add({ object, type: 'shoot' });
+              }
             }
           }
         }
@@ -264,7 +269,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
 
         dispatch(addLeader({
-          name: getDisplayName(auth.user),
+          name: getDisplayName(auth.user) as string,
           avatar: getAvatar(auth.user),
           level: gameProperties.level,
           score_arcnd: gameProperties.score,

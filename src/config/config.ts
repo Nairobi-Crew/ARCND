@@ -5,3 +5,4 @@ export const SERVER_API_URL = API_URL;
 export const AUTH_PATH = 'auth';
 export const USER_PATH = 'user';
 export const LEADER_PATH = 'leaderboard';
+export const FORUM_PATH = 'forum';

@@ -29,11 +29,11 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       </div>
       <div className="message_tools">
         <div className="message_tools_item">
-          {auth.state === EAuthState.LOGGED && message.parentMessage === ''
+          {auth.state === EAuthState.LOGGED && message.parentMessage === 0
             ? (
               <>
                 <Button onClick={() => setFormReplyVisible((prevState) => !prevState)}>{formReplyVisible ? 'Отменить' : 'Ответить' }</Button>
-                <EditMessage parentMessage={message.id} topicId={message.topic} messageId="" visible={formReplyVisible} onSave={onSaveHandler} />
+                <EditMessage parentMessage={message.id} topicId={message.topic} messageId={0} visible={formReplyVisible} onSave={onSaveHandler} />
               </>
             )
             : null}
