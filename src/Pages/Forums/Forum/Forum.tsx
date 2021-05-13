@@ -8,7 +8,6 @@ import { useAuthReselect, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
 import { getUserData } from 'Reducers/auth/actions';
 import { useHistory } from 'react-router-dom';
-import { EForumState } from 'Reducers/forum/types';
 import { clearState, fetchTopicsAction } from 'Reducers/forum/actions';
 
 const Forum: React.FC<ForumProps> = ({ caption }) => {
@@ -17,17 +16,13 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
   const history = useHistory();
   const data = useForumTopics();
   useEffect(() => {
-    if (auth.state === EAuthState.UNKNOWN) {
-      dispatch(getUserData());
-    }
-    if (data.state === EForumState.UNKNOWN) {
-      dispatch(fetchTopicsAction());
-    }
+    dispatch(getUserData());
+    dispatch(fetchTopicsAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    if (auth.state === EAuthState.UNKNOWN) {
-      dispatch(getUserData());
-    }
+    dispatch(getUserData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   const newTopicHandler = () => {

@@ -64,6 +64,7 @@ export interface MessageAttributes {
   date?: Date
   message?: string
   title?: string
+  emoji?: number
 }
 
 export interface MessageCreationAttributes extends Optional<MessageAttributes, 'id'> {}
@@ -122,6 +123,11 @@ export class MessageModel extends Model<MessageAttributes, MessageCreationAttrib
     type: DataType.STRING(200),
   })
   title: string
+
+  @Column({
+    type: DataType.SMALLINT,
+  })
+  emoji: number
 }
 export const syncTopicModel = (force: boolean): Promise<void> => new Promise((resolve, reject) => (
   TopicModel.sync({ force }).then(() => resolve()).catch((error) => {

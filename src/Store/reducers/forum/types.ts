@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 export interface TopicItem {
   id: number
   title: string
@@ -39,6 +40,7 @@ export interface IMessagesItem {
   time: number
   parentMessage: number
   topic: number
+  emoji: number
 }
 
 export type Messages = IMessagesItem[];

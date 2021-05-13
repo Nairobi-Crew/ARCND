@@ -1,7 +1,4 @@
 import { EForumState, IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
-import {
-  getData, getMessages, saveData, saveMessages, WAIT_FOR_TEST,
-} from 'Reducers/forum/sampleData';
 import { Dispatch } from 'react';
 import { ForumAction } from 'Reducers/forum/forum';
 import { API_PATH, FORUM_PATH } from 'Config/config';
@@ -49,10 +46,12 @@ export const fetchMessages = (thread: number) => async (dispatch: Dispatch<Forum
       });
     }).catch((error) => {
       dispatch({ type: EForumState.UNKNOWN });
+      // eslint-disable-next-line no-console
       console.log('Error parsing answer', error);
     });
   }).catch((error) => {
     dispatch({ type: EForumState.UNKNOWN });
+    // eslint-disable-next-line no-console
     console.log('Error fetch messages', error);
   });
 };
@@ -63,6 +62,7 @@ export const saveMessage = (
   parentMessage: number,
   topic: number,
   header: string,
+  emoji = 5,
 ) => (dispatch: Dispatch<ForumAction>) => {
   dispatch({ type: EForumState.FETCH_START });
   fetch(`${FORUM_URL}/thread/${_id}`, {
@@ -76,6 +76,7 @@ export const saveMessage = (
       parentMessage,
       topic,
       header,
+      emoji,
     }),
   }).then((response) => {
     response.json().then((parsedMessage) => {
@@ -88,6 +89,7 @@ export const saveMessage = (
         time: parsedMessage.time,
         topic,
         header,
+        emoji,
       };
       if (_id === 0) {
         dispatch({
@@ -101,9 +103,11 @@ export const saveMessage = (
         });
       }
     }).catch((error) => {
+      // eslint-disable-next-line no-console
       console.log('Error parse answer', error);
     });
   }).catch((error) => {
+    // eslint-disable-next-line no-console
     console.log('Error get answer from server', error);
   });
 };
@@ -125,37 +129,10 @@ export const addTopic = (description: string) => async (dispatch: Dispatch<Forum
         .then((topic) => {
           dispatch({ type: EForumState.NEW_TOPIC, payload: { topic } });
         })
+        // eslint-disable-next-line no-console
         .catch((error) => console.log('Error', error));
     })
     .catch(() => {
       dispatch({ type: EForumState.UNKNOWN });
     });
-};
-
-export const removeTopic = (id: number) => (dispatch: Dispatch<ForumAction>) => {
-  dispatch({ type: EForumState.FETCH_START });
-  const d = getData();
-  const topic = d.find((item) => item.id === id);
-  const found = topic ? d.indexOf(topic) : -1;
-  if (found > -1) {
-    d.splice(found, 1);
-  }
-  saveData(d);
-  setTimeout(() => {
-    dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: getData() } });
-  }, WAIT_FOR_TEST);
-};
-
-export const removeMessage = (id: number) => (dispatch: Dispatch<ForumAction>) => {
-  dispatch({ type: EForumState.FETCH_START });
-  const m = getMessages();
-  const topic = m.find((item) => item.id === id);
-  const found = topic ? m.indexOf(topic) : -1;
-  if (found > -1) {
-    m.splice(found, 1);
-  }
-  saveMessages(m);
-  setTimeout(() => {
-    dispatch({ type: EForumState.FETCHED_MESSAGES, payload: { messages: getMessages() } });
-  }, WAIT_FOR_TEST);
 };

@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { isDev } = require('./env.variables');
 const babelLoader = require('./webpack.babel');
 
@@ -63,6 +64,13 @@ module.exports = {
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: './static', to: './',
+        },
+      ],
+    }),
     new ResourcesManifestPlugin(
       {
         match: {

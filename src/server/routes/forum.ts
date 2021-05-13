@@ -9,9 +9,9 @@ import { IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as sq from 'sequelize';
 import { getDisplayName } from 'Store/util';
-import htmlescape from 'htmlescape';
 import { IUser } from 'Store/types';
 import { cloneObject } from 'Util/cloneObject';
+import { escapedString } from 'Util/escapedString';
 
 const forumRoutes = (app: Express, json: any, url: string) => {
 //   SELECT
@@ -152,7 +152,7 @@ const forumRoutes = (app: Express, json: any, url: string) => {
   app.post(`${url}/`, json, async (req, res) => {
     let user : UserModel;
     const { body } = req;
-    const title = htmlescape(body.title ? body.title : '');
+    const title = escapedString(body.title ? body.title : '');
     try {
       const createTime = new Date(Date.now());
       user = cloneObject(await getUser(req));
@@ -207,6 +207,7 @@ const forumRoutes = (app: Express, json: any, url: string) => {
           message: message.message,
           author: getDisplayName(cloneObject(await getUserById(req, message.userId)), 'Unknown'),
           time: new Date(message.date).getTime(),
+          emoji: message.emoji,
         });
       }
       res.status(200).send(messages);
@@ -224,7 +225,7 @@ const forumRoutes = (app: Express, json: any, url: string) => {
     const date = new Date(Date.now());
     console.log('Body', req.body);
     const {
-      message, parentMessage, topic, header,
+      message, parentMessage, topic, header, emoji,
     } = req.body;
     let user;
     try {
@@ -232,13 +233,15 @@ const forumRoutes = (app: Express, json: any, url: string) => {
     } catch (e) {
       console.log('Error check user');
       res.status(401).send({});
+      return;
     }
     const msg: MessageCreationAttributes = {
-      message: message as string,
+      message: escapedString(message as string),
       topicId: topic,
-      title: header as string,
+      title: escapedString(header as string),
       userId: user.id,
       parent: parentMessage,
+      emoji,
     };
     console.log('New message', msg);
     let newMessage;
@@ -266,6 +269,7 @@ const forumRoutes = (app: Express, json: any, url: string) => {
       parentMessage: parseInt(newMessage.parent, 10),
       authorId: parseInt(newMessage.userId, 10),
       author: getDisplayName(user, 'Unknown'),
+      emoji: newMessage.emoji,
     };
     res.status(200).send(answer);
   });

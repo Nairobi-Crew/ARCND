@@ -6,3 +6,5 @@ export const AUTH_PATH = 'auth';
 export const USER_PATH = 'user';
 export const LEADER_PATH = 'leaderboard';
 export const FORUM_PATH = 'forum';
+export const EMOJI_INPUT_SIZE = 36;
+export const EMOJI_SIZE = 24;

@@ -22,10 +22,8 @@ import userRoutes from 'Server/routes/user';
 import { EAuthState } from 'Reducers/auth/types';
 import leaderRoutes from 'Server/routes/leader';
 import path from 'path';
-// import { syncForumModels } from 'Server/db/models/forum';
 import forumRoutes from 'Server/routes/forum';
 import { syncForumModels } from 'Server/db/models/forum';
-// eslint-disable-next-line import/extensions
 // @ts-ignore
 // eslint-disable-next-line import/extensions
 import clientConfig from '../../webpack.client.js';
@@ -56,7 +54,8 @@ app.use(
   ),
 );
 app.use(webpackHotMiddleware(compiler));
-app.use(express.static(path.join(__dirname, './dist')));
+const distPath = path.join(__dirname, './');
+app.use(express.static(distPath));
 
 const AUTH_URL = `${API_PATH}${AUTH_PATH}`;
 const AUTH_SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
@@ -75,9 +74,9 @@ leaderRoutes(app, json, LEADER_URL, LEADER_SERVER_URL);
 forumRoutes(app, json, FORUM_URL);
 
 app.get('*', async (req: Request, res: Response) => {
-  // const { url, method } = req;
+  const { url, method } = req;
   // eslint-disable-next-line no-console
-  // console.log('Request *', { url, method });
+  console.log('Request *', { url, method });
 
   const context = {};
   const store = configureStore(
