@@ -1,4 +1,4 @@
-import { IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
+import { GameFieldObjectType, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
   EVENTS,
@@ -13,6 +13,7 @@ import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -32,6 +33,10 @@ export default class GameFieldObjects {
 
   add(item: IGameFieldObjectProps): void {
     this.data.push(item);
+  }
+
+  getList(filter: GameFieldObjectType): IGameFieldObjectProps[] {
+    return this.data.filter((item) => (item.type === filter));
   }
 
   render(): void {
@@ -76,6 +81,9 @@ export default class GameFieldObjects {
               case 'gun':
                 e = EVENTS.GUN;
                 break;
+              case 'split':
+                e = EVENTS.SPLIT;
+                break;
               default:
                 break;
             }
@@ -101,6 +109,10 @@ export default class GameFieldObjects {
 
   removeThing(thing: Thing) {
     this.data = this.data.filter((item) => !(item.type === 'thing' && (item.object as Thing) === thing));
+  }
+
+  removeBall(ball: Ball) {
+    this.data = this.data.filter((item) => !(item.type === 'ball' && (item.object) === ball));
   }
 
   removeShoot(shoot: Shoot) {

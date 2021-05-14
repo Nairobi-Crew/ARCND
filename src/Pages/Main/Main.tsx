@@ -19,10 +19,12 @@ const Main: React.FC = () => {
     } else {
       setAuthState(auth.state === EAuthState.LOGGED);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   useEffect(() => {
     dispatch(getUserData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <li className="linkBlock">

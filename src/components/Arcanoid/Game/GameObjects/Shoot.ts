@@ -26,7 +26,6 @@ class Shoot extends BaseObject {
 
   /**
    * Отрисовка выстрела
-   * @param {GameWindowProps | undefined} gw
    */
   render() {
     super.render();

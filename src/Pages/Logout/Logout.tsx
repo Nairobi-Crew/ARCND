@@ -14,9 +14,11 @@ const Logout: React.FC = () => {
     if (auth.state === EAuthState.LOGOUT) {
       history.push('/');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
   useEffect(() => {
     dispatch(logoutUser());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>

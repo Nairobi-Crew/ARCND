@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 export enum EAuthState {
   LOGGED = 'LOGGED',
   LOGIN_ERROR = 'LOGIN_ERROR',

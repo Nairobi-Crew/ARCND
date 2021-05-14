@@ -14,7 +14,9 @@ export type GameWindowProps = {
   height: number // высота
 };
 
+export type GameFieldObjectType = 'ball' | 'brick' | 'thing' | 'shoot';
+
 export interface IGameFieldObjectProps {
-  type: string
+  type: GameFieldObjectType
   object: BaseObject
 }

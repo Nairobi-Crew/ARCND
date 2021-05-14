@@ -51,6 +51,7 @@ const authRoutes = (app: Express, json: any, url: string, serverUrl: string) => 
     getUserInfo(su, req)
       .then((user) => res.status(200).send(user))
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.log('Error get user info', error);
         res.status(error.status || 500).send(error.statusText);
       });

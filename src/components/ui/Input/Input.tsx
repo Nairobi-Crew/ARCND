@@ -21,6 +21,7 @@ const Input: InputProps = ({
 
   return (
     <div className="input">
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className="input__label">
         <input
           className="input__input"

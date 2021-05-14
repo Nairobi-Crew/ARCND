@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import React from 'react';
@@ -10,13 +11,13 @@ describe('Render Button', () => {
     expect(buttonComponent).toMatchSnapshot();
   });
 
-  it ('buttonType="rect"', () => {
+  it('buttonType="rect"', () => {
     const Component = () => (<Button buttonType="rect">Test rect button</Button>);
     const wrapper = mount(<Component />);
     expect(wrapper.find('.button_type_rect')).toHaveLength(1);
     expect(wrapper.find('.button_type_rounded')).toHaveLength(0);
   });
-  it ('buttonType="round"', () => {
+  it('buttonType="round"', () => {
     const Component = () => (<Button buttonType="round">Test rect button</Button>);
     const wrapper = mount(<Component />);
     expect(wrapper.find('.button_type_rect')).toHaveLength(0);

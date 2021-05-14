@@ -1,5 +1,4 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { LIVES_BALL_RADIUS } from 'Components/Arcanoid/settings';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
@@ -14,8 +13,8 @@ const drawLives = (w: GameWindowProps) => {
       return;
     }
     ctx.beginPath();
-    ctx.fillStyle = ball.fillStyle;
-    ctx.strokeStyle = ball.strokeStyle;
+    ctx.fillStyle = 'green';
+    ctx.strokeStyle = 'lime';
     ctx.shadowBlur = 10;
     ctx.shadowOffsetX = 10;
     ctx.shadowOffsetY = 5;

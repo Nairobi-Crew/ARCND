@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getUserInfo } from 'Server/routes/auth';
 import { Request } from 'express';
 import { AUTH_PATH, SERVER_API_URL, USER_PATH } from 'Config/config';

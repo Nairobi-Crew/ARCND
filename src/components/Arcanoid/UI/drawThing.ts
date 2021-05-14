@@ -1,6 +1,12 @@
 import { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { THING_FONT, THING_HEIGHT, THING_WIDTH } from 'Components/Arcanoid/settings';
+import {
+  THING_COMPRESS_LETTER, THING_EXPAND_LETTER,
+  THING_FONT, THING_GLUE_LETTER, THING_GUN_LETTER,
+  THING_HEIGHT,
+  THING_SPLIT_LETTER,
+  THING_WIDTH,
+} from 'Components/Arcanoid/settings';
 
 /**
  * Отрисовка бонуса
@@ -33,23 +39,28 @@ const drawThing = (
   let letter = '';
   switch (type) {
     case 'gun':
-      letter = 'П';
+      letter = THING_GUN_LETTER;
       color1 = 'silver';
       color2 = 'gray';
       break;
     case 'glue':
-      letter = 'К';
+      letter = THING_GLUE_LETTER;
       color1 = 'yellow';
       color2 = 'gray';
       break;
     case 'expand':
-      letter = 'Ш';
+      letter = THING_EXPAND_LETTER;
       color1 = 'green';
       color2 = 'gray';
       break;
     case 'compress':
-      letter = 'У';
+      letter = THING_COMPRESS_LETTER;
       color1 = 'red';
+      color2 = 'gray';
+      break;
+    case 'split':
+      letter = THING_SPLIT_LETTER;
+      color1 = 'blue';
       color2 = 'gray';
       break;
     default:

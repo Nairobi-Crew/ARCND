@@ -21,12 +21,14 @@ const NewTopic: FC = () => {
     if (auth.state === EAuthState.UNKNOWN) {
       dispatch(getUserData());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (topics.state === EForumState.FETCHED_TOPICS) {
       history.push('/forum');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topics]);
 
   const onSaveMessageHandler = () => {

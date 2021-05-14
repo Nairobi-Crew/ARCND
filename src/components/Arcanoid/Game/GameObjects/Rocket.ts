@@ -5,10 +5,11 @@ import {
   ROCKET_MOVE_STEP,
   ROCKET_WIDTH, SHOOT_QTY,
 } from 'Components/Arcanoid/settings';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawRocket from 'Components/Arcanoid/UI/drawRocket';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { globalBus } from 'Util/EventBus';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,
@@ -45,25 +46,42 @@ export class Rocket extends BaseObject {
     Rocket.instance = this;
     // Шина событий для бонусов
     globalBus.on(EVENTS.EXPAND, () => { // бонус расширения ракетки
-      this.changeWidth(1.1); // увеличение ширина на 10%
       this.glue = 0; // отмена бонуса клея
       this.gun = 0; // отмена бонуса пушки
       gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
+      if (gameObjects.getList('ball').length > 1) {
+        return;
+      }
+      this.changeWidth(1.1); // увеличение ширина на 10%
     });
     globalBus.on(EVENTS.COMPRESS, () => { // бонус сужения ракетки
       this.glue = 0; // отмена бонуса клея
       this.gun = 0; // отмена бонуса пушки
       gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
+      if (gameObjects.getList('ball').length > 1) {
+        return;
+      }
       this.changeWidth(0.9); // уменьшение ширины до 90%
     });
     globalBus.on(EVENTS.GLUE, () => { // бонус клея
-      this.glue = GLUE_QTY;
       this.gun = 0; // отмена бонуса пушки
+      if (gameObjects.getList('ball').length > 1) {
+        return;
+      }
+      this.glue = GLUE_QTY;
     });
     globalBus.on(EVENTS.GUN, () => { // бонус пушки
-      this.gun = SHOOT_QTY; // установка бонуса пушки на количество выстрелов
       this.glue = 0; // отмена бонуса клея
       gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
+      if (gameObjects.getList('ball').length > 1) {
+        return;
+      }
+      this.gun = SHOOT_QTY; // установка бонуса пушки на количество выстрелов
+    });
+
+    globalBus.on(EVENTS.SPLIT, () => {
+      this.gun = 0;
+      this.glue = 0;
     });
   }
 
@@ -77,7 +95,6 @@ export class Rocket extends BaseObject {
 
   /**
    * Отрисовка ракетки
-   * @param {GameWindowProps | undefined} gameWindow объект с размерами окна
    */
   render(): void {
     super.render();
@@ -115,7 +132,9 @@ export class Rocket extends BaseObject {
   nextMove(): void {
     const { gameWindow, ctx } = gameProperties;
     // если шарик на ракетке, то перемещаем и шарик
-    if (gameWindow && ctx && gameProperties.onRocket) {
+    const balls = gameObjects.getList('ball');
+    if (gameWindow && ctx && gameProperties.onRocket && balls.length === 1) {
+      const ball = balls[0].object as Ball;
       ball.x = this.x + Math.round(this.width / 2);
       ball.y = gameWindow.height - this.height - ball.radius;
     }

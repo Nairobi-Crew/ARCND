@@ -10,10 +10,10 @@ export const decLive = () => (dispatch: Dispatch<GameAction>) => {
   dispatch({ type: EGameAction.DEC_LIVE });
 };
 
-export const startGame = () => (dispatch: Dispatch<GameAction>) => {
-  dispatch({ type: EGameAction.START_GAME });
-};
-
+// export const startGame = () => (dispatch: Dispatch<GameAction>) => {
+//   dispatch({ type: EGameAction.START_GAME });
+// };
+//
 export const endGame = () => (dispatch: Dispatch<GameAction>) => {
   dispatch({ type: EGameAction.END_GAME });
 };

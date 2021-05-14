@@ -18,6 +18,7 @@ export const getDisplayName = (user: IUser | null, nullDefault: string | undefin
     }
     return login;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('Error getDisplayName', e);
     return nullDefault;
   }

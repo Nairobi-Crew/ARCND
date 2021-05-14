@@ -31,12 +31,14 @@ const Thread: React.FC = () => {
     } else {
       setTopicDescription('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (messages.messagesLoaded === threadId) {
       setMessagesList(messages.messages);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
   return (
     <div className="thread" key={`${threadId}-${Date.now()}`}>
