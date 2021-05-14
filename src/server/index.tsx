@@ -27,6 +27,7 @@ import { syncForumModels } from 'Server/db/models/forum';
 // @ts-ignore
 // eslint-disable-next-line import/extensions
 import clientConfig from '../../webpack.client.js';
+import { isDev } from '../../env.variables';
 
 syncForumModels(false).then(() => {
   // eslint-disable-next-line no-console
@@ -40,20 +41,21 @@ const app = express();
 app.use(cookieParser());
 const json = express.json();
 const PORT = process.env.PORT || 3000;
-
-const compiler = webpack(clientConfig as Configuration);
-app.use(
-  webpackDevMiddleware(
-    compiler,
-    {
-      serverSideRender: true,
-      writeToDisk: true,
-      publicPath: clientConfig.publicPath,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-    },
-  ),
-);
-app.use(webpackHotMiddleware(compiler));
+if (isDev) {
+  const compiler = webpack(clientConfig as Configuration);
+  app.use(
+    webpackDevMiddleware(
+      compiler,
+      {
+        serverSideRender: true,
+        writeToDisk: true,
+        publicPath: clientConfig.output.publicPath,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      },
+    ),
+  );
+  app.use(webpackHotMiddleware(compiler));
+}
 const distPath = path.join(__dirname, './');
 app.use(express.static(distPath));
 
@@ -73,7 +75,7 @@ userRoutes(app, json, USER_URL, USER_SERVER_URL);
 leaderRoutes(app, json, LEADER_URL, LEADER_SERVER_URL);
 forumRoutes(app, json, FORUM_URL);
 
-app.get('*', async (req: Request, res: Response) => {
+app.get('*', (req: Request, res: Response) => {
   const { url, method } = req;
   // eslint-disable-next-line no-console
   console.log('Request *', { url, method });
@@ -83,30 +85,49 @@ app.get('*', async (req: Request, res: Response) => {
     initialAppState,
   );
 
-  try {
-    const user = await getUserInfo(`${AUTH_SERVER_URL}/user`, req);
+  getUserInfo(`${AUTH_SERVER_URL}/user`, req).then((user) => {
     initialAppState.auth.state = EAuthState.LOGGED;
     initialAppState.auth.user = user;
-  } catch (e) {
-    // Not logged
-  }
+    // eslint-disable-next-line no-console
+    console.log('Authorized', user);
+    const content = renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={context}>
+          {renderApp()}
+        </StaticRouter>
+      </Provider>,
+    );
 
-  const content = renderToString(
-    <Provider store={store}>
-      <StaticRouter location={req.url} context={context}>
-        {renderApp()}
-      </StaticRouter>
-    </Provider>,
-  );
+    res.send(renderTemplate(
+      {
+        cssPath: 'main.css',
+        jsPath: 'main.js',
+        content,
+        data: JSON.stringify(store.getState()),
+      },
+    ));
+  }).catch(() => {
+    initialAppState.auth.state = EAuthState.UNKNOWN;
+    initialAppState.auth.user = null;
+    // eslint-disable-next-line no-console
+    console.log('Unauthorized');
+    const content = renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={context}>
+          {renderApp()}
+        </StaticRouter>
+      </Provider>,
+    );
 
-  res.send(renderTemplate(
-    {
-      cssPath: 'main.css',
-      jsPath: 'main.js',
-      content,
-      data: JSON.stringify(store.getState()),
-    },
-  ));
+    res.send(renderTemplate(
+      {
+        cssPath: 'main.css',
+        jsPath: 'main.js',
+        content,
+        data: JSON.stringify(store.getState()),
+      },
+    ));
+  });
 });
 
 app.listen(PORT, () => {

@@ -118,7 +118,7 @@
     "ssr-start:webpack": "cross-env NODE_ENV=development webpack --config webpack.server.js --watch --hot",
     "ssr-start": "npm-run-all --parallel ssr-start:*",
     "start": "cross-env NODE_ENV=development webpack --config webpack.server.js && node ./dist/server.js",
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.js",
     "jest": "npx jest",
     "test": "npm run lint:fix",
     "lint:ts": "eslint --ext js,ts,tsx src",

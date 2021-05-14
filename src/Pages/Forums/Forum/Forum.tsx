@@ -20,10 +20,6 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
     dispatch(fetchTopicsAction());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    dispatch(getUserData());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
 
   const newTopicHandler = () => {
     dispatch(clearState());

@@ -1,12 +1,14 @@
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
+import { pg_connection } from '../../../env.variables';
 
 const options: SequelizeOptions = {
-  database: 'game' || process.env.DBNAME,
-  port: 5432 || parseInt(process.env.DBPORT as string, 10),
-  username: 'gamer' || process.env.DBUSER,
-  password: 'Pa$SW0r|)' || process.env.DBPASSWORD,
-  host: '10.0.2.4' || process.env.DBHOST,
+  database: pg_connection.database,
+  port: parseInt(pg_connection.port.toString(), 10),
+  username: pg_connection.user,
+  password: pg_connection.password,
+  host: pg_connection.address,
   dialect: 'postgres',
+  ssl: pg_connection.ssl as boolean,
 };
 
 const sequelize = new Sequelize(options);

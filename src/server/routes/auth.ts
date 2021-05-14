@@ -46,6 +46,35 @@ const authRoutes = (app: Express, json: any, url: string, serverUrl: string) => 
       });
   });
 
+  app.post(`${url}/signup`, json, (req, res) => {
+    if (!req.body) {
+      res.status(400).send({ reason: 'Error in parameters' });
+      return;
+    }
+    const {
+      first_name, second_name, login, email, password, phone,
+    } = req.body;
+
+    const serverAddress = `${serverUrl}/signup`;
+    Fetch.post(serverAddress, {
+      data: {
+        first_name,
+        second_name,
+        login,
+        email,
+        password,
+        phone,
+      },
+    }).then((answer) => {
+      Cookies.setCookies(answer, res);
+      answer.json().then((result) => {
+        res.status(200).send(result);
+      }).catch((error) => {
+        res.status(400).send(error);
+      });
+    }).catch(async (error) => res.status(error.status).send(await error.text()));
+  });
+
   app.get(`${url}/user`, json, (req, res) => {
     const su = `${serverUrl}/user`;
     getUserInfo(su, req)
@@ -59,7 +88,6 @@ const authRoutes = (app: Express, json: any, url: string, serverUrl: string) => 
 
   app.post(`${url}/logout`, (req, res) => {
     const Cookie = Cookies.getCookies(req);
-
     const LogoutUserOptions: TFetchOptions = {
       headers: { Cookie },
     };

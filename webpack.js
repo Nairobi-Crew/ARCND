@@ -5,3 +5,4 @@ module.exports = [
   webpackConfigClient,
   webpackConfigServer,
 ];
+console.log('Client', webpackConfigClient);

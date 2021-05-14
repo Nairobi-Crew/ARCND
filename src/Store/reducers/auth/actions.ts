@@ -1,5 +1,5 @@
 import { API_PATH, AUTH_PATH } from 'Config/config';
-import { EAuthAction, EAuthState } from 'Reducers/auth/types';
+import { EAuthAction, EAuthState, UserRegisterParams } from 'Reducers/auth/types';
 import { IUser } from 'Store/types';
 import { Dispatch } from 'react';
 import { AuthAction } from 'Reducers/auth/auth';
@@ -59,4 +59,21 @@ export const logoutUser = () => async (dispatch: Dispatch<AuthAction>) => {
     const reason = await response.json();
     dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
   }
+};
+
+export const registerUser = (params: UserRegisterParams) => async (dispatch: Dispatch<AuthAction>) => {
+  fetch(`${API}/signup`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then((response) => {
+    response.json().then((answer) => {
+      dispatch({ type: EAuthAction.AUTH_REGISTER, payload: answer });
+    }).catch((e) => dispatch({ type: EAuthAction.AUTH_REGISTER_ERROR, payload: e }));
+  }).catch((error) => {
+    dispatch({ type: EAuthAction.AUTH_REGISTER_ERROR, payload: error });
+  });
 };

@@ -73,7 +73,7 @@ const forumRoutes = (app: Express, json: any, url: string) => {
 
   app.get(`${url}/`, json, async (_req, res) => {
     TopicModel.findAll({
-      attributes: ['id', 'title', 'date', 'userId', ['(select count(*) from messages where messages."topicId" = "TopicModel"."id" group by messages."topicId")', 'count']],
+      attributes: ['id', 'title', 'date', 'userId', ['(select count(*) from messages where messages."topicId" = "id" group by messages."topicId")', 'count']],
     }).then(async (items) => {
       const topics: ITopicsItem[] = [];
       const obj = cloneObject(items);

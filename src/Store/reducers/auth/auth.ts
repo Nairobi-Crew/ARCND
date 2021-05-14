@@ -37,6 +37,10 @@ export function authReducer(
       return { ...state, user: action.payload.user, state: action.payload.status };
     case EAuthAction.AUTH_LOGIN_ERROR:
       return { ...state, state: EAuthState.LOGIN_ERROR, reason: action.payload.reason };
+    case EAuthAction.AUTH_REGISTER_ERROR:
+      return { ...state, state: EAuthState.LOGIN_ERROR, reason: action.payload.reason };
+    case EAuthAction.AUTH_REGISTER:
+      return { ...state, state: EAuthState.LOGGED };
     default:
       return state;
   }
