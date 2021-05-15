@@ -43,8 +43,8 @@ const NewTopic: FC = () => {
   };
 
   return (
-    <Form caption="Новая тема">
-      <Input label="Тема" value={header} onValueChanged={(v) => setHeader(v)} />
+    <Form caption="Новая тема" name="newTheme">
+      <Input label="Тема" value={header} onValueChanged={(v) => setHeader(v)} name="newTheme"/>
       <Button onClick={onSaveMessageHandler}>Сохранить</Button>
       <Button onClick={onCancelMessageHandler}>Вернуться</Button>
     </Form>

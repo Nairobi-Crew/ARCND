@@ -29,15 +29,13 @@ const Form: FormProps = ({
       setFormVisible('hidden');
     }
     if (window) {
-      const inputs = JSON.parse(localStorage.getItem(name)) || []
-      console.log(inputs, name, 'inputs name')
+      const inputs = JSON.parse(localStorage.getItem(`form_${name}`)) || []
       const elems = formRef.current.elements
       for (let i = 0; i < elems.length; i++) {
         if (elems[i].tagName === 'INPUT') {
           const elem = elems[i] as HTMLInputElement
           const value = inputs?.find(input => input.name === elem.name)?.value ?? ''
           setNativeInputValue(elem,value)
-
         }
       }
     }
@@ -60,11 +58,9 @@ const Form: FormProps = ({
         <h1 className="form__form_column caption">{caption}</h1>
         <form ref={formRef} onSubmit={onSubmitHandler}
               onInput={({currentTarget}) => {
-
+                if(!name) return
                 const elements = currentTarget.elements
                 const inputs = []
-
-
                 for (let i = 0; i < elements.length; i++) {
                   if (elements[i].tagName === 'INPUT') {
                     const elem = elements[i] as HTMLInputElement
@@ -74,7 +70,7 @@ const Form: FormProps = ({
                     })
                   }
                 }
-                localStorage.setItem(name, JSON.stringify(
+                localStorage.setItem(`form_${name}`, JSON.stringify(
                   inputs
                 ))
               }}>

@@ -99,7 +99,7 @@ const EditMessage: FC<EditMessageProps> = (
     }
   }, [messages]);
   return (
-    <Form caption={topicName} visible={visible} header={false} maxHeight={false}>
+    <Form caption={topicName} visible={visible} header={false} maxHeight={false} name="editMessage">
       { parentMessageMessage !== '' ? (
         <>
           <div>
@@ -118,8 +118,9 @@ const EditMessage: FC<EditMessageProps> = (
         onValueChanged={(v) => {
           setHeader(v);
         }}
+        name="title"
       />
-      <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} />
+      <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} name="message" />
       <Button onClick={saveButtonHandler} disabled={header.trim() === '' || message.trim() === ''}>Сохранить</Button>
     </Form>
   );

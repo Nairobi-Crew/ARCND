@@ -26,7 +26,7 @@ const Register: RegisterProps = ({ caption }) => {
   }, []);
 
   return (
-    <Form caption={caption || 'SING UP'}>
+    <Form caption={caption || 'SING UP'} name="signUp">
       <Input
         label="Фамилия"
         onValueChanged={(val) => setSecondName(val)}
