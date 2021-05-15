@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { FormProps } from 'UI/Form/types';
+import React, {useEffect, useRef, useState} from 'react';
+import {FormProps} from 'UI/Form/types';
 import './Form.scss';
 import Header from 'UI/Header/Header';
+import {setNativeInputValue} from "Util/setNativeInputValue";
 
 const Form: FormProps = ({
-  children,
-  onSubmit,
-  caption,
-  visible,
-  header = true,
-  maxHeight = true,
-}) => {
+                           children,
+                           onSubmit,
+                           caption,
+                           visible,
+                           header = true,
+                           maxHeight = true,
+                           name
+                         }) => {
   const [formVisible, setFormVisible] = useState(visible === undefined || visible === true ? '' : 'hidden');
   const onSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -18,12 +20,26 @@ const Form: FormProps = ({
       onSubmit();
     }
   };
+  const formRef = useRef<HTMLFormElement | null>()
 
   useEffect(() => {
     if (visible === undefined || visible === true) {
       setFormVisible('');
     } else {
       setFormVisible('hidden');
+    }
+    if (window) {
+      const inputs = JSON.parse(localStorage.getItem(name)) || []
+      console.log(inputs, name, 'inputs name')
+      const elems = formRef.current.elements
+      for (let i = 0; i < elems.length; i++) {
+        if (elems[i].tagName === 'INPUT') {
+          const elem = elems[i] as HTMLInputElement
+          const value = inputs?.find(input => input.name === elem.name)?.value ?? ''
+          setNativeInputValue(elem,value)
+
+        }
+      }
     }
   }, [visible]);
 
@@ -34,14 +50,34 @@ const Form: FormProps = ({
     classes_empty_column.push('form__empty_column_max_height');
   }
 
+
   return (
     <div className={classes.join(' ')}>
       <div className={classes_empty_column.join(' ')}>
-        { header ? <Header /> : null }
+        {header && <Header />}
       </div>
       <div className="form__form_column">
         <h1 className="form__form_column caption">{caption}</h1>
-        <form onSubmit={onSubmitHandler}>
+        <form ref={formRef} onSubmit={onSubmitHandler}
+              onInput={({currentTarget}) => {
+
+                const elements = currentTarget.elements
+                const inputs = []
+
+
+                for (let i = 0; i < elements.length; i++) {
+                  if (elements[i].tagName === 'INPUT') {
+                    const elem = elements[i] as HTMLInputElement
+                    (elem.type !== 'password' && !elem.name.includes('password')) && inputs.push({
+                      value: elem.value,
+                      name: elem.name,
+                    })
+                  }
+                }
+                localStorage.setItem(name, JSON.stringify(
+                  inputs
+                ))
+              }}>
           {children}
         </form>
       </div>

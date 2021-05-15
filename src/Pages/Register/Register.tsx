@@ -31,38 +31,45 @@ const Register: RegisterProps = ({ caption }) => {
         label="Фамилия"
         onValueChanged={(val) => setSecondName(val)}
         value={secondName}
+        name="secondName"
       />
       <Input
         label="Имя"
         onValueChanged={(val) => setFirstName(val)}
         value={firstName}
+        name="firstName"
       />
       <Input
         label="Логин"
         onValueChanged={(val) => setLogin(val)}
         value={login}
+        name="login"
       />
       <Input
         label="E-Mail"
         onValueChanged={(val) => setEmail(val)}
         value={email}
+        name="email"
       />
       <Input
         label="Phone"
         onValueChanged={(val) => setPhone(val)}
         value={phone}
+        name="phone"
       />
       <Input
         type="password"
         label="Пароль"
         onValueChanged={(val) => setPassword1(val)}
         value={password1}
+        name="password1"
       />
       <Input
         type="password"
         label="Повтор"
         onValueChanged={(val) => setPassword2(val)}
         value={password2}
+        name="password2"
       />
       <Button
         className="registration__submit button button_type_rounded"

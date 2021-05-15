@@ -46,13 +46,15 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
 
   return (
     <>
-      <Form caption={caption || 'SING IN'}>
+      <Form caption={caption || 'SING IN'}
+            name="login">
         <Input
           className="input__input"
           id="login_login"
           label="Имя пользователя"
           value={login}
           onValueChanged={onLoginChangedHandler}
+          name="login"
         />
         <Input
           id="login_password"
@@ -62,6 +64,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
           className="input__input"
           onValueChanged={onPasswordChangedHandler}
           errorMessage={passwordMessage}
+          name="password"
         />
         <Button onClick={loginButtonHandle} buttonType="round">login</Button>
         {auth.state === EAuthState.LOGGED ? <Button className="logout_button" onClick={logoutButtonHandle} buttonType="round">logout</Button> : null}
