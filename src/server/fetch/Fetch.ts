@@ -45,12 +45,13 @@ class Fetch {
       if (!(data instanceof FormData)) {
         headers = {
           ...headers,
-          'Content-Type': 'application/json',
+          'Content-type': 'application/json',
         };
         body = JSON.stringify(data);
       }
     }
-    return fetch(url, { method, body, headers }).then((res) => {
+    const fetchObject = { method, body, headers };
+    return fetch(url, fetchObject).then((res) => {
       if (res.ok) {
         return res;
       }

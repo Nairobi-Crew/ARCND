@@ -12,7 +12,7 @@ export const isLogged = (errorCode: number = 401) => async (req: Request, res: R
     next();
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.log(`Not authorized ${req.url}`, e);
+    console.log(`isLogged: Not authorized ${req.url}`, e);
     res.status(errorCode).send(e.statusText || 'Unauthorized');
   }
 };
