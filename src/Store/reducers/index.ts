@@ -11,4 +11,5 @@ export default combineReducers({
   game: gameReducer,
   forum: forumReducer,
   leader: leaderReducer,
+
 });

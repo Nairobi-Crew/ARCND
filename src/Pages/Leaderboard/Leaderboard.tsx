@@ -75,7 +75,7 @@ const Leaderboard: LeaderboardProps = () => {
         <Leader
           key={`${name}-${score_arcnd}`}
           name={name}
-          index={((index + 1) as unknown) as string}
+          index={((index + 1) as unknown) as number}
           avatar={avatar}
           score={score_arcnd}
         />
