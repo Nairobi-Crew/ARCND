@@ -13,7 +13,6 @@ const Leader: LeaderProps = ({
           ? <img src={avatar} alt={name || 'UNKNOWN'} className="leader__avatar" />
           : <p>&nbsp;No avatar&nbsp;</p>
       }
-
       <h3 className="leader__name">{name}</h3>
       <span className="leader__score">{score}</span>
     </li>

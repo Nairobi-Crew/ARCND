@@ -3,6 +3,7 @@ import { State } from 'Components/ErrorBoundary/types';
 import { globalBus } from 'Util/EventBus';
 
 globalBus.on('COMPONENT_ERROR', (error, errorInfo) => {
+  // eslint-disable-next-line no-console
   console.error({ error, errorInfo });
 });
 

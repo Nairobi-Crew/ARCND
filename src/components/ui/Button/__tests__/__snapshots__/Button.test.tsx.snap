@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Button Render correct 1`] = `
+<button
+  className="button button_type_rounded"
+  onClick={[Function]}
+>
+  Test
+</button>
+`;
