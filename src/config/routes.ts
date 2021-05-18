@@ -63,7 +63,7 @@ const routes: ILink[] = [
     key: 'register',
   },
   {
-    visibility: 'always',
+    visibility: 'auth',
     exact: false,
     path: '/forum',
     title: 'Форум',

@@ -49,36 +49,6 @@ export const changePassword = (
   }
 };
 
-export const changeAvatar = (avatar: Blob) => async (dispatch: Dispatch<UserAction>) => {
-  try {
-    // создаем объект для чтения файла
-    const fileReader: FileReader = new FileReader();
-    fileReader.onloadend = async () => { // при окончании загрузки файла
-      const a = new FormData();
-      a.append('avatar', avatar);
-      const response = await fetch(`${API}user/profile/avatar`,
-        {
-          method: 'PUT',
-          credentials: 'include',
-          body: JSON.stringify(a),
-          headers: { Accept: 'application/json' },
-        });
-      if (response.status === 200) {
-        const data = await response.json();
-        dispatch({ type: EUserAction.USER_CHANGE_AVATAR, payload: { user: data } });
-      } else if (response.status === 400) {
-        const data = await response.json();
-        dispatch({ type: EUserAction.ERROR_USER_CHANGE_AVATAR, payload: { reason: data.reason } });
-      } else {
-        dispatch({ type: EUserAction.ERROR_USER_CHANGE_AVATAR, payload: { reason: 'Unknown error' } });
-      }
-    };
-    fileReader.readAsDataURL(avatar as Blob);// загружаем
-  } catch (e) {
-    dispatch({ type: EUserAction.ERROR_USER_CHANGE_AVATAR, payload: { reason: 'Unknown error' } });
-  }
-};
-
 export const getUserById = (id: number) => async (dispatch: Dispatch<UserAction>) => {
   const response = await fetch(`${API}/${id}`,
     {

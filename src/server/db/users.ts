@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
-import { getUserInfo } from 'Server/routes/auth';
 import { Request } from 'express';
-import { AUTH_PATH, SERVER_API_URL, USER_PATH } from 'Config/config';
+import { SERVER_API_URL, USER_PATH } from 'Config/config';
 import { UserModel } from 'Server/db/models/user';
 import { IUser } from 'Store/types';
 import Cookies from 'Server/fetch/Cookies';
 import Fetch, { TFetchOptions } from 'Server/fetch/Fetch';
+import AuthRoute from 'Server/routes/Auth';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getUser = (req: Request): Promise<UserModel | void> => new Promise((resolve, reject) => {
-  const AUTH_SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
-  getUserInfo(`${AUTH_SERVER_URL}/user`, req).then(async (user) => {
+  AuthRoute.getUser(req).then(async (user: IUser) => {
     try {
       const found = await UserModel.findOrCreate({
         where: {

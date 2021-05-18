@@ -4,8 +4,10 @@ export type THeader = {
   [index: string]: string
 }
 
+export type HTTPMethod = 'POST' | 'GET' | 'PUT' | 'DELETE';
+
 export type TFetchOptions = {
-  method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
+  method?: HTTPMethod
   data?: any
   headers?: THeader
 }

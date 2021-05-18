@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies,import/extensions,no-console */
 import express, { Request, Response } from 'express';
 import { renderToString } from 'react-dom/server';
 import React from 'react';
@@ -7,39 +8,35 @@ import { initialAppState } from 'Store/types';
 import { Provider } from 'react-redux';
 import renderApp from 'Server/renderApp';
 import renderTemplate from 'Server/renderTemplate';
-import {
-  API_PATH, AUTH_PATH, FORUM_PATH, LEADER_PATH, SERVER_API_URL, USER_PATH,
-} from 'Config/config';
 import cookieParser from 'cookie-parser';
 import webpack, { Configuration } from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 // @ts-ignore
-// eslint-disable-next-line import/no-extraneous-dependencies
 import * as FormData from 'form-data';
-import authRoutes, { getUserInfo } from 'Server/routes/auth';
-import userRoutes from 'Server/routes/user';
+import AuthRoute from 'Server/routes/Auth';
+import UserRoute from 'Server/routes/User';
+import ForumRoute from 'Server/routes/Forum';
+import LeaderRoute from 'Server/routes/Leader';
 import { EAuthState } from 'Reducers/auth/types';
-import leaderRoutes from 'Server/routes/leader';
 import path from 'path';
-import forumRoutes from 'Server/routes/forum';
 import { syncForumModels } from 'Server/db/models/forum';
-// @ts-ignore
-// eslint-disable-next-line import/extensions
+import Routes from 'Server/routes/Routes';
 import clientConfig from '../../webpack.client.js';
 import { isDev } from '../../env.variables';
 
 syncForumModels(false).then(() => {
-  // eslint-disable-next-line no-console
-  console.log('Synchronized');
-// eslint-disable-next-line no-console
-}).catch(() => console.log('Synchronization failed'));
+  // console.log('Synchronized');
+}).catch(() => {
+  console.log('Synchronization failed');
+});
 
 (global as any).FormData = FormData;
 
 const app = express();
 app.use(cookieParser());
-const json = express.json();
+app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 if (isDev) {
   const compiler = webpack(clientConfig as Configuration);
@@ -59,78 +56,57 @@ if (isDev) {
 const distPath = path.join(__dirname, './');
 app.use(express.static(distPath));
 
-const AUTH_URL = `${API_PATH}${AUTH_PATH}`;
-const AUTH_SERVER_URL = `${SERVER_API_URL}${AUTH_PATH}`;
+const routes: Routes[] = [];
 
-const USER_URL = `${API_PATH}${USER_PATH}`;
-const USER_SERVER_URL = `${SERVER_API_URL}${USER_PATH}`;
+const authRoute = new AuthRoute(app);
+const userRoute = new UserRoute(app);
+const forumRoute = new ForumRoute(app);
+const leaderRoute = new LeaderRoute(app);
 
-const LEADER_URL = `${API_PATH}${LEADER_PATH}`;
-const LEADER_SERVER_URL = `${SERVER_API_URL}${LEADER_PATH}`;
+routes.push(authRoute);
+routes.push(userRoute);
+routes.push(forumRoute);
+routes.push(leaderRoute);
 
-const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
-
-authRoutes(app, json, AUTH_URL, AUTH_SERVER_URL);
-userRoutes(app, json, USER_URL, USER_SERVER_URL);
-leaderRoutes(app, json, LEADER_URL, LEADER_SERVER_URL);
-forumRoutes(app, json, FORUM_URL);
-
-app.get('*', (req: Request, res: Response) => {
-  const { url, method } = req;
-  // eslint-disable-next-line no-console
-  console.log('Request *', { url, method });
-
+app.get('*', async (req: Request, res: Response) => {
   const context = {};
   const store = configureStore(
     initialAppState,
   );
+  let user;
+  try {
+    user = await AuthRoute.getUser(req);
+  } catch (e) {
+    console.log('Unauthorized');
+  }
 
-  getUserInfo(`${AUTH_SERVER_URL}/user`, req).then((user) => {
+  if (user) {
     initialAppState.auth.state = EAuthState.LOGGED;
     initialAppState.auth.user = user;
-    // eslint-disable-next-line no-console
-    console.log('Authorized', user);
-    const content = renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={context}>
-          {renderApp()}
-        </StaticRouter>
-      </Provider>,
-    );
-
-    res.send(renderTemplate(
-      {
-        cssPath: 'main.css',
-        jsPath: 'main.js',
-        content,
-        data: JSON.stringify(store.getState()),
-      },
-    ));
-  }).catch(() => {
+  } else {
     initialAppState.auth.state = EAuthState.UNKNOWN;
     initialAppState.auth.user = null;
-    // eslint-disable-next-line no-console
-    console.log('Unauthorized');
-    const content = renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={context}>
-          {renderApp()}
-        </StaticRouter>
-      </Provider>,
-    );
+  }
 
-    res.send(renderTemplate(
-      {
-        cssPath: 'main.css',
-        jsPath: 'main.js',
-        content,
-        data: JSON.stringify(store.getState()),
-      },
-    ));
-  });
+  const content = renderToString(
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        {renderApp()}
+      </StaticRouter>
+    </Provider>,
+  );
+
+  res.send(renderTemplate(
+    {
+      cssPath: 'main.css',
+      jsPath: 'main.js',
+      content,
+      data: JSON.stringify(store.getState()),
+    },
+  ));
 });
 
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`Server started on port ${PORT}`);
+  routes.forEach((route) => console.log('Register route', route.getName()));
 });

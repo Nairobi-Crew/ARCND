@@ -85,11 +85,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   gameProperties.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
 
-  const toggleFullScreen = () => { // переключатель в полноэкранный режим
+  const toggleFullScreen = async () => { // переключатель в полноэкранный режим
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+      await document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
-      document.exitFullscreen();
+      await document.exitFullscreen();
     }
   };
 

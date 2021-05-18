@@ -14,27 +14,6 @@ const TopicItem: TopicProps = ({ topic }) => {
         <div className="topic__item_header_time"><Link to={topicLink}>{dateFormat(topic.createTime)}</Link></div>
         <div className="topic__item_header_count"><Link to={topicLink}>{topic.messageCount}</Link></div>
       </div>
-      <div className="topic__item_message">
-        <Link to={topicLink}>
-          {
-            topic.lastMessage
-              ? (
-                <>
-                  {dateFormat(topic.lastMessageTime as number, 'dd-mm')}
-            &nbsp;в &nbsp;
-                  {dateFormat(topic.lastMessageTime as number, 'HH:MM')}
-                  ,&nbsp;
-                  {topic.lastMessageUser}
-                  &nbsp;
-                  написал:
-                  <br />
-                  {topic.lastMessage}
-                </>
-              )
-              : null
-          }
-        </Link>
-      </div>
     </div>
   );
 };

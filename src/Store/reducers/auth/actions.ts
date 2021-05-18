@@ -13,7 +13,7 @@ export const loginUser = (
     method: 'POST',
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-type': 'application/json',
     },
     body: JSON.stringify({ login, password }),
   });

@@ -2,7 +2,7 @@ export const GAME_CANVAS_ID = 'arcanoid';
 
 export const FPS = 80; // максимуму кадров/с
 
-export const CANVAS_MARGIN = 10; // отступы на канвас
+// отступы на канвас
 
 export const BALL_SPEED_LIMIT = 1;
 
