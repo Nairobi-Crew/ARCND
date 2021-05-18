@@ -4,7 +4,7 @@ export type OwnLeaderProps = {
   avatar?: string;
   name?: string;
   score?: number;
-  index?: number;
+  index?: string;
 }
 
 export type LeaderProps = FC<OwnLeaderProps>;

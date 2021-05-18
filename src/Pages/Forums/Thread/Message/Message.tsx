@@ -6,6 +6,7 @@ import Button from 'UI/Button/index';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect } from 'Store/hooks';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
+import Emoji from 'UI/Emoji';
 
 const Message: React.FC<MessageProps> = ({ message }) => {
   const auth = useAuthReselect();
@@ -18,6 +19,9 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     <div className="message">
       <div className="message__header">
         <div className="message__header_description">
+          <div className="emoji">
+            <Emoji id={message.emoji} />
+          </div>
           {message.header}
         </div>
         <div className="message__header_author">
@@ -29,11 +33,11 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       </div>
       <div className="message_tools">
         <div className="message_tools_item">
-          {auth.state === EAuthState.LOGGED && message.parentMessage === ''
+          {auth.state === EAuthState.LOGGED && message.parentMessage === 0
             ? (
               <>
                 <Button onClick={() => setFormReplyVisible((prevState) => !prevState)}>{formReplyVisible ? 'Отменить' : 'Ответить' }</Button>
-                <EditMessage parentMessage={message.id} topicId={message.topic} messageId="" visible={formReplyVisible} onSave={onSaveHandler} />
+                <EditMessage parentMessage={message.id} topicId={message.topic} messageId={0} visible={formReplyVisible} onSave={onSaveHandler} />
               </>
             )
             : null}

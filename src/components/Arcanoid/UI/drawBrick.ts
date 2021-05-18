@@ -4,7 +4,7 @@ import {
   THING_EXPAND_LETTER,
   THING_GLUE_LETTER,
   THING_GUN_LETTER,
-  THING_SHOW_TYPE,
+  THING_SHOW_TYPE, THING_SPLIT_LETTER,
 } from 'Components/Arcanoid/settings';
 
 type brickStyle = {
@@ -46,6 +46,9 @@ const stylesByLevelType = (level: number, type = 0): brickStyle => {
     case 5:
       res.bonusLetter = THING_COMPRESS_LETTER;
       break;
+    case 6:
+      res.bonusLetter = THING_SPLIT_LETTER;
+      break;
     case 9:
       res.bonusLetter = '?';
       break;
@@ -73,7 +76,7 @@ const drawBall = (
   x: number,
   y: number,
   width: number,
-  height,
+  height: number,
   level: number,
   type: number, // координаты шара и радиус, и стили из оъекта
 ) => {

@@ -2,7 +2,7 @@ export const GAME_CANVAS_ID = 'arcanoid';
 
 export const FPS = 80; // максимуму кадров/с
 
-export const CANVAS_MARGIN = 10; // отступы на канвас
+// отступы на канвас
 
 export const BALL_SPEED_LIMIT = 1;
 
@@ -43,6 +43,9 @@ export const THING_GUN_LETTER = 'П';
 export const THING_GLUE_LETTER = 'К';
 export const THING_EXPAND_LETTER = 'Ш';
 export const THING_COMPRESS_LETTER = 'У';
+export const THING_SPLIT_LETTER = 'Т';
+export const SPLIT_ALL_BALLS = false;
+export const SPLIT_QTY = 3;
 
 // выстрелы
 export const SHOOT_INTERVAL = 150; // минимальный интервал между выстрелами, мс
@@ -66,6 +69,7 @@ export enum EVENTS {
   BLOCK = 'block:crash',
   GUN = 'take:a:gun',
   GLUE = 'take:a:glue',
+  SPLIT = 'take:3balls',
   EXPAND = 'expand:a:rocket',
   COMPRESS = 'compress:a:rocket',
   BRICK_CRASH = 'yeah:brick-level'

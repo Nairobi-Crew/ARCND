@@ -5,6 +5,7 @@ import { IAuthUserReducer } from 'Reducers/auth/auth';
 import { IUserReducer } from 'Reducers/user/user';
 import { IGameReducer } from 'Reducers/game/game';
 import { IForumReducer } from 'Reducers/forum/types';
+import { ILeaderReducer } from 'Reducers/leader/leader';
 
 export const useAuthReselect = () => {
   const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
@@ -14,6 +15,11 @@ export const useAuthReselect = () => {
 export const useUserReselect = () => {
   const userSelector = createSelector((state: IAppState) => state.user, (user) => user);
   return useSelector<IAppState>((state) => userSelector(state)) as IUserReducer;
+};
+
+export const useLeaderReselect = () => {
+  const leaderSelector = createSelector((state: IAppState) => state.leader, (user) => user);
+  return useSelector<IAppState>((state) => leaderSelector(state)) as ILeaderReducer;
 };
 
 export const useGameReselect = () => {
@@ -41,11 +47,4 @@ export const useForumMessages = () => {
     messagesLoaded: forum.messagesLoaded,
   }));
   return useSelector((state: IAppState) => forumSelector(state));
-};
-
-export const useLeaderboardLeaders = () => {
-  const leaderboardSelector = createSelector((state: IAppState) => state.leader, ({state,leaders}) => ({
-  state,leaders
-  }));
-  return useSelector((state: IAppState) => leaderboardSelector(state));
 };

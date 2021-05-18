@@ -2,8 +2,8 @@ import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjec
 import {
   SHOOT_HEIGHT, SHOOT_SPEED, SHOOT_WIDTH, THING_HEIGHT, THING_WIDTH,
 } from 'Components/Arcanoid/settings';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import drawShoot from 'Components/Arcanoid/UI/drawShoot';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 export interface IShootProps extends IBaseObjectProps {
   width?: number
@@ -26,13 +26,16 @@ class Shoot extends BaseObject {
 
   /**
    * Отрисовка выстрела
-   * @param {GameWindowProps | undefined} gw
    */
-  render(gw: GameWindowProps | undefined = undefined) {
-    super.render(gw);
+  render() {
+    super.render();
     const {
-      ctx, gameWindow, x, y, width, height,
+      x, y, width, height,
     } = this;
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
+      return;
+    }
     drawShoot(ctx, gameWindow, x, y, width, height);
   }
 

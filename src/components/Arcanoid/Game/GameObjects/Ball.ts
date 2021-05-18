@@ -1,5 +1,4 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
   BALL_SPEED_LIMIT,
   EVENTS,
@@ -19,7 +18,7 @@ export interface IBallProps extends IBaseObjectProps {
   speedY: number
 }
 
-// синглтон на объект шарика
+// объект шарика
 export class Ball extends BaseObject {
   private static instance : Ball;
 
@@ -29,24 +28,27 @@ export class Ball extends BaseObject {
 
   speedY = 0;
 
-  constructor(props: IBallProps) {
+  constructor(props: IBallProps, single = false) {
     super(props);
-    if (Ball.instance) {
+    if (single && Ball.instance) {
       return Ball.instance;
     }
     this.radius = props.radius;
     this.speedX = props.speedX;
     this.speedY = props.speedY;
-    Ball.instance = this;
+
+    if (single) {
+      Ball.instance = this;
+    }
   }
 
-  render(gameWindow: GameWindowProps | undefined = undefined) { // отрисовка
-    super.render(gameWindow);
-    if (!gameWindow || !this.ctx) {
+  render() { // отрисовка
+    super.render();
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
       return;
     }
-    const { ctx } = this;
-    drawBall(ctx, this.gameWindow, this.x, this.y, this.radius);
+    drawBall(ctx, gameWindow, this.x, this.y, this.radius);
   }
 
   changeXSpeed(speed: number, fromCurrent = false): void { // изменение скорости по оси Х
@@ -77,10 +79,13 @@ export class Ball extends BaseObject {
     if (gameProperties.onRocket) {
       return;
     }
+
+    const { gameWindow } = gameProperties;
+
     let needInvert = false;
     if (
       !gameProperties.moved
-      || !this.gameWindow
+      || !gameWindow
       || !gameProperties.gameStarted
       || gameProperties.onRocket) {
       return;
@@ -92,7 +97,7 @@ export class Ball extends BaseObject {
     const topOfBall = this.y - this.radius;
     const rightOfBall = this.x + this.radius;
     const leftOfBall = this.x - this.radius;
-    const upOfRocket = this.gameWindow.height
+    const upOfRocket = gameWindow.height
       - ROCKET_HEIGHT; // верхняя грань рокетки
     const leftOfRocket = rocket.x;
     const rightOfRocket = leftOfRocket + rocket.width;
@@ -100,7 +105,7 @@ export class Ball extends BaseObject {
     if (this.speedY > 0) { // есть движение по оси вниз проверка ракетки или нижней кромки
       if (bottomOfBall > upOfRocket) { // шарик опустиля ниже верхней грани ракетки
         if (rightOfBall < leftOfRocket || leftOfBall > rightOfRocket) { // не попали в ракетку
-          globalBus.emit(EVENTS.GOAL); // эмит события гол
+          globalBus.emit(EVENTS.GOAL, this); // эмит события гол
           this.y = upOfRocket;
           this.invertYDirection(true);
           return;
@@ -135,8 +140,8 @@ export class Ball extends BaseObject {
 
     this.x += this.speedX; // перемещаем шарик по Х
     if (this.speedX > 0) { // летит вправо
-      if (rightOfBall >= this.gameWindow.width) { // если долетел до края
-        this.x = this.gameWindow.width - this.radius; //
+      if (rightOfBall >= gameWindow.width) { // если долетел до края
+        this.x = gameWindow.width - this.radius; //
         needInvert = true; // поменяем направление по оси Х
       }
     } else if (leftOfBall < 0) { // летит влево и долетел до края
@@ -148,8 +153,8 @@ export class Ball extends BaseObject {
 
     this.y += this.speedY; // перемещаем по оси У
     if (this.speedY > 0) { // летит вниз
-      if (bottomOfBall >= this.gameWindow.height) { // долетел до края
-        this.y = this.gameWindow.height - this.radius;
+      if (bottomOfBall >= gameWindow.height) { // долетел до края
+        this.y = gameWindow.height - this.radius;
         needInvert = true; // меняем направление
       }
     } else if (topOfBall < 0) { // долетел до верхнего края
@@ -159,10 +164,10 @@ export class Ball extends BaseObject {
     this.invertYDirection(needInvert);
   }
 }
-export const ball = new Ball({
-  x: 950, // координаты по умолчанию
-  y: 500,
-  radius: 15, // радиус
-  speedX: 5, // сророст и по осям
-  speedY: 5,
-});
+// export const ball = new Ball({
+//   x: 950, // координаты по умолчанию
+//   y: 500,
+//   radius: 15, // радиус
+//   speedX: 5, // сророст и по осям
+//   speedY: 5,
+// }, true);

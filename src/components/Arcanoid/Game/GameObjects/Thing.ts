@@ -1,12 +1,12 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import drawThing from 'Components/Arcanoid/UI/drawThing';
 import { THING_HEIGHT, THING_SPEED, THING_WIDTH } from 'Components/Arcanoid/settings';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
  * Тип бонуса Клей, Пушка, Расширение/сжатие ракетки
  */
-export type ThingType = 'glue' | 'gun' | 'expand' | 'compress' | 'none';
+export type ThingType = 'glue' | 'gun' | 'expand' | 'compress' | 'none' | 'split';
 export interface IThingProps extends IBaseObjectProps {
   thingType: ThingType
   x: number
@@ -26,12 +26,13 @@ class Thing extends BaseObject {
     this.thingType = props.thingType;
   }
 
-  render(gw: GameWindowProps | undefined = undefined) {
-    super.render(gw);
-    if (!this.gameWindow || !this.ctx) {
+  render() {
+    super.render();
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
       return;
     }
-    const { ctx, gameWindow, thingType } = this;
+    const { thingType } = this;
     drawThing(ctx, gameWindow, this.x, this.y, thingType);
   }
 
@@ -40,7 +41,10 @@ class Thing extends BaseObject {
    */
   nextMove() {
     this.y += THING_SPEED; // передвигаем вверх
-    const { gameWindow } = this;
+    const { gameWindow } = gameProperties;
+    if (!gameWindow) {
+      return;
+    }
     if (this.y + THING_HEIGHT > gameWindow.top + gameWindow.height) {
       // убираем активное состояние, при вылете за пределы игровой зоны
       this.active = false;
