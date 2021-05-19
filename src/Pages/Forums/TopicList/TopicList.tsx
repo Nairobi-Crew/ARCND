@@ -14,7 +14,7 @@ const TopicList: React.FC<TopicListProps> = ({ topics }) => (
       </div>
     </div>
     {
-      topics ? topics.map((topic, idx) => (
+      topics && Array.isArray(topics) ? topics.map((topic, idx) => (
         <TopicItem topic={topic} key={topic.id} index={idx} />
       )) : null
     }

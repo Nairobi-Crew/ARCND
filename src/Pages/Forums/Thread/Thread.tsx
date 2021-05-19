@@ -7,7 +7,7 @@ import { useForumMessages, useForumTopics } from 'Store/hooks';
 import { fetchMessages } from 'Reducers/forum/actions';
 import { useDispatch } from 'react-redux';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
-import { IMessagesItem } from 'Reducers/forum/types';
+import { EForumState, IMessagesItem } from 'Reducers/forum/types';
 
 const Thread: React.FC = () => {
   const threadId = parseInt(useParams<{ threadId: string }>().threadId, 10);
@@ -20,11 +20,7 @@ const Thread: React.FC = () => {
   const [topicDescription, setTopicDescription] = useState('');
 
   useEffect(() => {
-    if (messages.messagesLoaded === threadId) {
-      setMessagesList(messages.messages);
-    } else {
-      dispatch(fetchMessages(threadId));
-    }
+    dispatch(fetchMessages(threadId));
     const found = topics.topics.find((item) => item.id === threadId);
     if (found) {
       setTopicDescription(found.description);
@@ -35,7 +31,9 @@ const Thread: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (messages.messagesLoaded === threadId) {
+    if (messages.state === EForumState.WRONG_THREAD) {
+      history.push('/forum');
+    } else if (messages.state === EForumState.FETCHED_MESSAGES) {
       setMessagesList(messages.messages);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -27,7 +27,7 @@ export const fetchTopicsAction = () => async (dispatch: Dispatch<ForumAction>) =
   dispatch({ type: EForumState.FETCH_START });
   fetchTopics().then((items) => {
     dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: items } });
-  }).catch(() => dispatch({ type: EForumState.UNKNOWN }));
+  }).catch(() => dispatch({ type: EForumState.UNKNOWN, payload: { topics: [] } }));
 };
 
 export const fetchMessages = (thread: number) => async (dispatch: Dispatch<ForumAction>) => {
@@ -36,14 +36,25 @@ export const fetchMessages = (thread: number) => async (dispatch: Dispatch<Forum
     method: 'GET',
     credentials: 'include',
   }).then((rawMessages) => {
-    rawMessages.json().then((messages) => {
-      dispatch({
-        type: EForumState.FETCHED_MESSAGES,
-        payload: {
-          messages,
-          loaded: thread,
-        },
-      });
+    rawMessages.json().then((result) => {
+      const { messages, state } = result;
+      if (state === 0) {
+        dispatch({
+          type: EForumState.WRONG_THREAD,
+          payload: {
+            messages: [],
+            loaded: 0,
+          },
+        });
+      } else {
+        dispatch({
+          type: EForumState.FETCHED_MESSAGES,
+          payload: {
+            messages,
+            loaded: thread,
+          },
+        });
+      }
     }).catch((error) => {
       dispatch({ type: EForumState.UNKNOWN });
       // eslint-disable-next-line no-console

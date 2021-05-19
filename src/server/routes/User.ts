@@ -20,7 +20,7 @@ export default class User extends Routes {
     });
     const password = '/password';
 
-    this.app.put(`${USER_URL}${password}`, [logger({ needBody: true }), isLogged(), bodyChecker()], async (req: Request, res: Response) => {
+    this.app.put(`${USER_URL}${password}`, [isLogged(), bodyChecker(), logger({ needBody: true })], async (req: Request, res: Response) => {
       await this.redirect(`${USER_SERVER_URL}${password}`, 'PUT', req, res);
     });
 

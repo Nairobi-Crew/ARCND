@@ -4,7 +4,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { isDev } = require('./env.variables');
 const babelLoader = require('./webpack.babel');
 
-console.log('Server config used...');
+// console.log('Server config used...');
 
 const resolve = (p) => path.resolve(__dirname, `${p}`);
 

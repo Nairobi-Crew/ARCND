@@ -20,13 +20,22 @@ export default abstract class Routes {
 
   redirect = async (path: string, method: HTTPMethod, req: Request, res: Response) => {
     const Cookie = Cookies.getCookies(req);
+    let result;
     try {
       const answer = await Fetch.fetch(path, { method, headers: { Cookie }, data: req.body });
-      const result = await answer.json();
-      res.status(EHttpStatusCodes.OK).send(result);
+      result = await answer.text();
     } catch (e) {
-      res.status(e.statusCode).send(e);
+      res.status(e.statusCode || EHttpStatusCodes.BAD_REQUEST).send(await e.text());
+      return;
     }
+
+    try {
+      result = JSON.parse(result);
+    } catch (e) {
+      //
+    }
+
+    res.status(EHttpStatusCodes.OK).send(result);
   };
 
   abstract configRoutes(): express.Application;

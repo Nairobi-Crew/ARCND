@@ -33,6 +33,29 @@ export const getUser = (req: Request): Promise<UserModel | void> => new Promise(
   }).catch(() => reject());
 });
 
+// eslint-disable-next-line no-async-promise-executor
+export const checkDBUser = (user: IUser): Promise<void | UserModel> => new Promise(async (resolve, reject) => {
+  try {
+    const found = await UserModel.findOrCreate({
+      where: {
+        id: user.id,
+      },
+      defaults: {
+        first_name: user.first_name,
+        display_name: user.display_name,
+        second_name: user.second_name,
+        email: user.email,
+        login: user.login,
+        phone: user.phone,
+        avatar: user.avatar,
+      },
+    });
+    resolve(found[0]);
+  } catch (e) {
+    reject();
+  }
+});
+
 export const getUserByIdInfo = (req: Request, id: number): Promise<IUser> => new Promise((resolve, reject) => {
   const Cookie = Cookies.getCookies(req);
   const getUserOptions: TFetchOptions = {

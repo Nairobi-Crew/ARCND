@@ -8,7 +8,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const { isDev } = require('./env.variables');
 const babelLoader = require('./webpack.babel');
 
-console.log(`Mode: ${isDev ? 'DEV' : 'PRODUCTION'}, current folder: ${__dirname} `);
+// console.log(`Mode: ${isDev ? 'DEV' : 'PRODUCTION'}, current folder: ${__dirname} `);
 
 const resolve = (p) => path.resolve(__dirname, `${p}`);
 
