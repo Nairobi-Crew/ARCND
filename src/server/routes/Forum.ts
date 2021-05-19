@@ -29,36 +29,37 @@ export default class Forum extends Routes {
     this.app.get(`${FORUM_URL}/`, [isLogged(), logger({ needParams: true })], async (_req: Request, res: Response) => {
       try {
         const topicsFromDb = await TopicModel.findAll({
-          attributes: [
-            'id',
-            'title',
-            'date',
-            'userId',
-            ['(select count(*) from messages where messages."topicId" = "TopicModel"."id" group by messages."topicId")', 'count'],
-          ],
           include: [
+            {
+              model: MessageModel,
+              attributes: ['id'],
+              required: false,
+            },
             {
               model: UserModel,
               required: true,
             },
           ],
         });
+
         const topics: ITopicsItem[] = [];
         const list = cloneObject(topicsFromDb);
-        // eslint-disable-next-line no-restricted-syntax
-        for (const item of list) {
-          const { user } = item;
+        list.forEach(({
+          date, id, messages, title, user, userId,
+        }: Record<string, unknown>) => {
           topics.push({
-            id: item.id as number,
-            author: getDisplayName(user),
-            authorId: item.userId as number,
-            description: escapedString(item.title),
-            messageCount: item.count as number || 0,
-            createTime: item.date as number,
+            id: id as number,
+            author: getDisplayName(user as IUser),
+            authorId: userId as number,
+            description: escapedString(title as string),
+            messageCount: (messages as Record<string, number>[]).length as number || 0,
+            createTime: date as number,
           });
-        }
+        });
         res.status(EHttpStatusCodes.OK).send(topics);
       } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('Error get topic list', e);
         res.status(EHttpStatusCodes.BAD_REQUEST).send(e);
       }
     });
@@ -102,9 +103,22 @@ export default class Forum extends Routes {
       ],
       async (req: Request, res: Response) => {
         const topicId = parseInt(req.params.id, 10) || 0;
-        if (topicId === 0) {
-          res.status(EHttpStatusCodes.BAD_REQUEST).send({ reason: 'Error in parameters' });
+
+        try {
+          const count = await TopicModel.count({
+            where: {
+              id: topicId,
+            },
+          });
+          if (count === 0) {
+            res.status(EHttpStatusCodes.OK).send({ state: 0, messages: [] });
+            return;
+          }
+        } catch (e) {
+          res.status(EHttpStatusCodes.OK).send({ state: 0, messages: [] });
+          return;
         }
+
         try {
           const messagesDB = (await MessageModel.findAll({
             where: {
@@ -116,7 +130,7 @@ export default class Forum extends Routes {
             },
           }));
           const messages: IMessagesItem[] = [];
-          messagesDB.forEach((d) => {
+          messagesDB.forEach((d: MessageModel) => {
             const u = cloneObject(d).user;
             const message = d.get();
             const id = toNumber(message.id);
@@ -135,9 +149,9 @@ export default class Forum extends Routes {
               time: (message.date as Date).getTime(),
             });
           });
-          res.status(EHttpStatusCodes.OK).send(messages);
+          res.status(EHttpStatusCodes.OK).send({ state: 1, messages });
         } catch (e) {
-          res.status(EHttpStatusCodes.BAD_REQUEST).send(e);
+          res.status(EHttpStatusCodes.BAD_REQUEST).send({ state: 0, messages: [], error: e });
         }
       },
     );

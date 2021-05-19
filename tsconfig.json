@@ -4,6 +4,8 @@
     "lib": [
       "dom",
       "es2020",
+      "scripthost",
+      "es2015.proxy"
     ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

@@ -20,16 +20,9 @@ import ForumRoute from 'Server/routes/Forum';
 import LeaderRoute from 'Server/routes/Leader';
 import { EAuthState } from 'Reducers/auth/types';
 import path from 'path';
-import { syncForumModels } from 'Server/db/models/forum';
 import Routes from 'Server/routes/Routes';
 import clientConfig from '../../webpack.client.js';
 import { isDev } from '../../env.variables';
-
-syncForumModels(false).then(() => {
-  // console.log('Synchronized');
-}).catch(() => {
-  console.log('Synchronization failed');
-});
 
 (global as any).FormData = FormData;
 

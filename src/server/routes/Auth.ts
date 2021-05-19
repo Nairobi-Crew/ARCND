@@ -9,6 +9,7 @@ import { isLogged } from 'Server/middlewares/isLogged';
 import Cookies from 'Server/fetch/Cookies';
 import { IUser } from 'Store/types';
 import { AUTH_SERVER_URL, AUTH_URL } from 'Config/config';
+import { checkDBUser } from 'Server/db/users';
 
 export default class Auth extends Routes {
   constructor(app: express.Application) {
@@ -88,6 +89,7 @@ export default class Auth extends Routes {
     try {
       const answer = await Fetch.get(`${AUTH_SERVER_URL}/user`, { headers: { Cookie } });
       user = await answer.json() as IUser;
+      await checkDBUser(user);
       return user;
     } catch (e) {
       return null;

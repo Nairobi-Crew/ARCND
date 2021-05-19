@@ -1,42 +1,38 @@
-version: '3.7'
+version: '3'
 
 services:
   arcnd:
     build:
       context: .
     ports:
-      - "3000:5000"
+      - "5000:3000"
     depends_on:
       - postgres
     networks:
       - arcnd-network
     restart: always
     environment:
-      PG_DB: ${PG_DB}
-      PG_USER: ${PG_USER}
-      PG_PASS: ${PG_PASS}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   postgres:
     build:
       context: .
       dockerfile: Dockerfile.pg
-    ports:
-      - '6432:5432'
-    volumes:
-      - vol-pg:/var/lib/postgresql/data
+    restart: always
     environment:
-      PG_USER: ${PG_USER}
-      PG_DB: ${PG_DB}
-      PG_PASS: ${PG_PASS}
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - v-pg:/var/lib/postgresql/data
     networks:
       - arcnd-network
-    restart: always
 
 networks:
   arcnd-network:
     driver: bridge
 
 volumes:
-  vol-pg:
+  v-pg:
     driver: local

@@ -25,8 +25,14 @@ export function forumReducer(
   let newState;
   let messages = [];
   switch (action.type) {
+    case EForumState.WRONG_THREAD:
+      newState = { ...state, state: action.type, messages: [] };
+      break;
     case EForumState.UNKNOWN:
       newState = { ...state, state: action.type };
+      if (action.payload?.topics) {
+        newState = { ...newState, topics: action.payload.topics };
+      }
       break;
     case EForumState.FETCH_START:
       newState = { ...state, state: action.type };

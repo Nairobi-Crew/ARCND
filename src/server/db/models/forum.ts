@@ -3,7 +3,7 @@ import {
   AutoIncrement, BelongsTo,
   Column,
   DataType,
-  ForeignKey,
+  ForeignKey, HasMany,
   Index,
   Model,
   PrimaryKey,
@@ -54,6 +54,10 @@ export class TopicModel extends Model<TopicAttributes, TopicCreationAttributes> 
 
   @BelongsTo(() => UserModel)
   user: UserModel
+
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  @HasMany(() => MessageModel)
+  messages: MessageModel
 }
 
 export interface MessageAttributes {
@@ -129,6 +133,7 @@ export class MessageModel extends Model<MessageAttributes, MessageCreationAttrib
   })
   emoji: number
 }
+
 export const syncTopicModel = (force: boolean): Promise<void> => new Promise((resolve, reject) => (
   TopicModel.sync({ force }).then(() => resolve()).catch((error) => {
     // eslint-disable-next-line no-console
@@ -152,3 +157,11 @@ export const syncForumModels = (force: boolean) => new Promise<void>((resolve, r
 });
 
 sequelize.addModels([UserModel, TopicModel, MessageModel]);
+TopicModel.hasMany(MessageModel);
+MessageModel.belongsTo(TopicModel);
+
+syncForumModels(false).then(() => {
+}).catch(() => {
+  // eslint-disable-next-line no-console
+  console.log('Synchronization failed');
+});

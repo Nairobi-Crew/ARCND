@@ -1,13 +1,11 @@
-FROM alpine
-
-RUN apk add --update nodejs npm
+FROM node:14-alpine
 
 WORKDIR /var/www
 
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+RUN npm install --legacy-peer-deps
 
-COPY ./utils/wait-for.sh wait-for.sh
+COPY ./wait-for.sh wait-for.sh
 RUN chmod +x wait-for.sh
 
 COPY . .
@@ -16,4 +14,4 @@ RUN npm run build
 
 EXPOSE 5000
 
-CMD npm run heroku-start
+CMD npm run start
