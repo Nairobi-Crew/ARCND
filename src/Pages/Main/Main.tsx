@@ -6,6 +6,7 @@ import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
 import { useAuthReselect } from 'Store/hooks';
 import routes from 'Config/routes';
+import OAuth from 'Pages/OAuth';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const Main: React.FC = () => {
   }, []);
   return (
     <li className="linkBlock">
+      <OAuth />
       {
         routes.filter(
           (item) => {

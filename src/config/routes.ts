@@ -11,6 +11,8 @@ import Main from 'Pages/Main';
 import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import NewTopic from 'Pages/Forums/NewTopic';
 import Thread from 'Pages/Forums/Thread';
+import OAuth from 'Pages/OAuth/index';
+import { OAUTH_REDIRECT_PATH } from 'Config/config';
 
 export interface ILink {
   title: string
@@ -117,6 +119,14 @@ const routes: ILink[] = [
     path: '/',
     component: Page404,
     key: 'not_found',
+  },
+  {
+    visibility: 'never',
+    exact: false,
+    title: '',
+    path: OAUTH_REDIRECT_PATH,
+    component: OAuth,
+    key: 'oauth',
   },
 ];
 

@@ -1,7 +1,10 @@
+export const SITE_URL = 'http://arcnd8.herokuapp.com:3000';
+export const OAUTH_REDIRECT_PATH = '';
 export const API_PATH = '/api/v2/';
 export const API_URL = `https://ya-praktikum.tech${API_PATH}`;
 export const SERVER_API_URL = API_URL;
 export const AUTH_PATH = 'auth';
+export const OAUTH_PATH = 'oauth/yandex';
 export const USER_PATH = 'user';
 export const LEADER_PATH = 'leaderboard';
 export const FORUM_PATH = 'forum';
