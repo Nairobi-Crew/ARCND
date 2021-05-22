@@ -9,14 +9,20 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 <hr>
 
 ### URL's:
-* [HEROKU](https://arcnd.herokuapp.com/signin)
+* [ARCND](https://nairobi-arcnd.ya-praktikum.tech)
 <hr>
+
+
+## **Игра Арканоид** *классический*
+####Выполнена без использования растровой графики
 
 ### :floppy_disk:INSTALLATION:
 1) Клонировать репозиторий к себе локально `git clone https://github.com/Praktikum-game/game.git`
 2) Установить зависимости `npm i`
-3) Для __разработки__ `npm run dev` | __продакшн деплоя__ `npm run build`
-> при __деплое__, в проект нужно добавить **.env** и указать порт `PORT=80`
+3) Для __разработки__ `npm run ssr-start` | __продакшн деплоя__ `npm run build && npm run start`
+4) Для деплоя в Docker-е выполнить команду сборки: __docker-compose build__, для запуска: __docker-compose up__
+> при __деплое__, в проект нужно добавить **.env**
+5) Настройки игрового процесса находятся в [файле](src/components/Arcanoid/settings.ts)
 <hr>
 
 ### STRUCTURE:

@@ -1,6 +1,6 @@
 {
   "name": "game",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -135,13 +135,6 @@
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "lint:styles-fix": "stylelint --fix \"src/**/*.scss\"",
     "lint:fix": "npm run lint:styles-fix && npm run lint:ts-fix",
-    "heroku:login": "heroku container:login",
-    "heroku:push": "heroku container:push web",
-    "heroku:release": "heroku container:release web",
-    "heroku:open": "heroku open",
-    "heroku": "npm-run-all heroku:*",
-    "heroku-init": "heroku login && heroku create $npm_package_name",
-    "heroku-start": "cross-env NODE_ENV=production node ./dist/server.js",
     "prepare": "husky install"
   },
   "husky": {

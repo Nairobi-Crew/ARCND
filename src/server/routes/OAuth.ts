@@ -21,6 +21,8 @@ export default class OAuth extends Routes {
         try {
           const result = await answer.json();
           res.status(EHttpStatusCodes.OK).send(result);
+          // eslint-disable-next-line no-console
+          console.log('OAUTH service-id', { result, answer });
         } catch (e) {
           // eslint-disable-next-line no-console
           console.log('Error OAUTH get service ID JSON', e);
