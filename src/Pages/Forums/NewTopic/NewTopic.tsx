@@ -13,7 +13,6 @@ import Form from 'UI/Form';
 const NewTopic: FC = () => {
   const auth = useAuthReselect();
   const [header, setHeader] = useState('');
-  const [user, setUser] = useState(auth.user);
   const dispatch = useDispatch();
   const topics = useForumTopics();
   const history = useHistory();
@@ -22,20 +21,18 @@ const NewTopic: FC = () => {
     if (auth.state === EAuthState.UNKNOWN) {
       dispatch(getUserData());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    setUser(auth.user);
-  }, [auth]);
 
   useEffect(() => {
     if (topics.state === EForumState.FETCHED_TOPICS) {
       history.push('/forum');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topics]);
 
   const onSaveMessageHandler = () => {
-    dispatch(addTopic(user.id, `${user.first_name} ${user.second_name}`, header));
+    dispatch(addTopic(header));
   };
 
   const onCancelMessageHandler = () => {

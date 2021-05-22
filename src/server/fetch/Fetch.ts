@@ -4,51 +4,54 @@ export type THeader = {
   [index: string]: string
 }
 
-export type TFetchOptions<T> = {
-  method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
-  data?: T
+export type HTTPMethod = 'POST' | 'GET' | 'PUT' | 'DELETE';
+
+export type TFetchOptions = {
+  method?: HTTPMethod
+  data?: any
   headers?: THeader
 }
 
 class Fetch {
-  static get<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static get(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'GET';
     return Fetch.fetch(url, getOptions);
   }
 
-  static post<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static post(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'POST';
     return Fetch.fetch(url, getOptions);
   }
 
-  static put<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static put(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'PUT';
     return Fetch.fetch(url, getOptions);
   }
 
-  static delete<T>(url: string, options: TFetchOptions<T>): Promise<FetchResponse> {
+  static delete(url: string, options: TFetchOptions): Promise<FetchResponse> {
     const getOptions = options;
     getOptions.method = 'DELETE';
     return Fetch.fetch(url, getOptions);
   }
 
-  static fetch<T>(url: string, options: TFetchOptions<T> = { method: 'GET' }): Promise<FetchResponse> {
+  static fetch(url: string, options: TFetchOptions = { method: 'GET' }): Promise<FetchResponse> {
     let { headers } = options;
     const { method, data } = options;
-    let body = (options.data as unknown)as string;
+    let body = data;
     if (method !== 'GET') {
       if (!(data instanceof FormData)) {
         headers = {
           ...headers,
-          'Content-Type': 'application/json',
+          'Content-type': 'application/json',
         };
         body = JSON.stringify(data);
       }
     }
-    return fetch(url, { method, body, headers }).then((res) => {
+    const fetchObject = { method, body, headers };
+    return fetch(url, fetchObject).then((res) => {
       if (res.ok) {
         return res;
       }

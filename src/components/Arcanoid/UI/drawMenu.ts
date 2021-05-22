@@ -7,6 +7,9 @@ const drawMenu = (gameWindow: GameWindowProps) => {
   const centerX = Math.round((gameWindow.left + gameWindow.width) / 2);
   const centerY = Math.round((gameWindow.top + gameWindow.height) / 2);
   const { ctx } = gameProperties;
+  if (!ctx) {
+    return;
+  }
   ctx.beginPath();
   ctx.shadowBlur = 10;
   ctx.shadowOffsetX = 10;

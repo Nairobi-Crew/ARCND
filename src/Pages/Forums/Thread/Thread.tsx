@@ -7,10 +7,12 @@ import { useForumMessages, useForumTopics } from 'Store/hooks';
 import { fetchMessages } from 'Reducers/forum/actions';
 import { useDispatch } from 'react-redux';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
+import { EForumState, IMessagesItem } from 'Reducers/forum/types';
 
 const Thread: React.FC = () => {
-  const { threadId } = useParams<{ threadId: string }>();
-  const [messagesList, setMessagesList] = useState([]);
+  const threadId = parseInt(useParams<{ threadId: string }>().threadId, 10);
+  // console.log('Thread ID', threadId);
+  const [messagesList, setMessagesList] = useState<IMessagesItem[]>([]);
   const history = useHistory();
   const messages = useForumMessages();
   const topics = useForumTopics();
@@ -18,28 +20,24 @@ const Thread: React.FC = () => {
   const [topicDescription, setTopicDescription] = useState('');
 
   useEffect(() => {
-    if (messages.messagesLoaded === threadId) {
-      setMessagesList(messages.messages);
-    } else {
-      dispatch(fetchMessages(threadId));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messages.messagesLoaded === threadId) {
-      setMessagesList(messages.messages);
-    }
-  }, [messages]);
-
-  useEffect(() => {
+    dispatch(fetchMessages(threadId));
     const found = topics.topics.find((item) => item.id === threadId);
     if (found) {
       setTopicDescription(found.description);
     } else {
       setTopicDescription('');
     }
-  }, [topics]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  useEffect(() => {
+    if (messages.state === EForumState.WRONG_THREAD) {
+      history.push('/forum');
+    } else if (messages.state === EForumState.FETCHED_MESSAGES) {
+      setMessagesList(messages.messages);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
   return (
     <div className="thread" key={`${threadId}-${Date.now()}`}>
       <div className="thread_title">
@@ -55,26 +53,28 @@ const Thread: React.FC = () => {
       </div>
       <div className="thread_body">
         {
-          messagesList.filter((item) => item.parentMessage === '').map(
-            (message) => (
-              <div key={message.id}>
-                <Message message={message} key={`messageKey-${message.id}`} />
-                <div className="parent_messages">
-                  {messagesList.filter(
-                    (parentMessage) => parentMessage.parentMessage === message.id,
-                  )
-                    .map(
-                      (identMessage) => (
-                        <Message message={identMessage} key={`parentMessageKey-${identMessage.id}`} />
-                      ),
-                    )}
+          messagesList
+            .filter((item: IMessagesItem) => (item.parentMessage as number) === 0)
+            .map(
+              (message: IMessagesItem) => (
+                <div key={message.id}>
+                  <Message message={message} key={`messageKey-${message.id}`} />
+                  <div className="parent_messages">
+                    {messagesList.filter(
+                      (parentMessage: IMessagesItem) => (parentMessage.parentMessage || '-1') === message.id,
+                    )
+                      .map(
+                        (identMessage: IMessagesItem) => (
+                          <Message message={identMessage} key={`parentMessageKey-${identMessage.id}`} />
+                        ),
+                      )}
+                  </div>
                 </div>
-              </div>
-            ),
-          )
+              ),
+            )
         }
       </div>
-      <EditMessage parentMessage="" topicId={threadId} messageId="" key={`editMessageKey-${threadId}`} />
+      <EditMessage parentMessage={0} topicId={threadId} messageId={0} key={`editMessageKey-${threadId}`} />
     </div>
   );
 };

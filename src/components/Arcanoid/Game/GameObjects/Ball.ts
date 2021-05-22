@@ -18,7 +18,7 @@ export interface IBallProps extends IBaseObjectProps {
   speedY: number
 }
 
-// синглтон на объект шарика
+// объект шарика
 export class Ball extends BaseObject {
   private static instance : Ball;
 
@@ -28,15 +28,18 @@ export class Ball extends BaseObject {
 
   speedY = 0;
 
-  constructor(props: IBallProps) {
+  constructor(props: IBallProps, single = false) {
     super(props);
-    if (Ball.instance) {
+    if (single && Ball.instance) {
       return Ball.instance;
     }
     this.radius = props.radius;
     this.speedX = props.speedX;
     this.speedY = props.speedY;
-    Ball.instance = this;
+
+    if (single) {
+      Ball.instance = this;
+    }
   }
 
   render() { // отрисовка
@@ -102,7 +105,7 @@ export class Ball extends BaseObject {
     if (this.speedY > 0) { // есть движение по оси вниз проверка ракетки или нижней кромки
       if (bottomOfBall > upOfRocket) { // шарик опустиля ниже верхней грани ракетки
         if (rightOfBall < leftOfRocket || leftOfBall > rightOfRocket) { // не попали в ракетку
-          globalBus.emit(EVENTS.GOAL); // эмит события гол
+          globalBus.emit(EVENTS.GOAL, this); // эмит события гол
           this.y = upOfRocket;
           this.invertYDirection(true);
           return;
@@ -161,10 +164,10 @@ export class Ball extends BaseObject {
     this.invertYDirection(needInvert);
   }
 }
-export const ball = new Ball({
-  x: 950, // координаты по умолчанию
-  y: 500,
-  radius: 15, // радиус
-  speedX: 5, // сророст и по осям
-  speedY: 5,
-});
+// export const ball = new Ball({
+//   x: 950, // координаты по умолчанию
+//   y: 500,
+//   radius: 15, // радиус
+//   speedX: 5, // сророст и по осям
+//   speedY: 5,
+// }, true);

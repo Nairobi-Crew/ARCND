@@ -8,7 +8,7 @@ import { IAuthUserReducer } from 'Reducers/auth/auth';
 import { Redirect } from 'react-router-dom';
 
 function AuthOnly<T>(Component: React.ComponentType<T>, redirectTo = '/signin') {
-  const WithAux: React.FC<T> = (props): JSX.Element => {
+  const WithAux: React.FC<T> = (props) => {
     const authSelector = createSelector((state: IAppState) => state.auth,
       (auth) => auth);
     const auth = useSelector((state: IAppState) => authSelector(state)) as IAuthUserReducer;
@@ -24,6 +24,7 @@ function AuthOnly<T>(Component: React.ComponentType<T>, redirectTo = '/signin') 
       if (authState.state === EAuthState.UNKNOWN) {
         dispatch(getUserData());
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const { state } = authState;

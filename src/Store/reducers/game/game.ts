@@ -14,7 +14,15 @@ export const defaultGameReducer: IGameReducer = {
   state: 'unknown',
 };
 
-export function gameReducer(state = defaultGameReducer, action): IGameReducer {
+export type GameAction = {
+  type: string
+  payload?: any
+  score?: number
+  live?: number
+  state?: 'end' | 'start' | 'unknown'
+}
+
+export function gameReducer(state = defaultGameReducer, action: GameAction): IGameReducer {
   switch (action.type) {
     case EGameAction.DEC_LIVE:
       return { ...state, live: state.live - 1 };

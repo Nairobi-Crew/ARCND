@@ -42,6 +42,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
 
   useEffect(() => {
     dispatch(getUserData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

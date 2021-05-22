@@ -1,7 +1,4 @@
-export default function random(num: number): number {
-  return Math.round(Math.random() * num);
-}
-
+// eslint-disable-next-line import/prefer-default-export
 export const randomRange = (from: number, to: number): number => {
   const qty = to - from;
   if (qty <= 0) {

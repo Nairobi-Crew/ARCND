@@ -49,7 +49,9 @@ const drawBall = (
   gameWindow: GameWindowProps, // размеры игрового поля и его отступы
   x: number, y: number, radius: number, // координаты шара и радиус
 ) => {
+  ctx.beginPath();
   drawGradientBall(ctx, gameWindow, x, y, radius);
+  ctx.closePath();
 };
 
 export default drawBall;

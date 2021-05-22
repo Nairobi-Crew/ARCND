@@ -1,5 +1,3 @@
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-
 export interface IBaseObjectProps {
   x?: number
   y?: number
@@ -11,7 +9,6 @@ export type DrawObjectProps = IBaseObjectProps;
 
 // класс базового объекта. от него наследуем все, что отрисовывать по requestAnimationFrame
 export default class BaseObject {
-
   fillStyle: string;
 
   strokeStyle: string;

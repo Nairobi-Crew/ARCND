@@ -1,5 +1,17 @@
-FROM node:12
-COPY . /
-RUN npm i && npm run build
-EXPOSE 80
-CMD node server.js
+FROM node:14-alpine
+
+WORKDIR /var/www
+
+COPY package.json ./
+RUN npm install --legacy-peer-deps
+
+COPY ./wait-for.sh wait-for.sh
+RUN chmod +x wait-for.sh
+
+COPY . .
+
+RUN npm run build
+
+EXPOSE 5000
+
+CMD npm run start

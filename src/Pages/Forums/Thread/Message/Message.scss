@@ -29,8 +29,14 @@ $background-odd: #4d4574;
     flex-direction: row;
 
     &_description {
+      margin: auto;
       flex: 10;
       padding: 1em;
+      display: inline-block;
+      .emoji {
+        display: inline-block;
+        margin: 0 0.5em 0 0;
+      }
     }
 
     &_author {

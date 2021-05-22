@@ -1,9 +1,10 @@
-import { ILeaderUser } from 'Reducers/leader/leader';
+import { ILeaderUser, LeaderAction } from 'Reducers/leader/leader';
 import { API_PATH, LEADER_PATH } from 'Config/config';
 import { ELeaderAction } from 'Reducers/leader/types';
+import { Dispatch } from 'react';
 
 const API = `${API_PATH}${LEADER_PATH}`;
-export const addLeader = (leader: ILeaderUser) => async (dispatch) => {
+export const addLeader = (leader: ILeaderUser) => async (dispatch: Dispatch<LeaderAction>) => {
   try {
     const response = await fetch(`${API}`, {
       method: 'POST',
@@ -23,7 +24,7 @@ export const addLeader = (leader: ILeaderUser) => async (dispatch) => {
   }
 };
 
-export const getLeaders = () => async (dispatch) => {
+export const getLeaders = () => async (dispatch: Dispatch<LeaderAction>) => {
   try {
     const response = await fetch(`${API}/all`, {
       method: 'POST',
@@ -37,7 +38,7 @@ export const getLeaders = () => async (dispatch) => {
       try {
         const list = await response.json();
         const leaders: ILeaderUser[] = [];
-        list.forEach((item) => {
+        list.forEach((item: any) => {
           leaders.push(item.data as ILeaderUser);
         });
         dispatch({ type: ELeaderAction.LEADER_GET, payload: { users: leaders } });

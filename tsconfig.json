@@ -1,21 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es5",
     "lib": [
       "dom",
       "es2020",
       "scripthost",
       "es2015.proxy"
     ],
-    "esModuleInterop": false,
-    "outDir": "static/build",
-    "rootDir": "src",
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "module": "es2015",
+    "alwaysStrict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "declaration": false,
+    "importHelpers": true,
     "jsx": "react",
-    "baseUrl": "./",
     "moduleResolution": "node",
+    "module": "es2015",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
     "paths": {
       // Указываем ссылки до директорий в проекте, чтобы каждый раз в импортах не писать относительные пути
       "App": [
@@ -48,14 +60,8 @@
       "Server/*": [
         "src/server/*"
       ]
-    }
+    },
   },
-  "noImplicitAny": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "alwaysStrict": true,
-  "sourceMap": true,
-  "strictNullChecks": true,
   "exclude": [
     "node_modules"
   ]

@@ -1,4 +1,4 @@
-import { IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
+import { GameFieldObjectType, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
   EVENTS,
@@ -13,6 +13,7 @@ import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -32,6 +33,10 @@ export default class GameFieldObjects {
 
   add(item: IGameFieldObjectProps): void {
     this.data.push(item);
+  }
+
+  getList(filter: GameFieldObjectType): IGameFieldObjectProps[] {
+    return this.data.filter((item) => (item.type === filter));
   }
 
   render(): void {
@@ -55,13 +60,12 @@ export default class GameFieldObjects {
         if (item.type === 'thing') {
           const thing = item.object as Thing;
           thing.nextMove();
-          if (
-            thing.intersect(
-              rocket.x,
-              gameWindow.bottom - rocket.height - gameWindow.top,
-              rocket.width,
-              rocket.height,
-            )
+          if (gameWindow && thing.intersect(
+            rocket.x,
+            gameWindow.bottom - rocket.height - gameWindow.top,
+            rocket.width,
+            rocket.height,
+          )
           ) {
             let e = '';
             switch (thing.thingType) {
@@ -76,6 +80,9 @@ export default class GameFieldObjects {
                 break;
               case 'gun':
                 e = EVENTS.GUN;
+                break;
+              case 'split':
+                e = EVENTS.SPLIT;
                 break;
               default:
                 break;
@@ -104,6 +111,10 @@ export default class GameFieldObjects {
     this.data = this.data.filter((item) => !(item.type === 'thing' && (item.object as Thing) === thing));
   }
 
+  removeBall(ball: Ball) {
+    this.data = this.data.filter((item) => !(item.type === 'ball' && (item.object) === ball));
+  }
+
   removeShoot(shoot: Shoot) {
     this.data = this.data.filter((item) => !(item.type === 'shoot' && (item.object as Shoot) === shoot));
   }
@@ -122,7 +133,7 @@ export default class GameFieldObjects {
     }
     // console.log('Generate level');
     this.data = this.data.filter((x) => x.type !== 'brick');
-    const getNextItem = (s) => {
+    const getNextItem = (s: string) => {
       let currentPos = 0;
       return () => {
         // noinspection LoopStatementThatDoesntLoopJS
@@ -154,6 +165,9 @@ export default class GameFieldObjects {
 
     const ld = [...levelData];
     const { gameWindow } = gameProperties;
+    if (!gameWindow) {
+      return;
+    }
     const blockHeight = Math.round((gameWindow.height / 100) * LEVEL_BLOCKS_HEIGHT);
     const blockWidth = Math.round((gameWindow.width / 100) * LEVEL_BLOCKS_WIDTH);
     const spaceWidth = Math.round(blockWidth * LEVEL_BLOCK_SPACE);

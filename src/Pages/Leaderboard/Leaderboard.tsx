@@ -6,6 +6,7 @@ import { useLeaderReselect } from 'Store/hooks';
 import { ELeaderState } from 'Reducers/leader/types';
 import { useDispatch } from 'react-redux';
 import { getLeaders } from 'Reducers/leader/actions';
+import { ILeaderUser } from 'Reducers/leader/leader';
 
 const Leaderboard: LeaderboardProps = () => {
   // const leaders = [
@@ -51,7 +52,7 @@ const Leaderboard: LeaderboardProps = () => {
   //
   // ];
 
-  const [leaders, setLeaders] = useState([]);
+  const [leaders, setLeaders] = useState<ILeaderUser[]>([]);
   const leaderboard = useLeaderReselect();
   const dispatch = useDispatch();
 
@@ -74,7 +75,7 @@ const Leaderboard: LeaderboardProps = () => {
         <Leader
           key={`${name}-${score_arcnd}`}
           name={name}
-          index={((index + 1) as unknown) as number}
+          index={(index + 1).toString()}
           avatar={avatar}
           score={score_arcnd}
         />

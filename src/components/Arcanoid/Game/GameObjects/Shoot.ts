@@ -26,7 +26,6 @@ class Shoot extends BaseObject {
 
   /**
    * Отрисовка выстрела
-   * @param {GameWindowProps | undefined} gw
    */
   render() {
     super.render();
@@ -34,6 +33,9 @@ class Shoot extends BaseObject {
       x, y, width, height,
     } = this;
     const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
+      return;
+    }
     drawShoot(ctx, gameWindow, x, y, width, height);
   }
 

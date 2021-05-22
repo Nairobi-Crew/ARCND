@@ -42,7 +42,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
       phone: phoneField,
       display_name: displayNameField,
       login: loginField,
-      id: auth.user.id,
+      id: auth?.user?.id,
     };
     dispatch(changeProfile(user));
   };
@@ -70,6 +70,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   useEffect(() => {
     getUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   useEffect(() => {
@@ -84,6 +85,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     if (auth.state === EAuthState.LOGGED && !auth.user) {
       dispatch(getUserData());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
