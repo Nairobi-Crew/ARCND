@@ -4,4 +4,5 @@ export enum EOAuthState {
   SET_URL = 'OAUTH:SET_URL',
   UNKNOWN = 'OAUTH:UNKNOWN',
   REDIRECT = 'OAUTH:REDIRECT',
+  OAUTH_DONE = 'OAUTH:DONE',
 }

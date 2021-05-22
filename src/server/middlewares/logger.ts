@@ -18,7 +18,7 @@ export const logger = (param: LoggerParams) => (req: Request, _res: Response, ne
   }
   if (param.needBody) {
     res.body = req.body;
-    console.log(`URL: ${req.url}, Method: ${req.method}`, res);
   }
+  console.log(`URL: ${req.url}, Method: ${req.method}`, res);
   next();
 };

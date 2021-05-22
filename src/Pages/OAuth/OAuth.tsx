@@ -1,39 +1,37 @@
 import React, { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useOAuthReselect } from 'Store/hooks';
-import { clearRedirectState, signInOAuthAction } from 'Reducers/oauth/actions';
-import { EOAuthState } from 'Reducers/oauth/types';
+import { useAuthReselect, useOAuthReselect } from 'Store/hooks';
+import { signInOAuthAction, signInOAUthDoneAction } from 'Reducers/oauth/actions';
 import { getUserData } from 'Reducers/auth/actions';
+import { EAuthState } from 'Reducers/auth/types';
+import { EOAuthState } from 'Reducers/oauth/types';
 
 const OAuth: React.FC<any> = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const code = params.get('code');
-  const history = useHistory();
   const dispatch = useDispatch();
   const oauth = useOAuthReselect();
-
-  if (!code) {
-    // history.push('/');
-  }
+  const auth = useAuthReselect();
 
   useEffect(() => {
-    if (oauth.state === EOAuthState.REDIRECT) {
+    if (auth.state === EAuthState.UNKNOWN) {
       dispatch(getUserData());
-      dispatch(clearRedirectState());
-      history.push('/');
     }
-    if (code) {
-      dispatch(signInOAuthAction(code, 'http://localhost:3000'));
+    if (oauth.state === EOAuthState.REDIRECT) {
+      dispatch(signInOAUthDoneAction());
+      dispatch(getUserData());
+    }
+
+    if (
+      code && auth.state !== EAuthState.LOGGED && oauth.state !== EOAuthState.OAUTH_DONE && oauth.state !== EOAuthState.REDIRECT
+    ) {
+      dispatch(signInOAuthAction(code, window.location.origin));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oauth]);
 
-  useEffect(() => {
-    dispatch(getUserData());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <></>
   );

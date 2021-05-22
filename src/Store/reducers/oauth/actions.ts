@@ -31,11 +31,12 @@ export const signInOAuthAction = (code: string, redirect_uri: string) => (dispat
   }).then(() => {
     dispatch({ type: EOAuthState.SET_URL, payload: redirect_uri });
   }).catch((error) => {
+    dispatch({ type: EOAuthState.SET_URL, payload: redirect_uri });
     // eslint-disable-next-line no-console
     console.log('OAUTH Error', error);
   });
 };
 
-export const clearRedirectState = () => (dispatch: Dispatch<OAuthAction>) => {
-  dispatch({ type: EOAuthState.UNKNOWN });
+export const signInOAUthDoneAction = () => (dispatch: Dispatch<OAuthAction>) => {
+  dispatch({ type: EOAuthState.OAUTH_DONE });
 };

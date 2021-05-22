@@ -25,6 +25,8 @@ export function oauthReducer(state: IOAuthReducer = defaultOAuthReducer, action:
       return { ...state, redirectUrl: action.payload as string, state: EOAuthState.REDIRECT };
     case EOAuthState.UNKNOWN:
       return { ...state, state: EOAuthState.UNKNOWN, serviceID: '' };
+    case EOAuthState.OAUTH_DONE:
+      return { ...state, state: EOAuthState.OAUTH_DONE };
     default:
       return state;
   }
