@@ -48,3 +48,10 @@ export const useForumMessages = () => {
   }));
   return useSelector((state: IAppState) => forumSelector(state));
 };
+
+export const useThemeReselect = () => {
+  const themeSelector = createSelector((state: IAppState) => state.theme, (theme) => ({
+    theme
+  }));
+  return useSelector((state: IAppState) => themeSelector(state));
+};

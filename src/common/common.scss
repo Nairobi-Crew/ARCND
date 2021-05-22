@@ -1,11 +1,15 @@
 @import "src/common/utils";
 
 html,
-body {
+body, {
   color: $fc;
   background: $background-color;
   min-width: 360px;
   box-sizing: border-box;
+}
+
+.root_theme_white {
+  background: $background-color
 }
 
 *,
