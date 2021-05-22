@@ -16,11 +16,20 @@ export const changeProfile = (user: IUser) => async (dispatch: Dispatch<UserActi
       body: JSON.stringify(user),
     });
   if (response.status === 200) {
-    const data = await response.json();
-    dispatch({ type: EUserAction.USER_CHANGE_PROFILE, payload: { user: data } });
+    try {
+      const data = await response.json();
+      dispatch({ type: EUserAction.USER_CHANGE_PROFILE, payload: { user: data } });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('Error parse JSON', e);
+    }
   } else {
-    const data = await response.json();
-    dispatch({ type: EUserAction.ERROR_USER_CHANGE_PROFILE, payload: { reason: data.reason } });
+    try {
+      const data = await response.json();
+      dispatch({ type: EUserAction.ERROR_USER_CHANGE_PROFILE, payload: { reason: data.reason } });
+    } catch (e) {
+      dispatch({ type: EUserAction.ERROR_USER_CHANGE_PROFILE, payload: { reason: 'Unknown error' } });
+    }
   }
 };
 

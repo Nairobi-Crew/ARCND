@@ -20,8 +20,14 @@ export const loginUser = (
   if (response.status === 200) {
     dispatch({ type: EAuthAction.AUTH_LOGIN });
   } else {
-    const reason = await response.json();
-    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    try {
+      const reason = await response.json();
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    } catch (e) {
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: 'Unknown error' } });
+      // eslint-disable-next-line no-console
+      console.log('Error parse JSON', e);
+    }
   }
 };
 
@@ -31,7 +37,13 @@ export const getUserData = () => async (dispatch: Dispatch<AuthAction>) => {
     credentials: 'include',
   });
   const { status } = response;
-  const json = await response.json();
+  let json;
+  try {
+    json = await response.json();
+  } catch (e) {
+    //
+  }
+
   if (status === 200) {
     const user: IUser = {
       display_name: json.display_name || '',
@@ -44,7 +56,7 @@ export const getUserData = () => async (dispatch: Dispatch<AuthAction>) => {
     };
     dispatch({ type: EAuthAction.USER_GET_DATA, payload: { user, status: EAuthState.LOGGED } });
   } else {
-    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: json.reason || '', status: EAuthState.LOGIN_ERROR } });
+    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: json?.reason || '', status: EAuthState.LOGIN_ERROR } });
   }
 };
 
@@ -56,8 +68,14 @@ export const logoutUser = () => async (dispatch: Dispatch<AuthAction>) => {
   if (response.status === 200) {
     dispatch({ type: EAuthAction.AUTH_LOGOUT });
   } else {
-    const reason = await response.json();
-    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    try {
+      const reason = await response.json();
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('Error parse JSON', e);
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: 'Unknown error' } });
+    }
   }
 };
 

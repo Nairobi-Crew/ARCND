@@ -1,6 +1,6 @@
 export const GAME_CANVAS_ID = 'arcanoid';
 
-export const FPS = 80; // максимуму кадров/с
+export const FPS = 80; // максимум кадров/с
 
 // отступы на канвас
 

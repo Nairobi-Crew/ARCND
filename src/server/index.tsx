@@ -18,11 +18,12 @@ import AuthRoute from 'Server/routes/Auth';
 import UserRoute from 'Server/routes/User';
 import ForumRoute from 'Server/routes/Forum';
 import LeaderRoute from 'Server/routes/Leader';
+import OAuthRoute from 'Server/routes/OAuth';
 import { EAuthState } from 'Reducers/auth/types';
 import path from 'path';
 import Routes from 'Server/routes/Routes';
-import clientConfig from '../../webpack.client.js';
 import { isDev } from '../../env.variables';
+import clientConfig from '../../webpack.client.js';
 
 (global as any).FormData = FormData;
 
@@ -55,11 +56,13 @@ const authRoute = new AuthRoute(app);
 const userRoute = new UserRoute(app);
 const forumRoute = new ForumRoute(app);
 const leaderRoute = new LeaderRoute(app);
+const oauthRoute = new OAuthRoute(app);
 
 routes.push(authRoute);
 routes.push(userRoute);
 routes.push(forumRoute);
 routes.push(leaderRoute);
+routes.push(oauthRoute);
 
 app.get('*', async (req: Request, res: Response) => {
   const context = {};

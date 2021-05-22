@@ -50,7 +50,10 @@ class Fetch {
         body = JSON.stringify(data);
       }
     }
-    const fetchObject = { method, body, headers };
+    const fetchObject = {
+      method, body, headers, credentials: 'include', mode: 'cors',
+    };
+    // console.log('Fetch object', { url, fetchObject });
     return fetch(url, fetchObject).then((res) => {
       if (res.ok) {
         return res;

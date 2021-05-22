@@ -6,10 +6,16 @@ import { IUserReducer } from 'Reducers/user/user';
 import { IGameReducer } from 'Reducers/game/game';
 import { IForumReducer } from 'Reducers/forum/types';
 import { ILeaderReducer } from 'Reducers/leader/leader';
+import { IOAuthReducer } from 'Reducers/oauth/oauth';
 
 export const useAuthReselect = () => {
   const authSelector = createSelector((state: IAppState) => state.auth, (auth) => auth);
   return useSelector<IAppState>((state) => authSelector(state)) as IAuthUserReducer;
+};
+
+export const useOAuthReselect = () => {
+  const oauthSelector = createSelector((state: IAppState) => state.oauth, (oauth) => oauth);
+  return useSelector<IAppState>((state) => oauthSelector(state)) as IOAuthReducer;
 };
 
 export const useUserReselect = () => {
