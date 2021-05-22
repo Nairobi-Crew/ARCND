@@ -1,7 +1,7 @@
 import {EThemeAction,EThemeState} from "./types";
 
 export interface IThemeReducer {
-  color: string
+  color: string | any
   state: EThemeState
 }
 
@@ -10,14 +10,19 @@ export const defaultThemeReducer: IThemeReducer = {
   state: EThemeState.UNKNOWN,
 };
 
+export type ThemeAction = {
+  state?: string
+  type: EThemeAction
+  payload?: any
+}
+
 export function themeReducer(
   state: IThemeReducer = defaultThemeReducer,
-  action,
+  action: ThemeAction,
 ): IThemeReducer {
-  console.log(action)
   switch (action.type) {
     case EThemeAction.SET_THEME:
-      return { ...state, state: action.type, color: action.payload.color};
+      return { ...state, color: action.payload.color};
     default:
       return state;
   }

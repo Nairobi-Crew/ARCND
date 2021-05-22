@@ -5,7 +5,7 @@ import Button from 'UI/Button/index';
 import Form from 'UI/Form/index';
 import { IUser } from 'Store/types';
 import { useDispatch } from 'react-redux';
-import {changePassword, changeProfile} from 'Reducers/user/actions';
+import { changeProfile} from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
 import {useAuthReselect, useThemeReselect} from 'Store/hooks';
@@ -64,7 +64,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setTheme(themeField)
   }
 
-  const changeSwitcherHandler = value => {
+  const changeSwitcherHandler = (value:boolean) => {
     dispatch(setUserTheme(value))
   }
 

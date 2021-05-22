@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect} from 'react';
 import { Route, Switch } from 'react-router-dom';
 import routes from 'Config/routes';
-import {useThemeReselect} from "Store/hooks";
+// import {useThemeReselect} from "Store/hooks";
 
 const renderApp = () => {
-  const themeReselect = useThemeReselect()
-  const [theme,setTheme] = useState(true)
+  // const themeReselect = useThemeReselect()
+  // const [theme,setTheme] = useState(true)
   useEffect(()=> {
-    console.log(themeReselect)
-    // setTheme(themeReselect)
-  },[themeReselect])
+
+  })
+  //   console.log(themeReselect)
+  //   // setTheme(themeReselect)
+  // },[themeReselect])
 
   return (
     <div className={`root`}>

@@ -3,7 +3,7 @@ import { SwitchProps } from 'UI/Switcher/types';
 import './Switcher.scss';
 
 const Switcher: SwitchProps = ({
-firstValue,secondValue,name,onValueChanged,value=false
+firstValue,secondValue,name='',onValueChanged,value=false
 }) => {
 
   const [inputValue, setInputValue] = useState(value);
@@ -26,6 +26,7 @@ firstValue,secondValue,name,onValueChanged,value=false
         <input
         className="switch__input"
         type="checkbox"
+        name={name}
         checked={inputValue}
         onChange={onInputHandler}/>
         <span className="switch__switcher"/>
