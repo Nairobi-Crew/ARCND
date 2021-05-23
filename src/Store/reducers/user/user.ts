@@ -45,6 +45,7 @@ export function userReducer(
       return {
         ...state, reason: '', user: action.payload.user, state: action.type,
       };
+
     case EUserAction.ERROR_USER_CHANGE_PROFILE:
       return { ...state, reason: action.payload.reason, state: action.type };
     case EUserAction.ERROR_USER_CHANGE_PASSWORD:

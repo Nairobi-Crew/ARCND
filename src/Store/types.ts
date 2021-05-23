@@ -5,6 +5,7 @@ import { defaultForumReducer } from 'Reducers/forum/forum';
 import { IForumReducer } from 'Reducers/forum/types';
 import { defaultLeaderReducer, ILeaderReducer } from 'Reducers/leader/leader';
 import { IOAuthReducer, defaultOAuthReducer } from 'Reducers/oauth/oauth';
+import {defaultThemeReducer, IThemeReducer} from "Reducers/theme/theme";
 
 export type Nullable<T> = T | null;
 
@@ -14,6 +15,7 @@ export interface IAppState {
   game: IGameReducer,
   forum: IForumReducer,
   leader: ILeaderReducer,
+  theme: IThemeReducer,
   oauth: IOAuthReducer,
 }
 
@@ -24,6 +26,7 @@ export const initialAppState: IAppState = {
   forum: defaultForumReducer,
   leader: defaultLeaderReducer,
   oauth: defaultOAuthReducer,
+  theme: defaultThemeReducer,
 };
 
 export interface IUser {

@@ -1,11 +1,51 @@
 @import "src/common/utils";
 
 html,
-body {
+body, {
   color: $fc;
   background: $background-color;
   min-width: 360px;
   box-sizing: border-box;
+}
+
+.root {
+  position: relative;
+  min-height: 100vh;
+
+
+  &_theme_white {
+    background: $background-color-white !important;
+    color: $fc-dark !important;
+    & * {
+      background: $background-color-white !important;
+      color: $fc-dark !important;
+    }
+  }
+
+  &__bnt {
+    position: absolute;
+    bottom: 20px;
+    right: calc(50% - 43px);
+  }
+
+  &__form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    background: $background-color;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%, -50%);
+  }
+
+  &__form-close {
+    position: absolute;
+    top:30px;
+    right: 30px;
+  }
 }
 
 *,
