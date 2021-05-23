@@ -78,9 +78,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     top: 30,
     left: 2,
     width: getWidth() - 4,
-    height: getHeight() - 60,
+    height: getHeight() - 60 - 50,
     right: getWidth() - 30,
-    bottom: getHeight() - 30,
+    bottom: getHeight() - 80,
   });
 
   gameProperties.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
