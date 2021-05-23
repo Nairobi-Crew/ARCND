@@ -12,9 +12,9 @@ function run(store: Store<any, AnyAction>) {
   hydrate(
     <Provider store={store}>
       <BrowserRouter>
-          <Switch>
-            {renderApp()}
-          </Switch>
+        <Switch>
+          {renderApp()}
+        </Switch>
       </BrowserRouter>
     </Provider>,
     document?.getElementById('root'),

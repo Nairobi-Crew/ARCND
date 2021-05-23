@@ -60,12 +60,14 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setAvatar(auth.user.avatar || '');
   };
 
-  const getTheme = () => {
-    setTheme(themeField)
-  }
+  // const getTheme = () => {
+  //   setTheme(themeField)
+  // }
 
   const changeSwitcherHandler = (value:boolean) => {
-    dispatch(setUserTheme(value))
+    const userTheme = value ? 'white' : 'dark'
+    dispatch(setUserTheme(userTheme))
+    setTheme(value)
   }
 
   useEffect(() => {
@@ -74,7 +76,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   }, [auth]);
 
   useEffect(() => {
-    getTheme();
+    // getTheme();
   }, [theme]);
 
   useEffect(() => {

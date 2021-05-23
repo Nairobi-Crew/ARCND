@@ -7,6 +7,7 @@ export type OwnSwitchProps = {
   value?: boolean
   firstValue? : string
   secondValue?: string
+  classes?: string[]
   onValueChanged?:TonValueChanged
 } & InputHTMLAttributes<HTMLInputElement>;
 
