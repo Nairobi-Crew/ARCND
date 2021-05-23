@@ -9,7 +9,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 <hr>
 
 ### URL's:
-* [ARCND](https://nairobi-arcnd.ya-praktikum.tech)
+* [ARCND](https://nairobi-arcnd-4.ya-praktikum.tech/)
 <hr>
 
 
