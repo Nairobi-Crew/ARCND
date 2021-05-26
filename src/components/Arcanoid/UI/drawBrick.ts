@@ -6,8 +6,9 @@ import {
   THING_GUN_LETTER,
   THING_SHOW_TYPE, THING_SPLIT_LETTER,
 } from 'Components/Arcanoid/settings';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
-type brickStyle = {
+export type brickStyle = {
   fillStyle: string
   strokeStyle: string
   bonusLetter: string
@@ -84,17 +85,18 @@ const drawBall = (
     return;
   }
 
-  const style = stylesByLevelType(level, type);
   ctx.beginPath();
-
+  const style = stylesByLevelType(level, type);
   ctx.fillStyle = style.fillStyle;
   ctx.strokeStyle = style.strokeStyle;
   ctx.lineJoin = 'round';
   ctx.lineWidth = 2;
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = 'black';
-  ctx.shadowOffsetX = 10;
-  ctx.shadowOffsetY = 10;
+  if (gameProperties.useShadows) {
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'black';
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 10;
+  }
 
   ctx.fillRect(
     // координаты кирпича в координатах окна игры,

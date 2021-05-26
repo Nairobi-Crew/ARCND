@@ -31,11 +31,6 @@ export default class Forum extends Routes {
         const topicsFromDb = await TopicModel.findAll({
           include: [
             {
-              model: MessageModel,
-              attributes: ['id'],
-              required: false,
-            },
-            {
               model: UserModel,
               required: true,
             },
@@ -44,18 +39,47 @@ export default class Forum extends Routes {
 
         const topics: ITopicsItem[] = [];
         const list = cloneObject(topicsFromDb);
-        list.forEach(({
-          date, id, messages, title, user, userId,
-        }: Record<string, unknown>) => {
-          topics.push({
+        // eslint-disable-next-line no-restricted-syntax
+        for (const {
+          date,
+          id,
+          title,
+          user,
+          userId,
+        } of list) {
+          // eslint-disable-next-line no-await-in-loop
+          const { count, rows } = await MessageModel.findAndCountAll({
+            where: {
+              topicId: id,
+            },
+            order: [['date', 'desc']],
+            limit: 1,
+            include: {
+              model: UserModel,
+              required: true,
+            },
+          });
+          const messagesRow = cloneObject(rows);
+          const row = messagesRow[0];
+          const lastTitle = escapedString(row ? row.title as string : '');
+          const lastMessage = escapedString(row ? row.message as string : '');
+          const lastAuthor = row ? getDisplayName(row.user as IUser) : '';
+          const lastDate = row ? Number(new Date(row.date).getTime()) : 0;
+
+          const topicItem: ITopicsItem = {
             id: id as number,
             author: getDisplayName(user as IUser),
             authorId: userId as number,
             description: escapedString(title as string),
-            messageCount: (messages as Record<string, number>[]).length as number || 0,
+            messageCount: Number(count),
             createTime: date as number,
-          });
-        });
+            lastTitle,
+            lastMessage,
+            lastAuthor,
+            lastDate,
+          };
+          topics.push(topicItem);
+        }
         res.status(EHttpStatusCodes.OK).send(topics);
       } catch (e) {
         // eslint-disable-next-line no-console

@@ -1,14 +1,15 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useAuthReselect, useForumTopics } from 'Store/hooks';
-import { EAuthState } from 'Reducers/auth/types';
+// import { EAuthState } from 'Reducers/auth/types';
 import { useDispatch } from 'react-redux';
-import { getUserData } from 'Reducers/auth/actions';
+// import { getUserData } from 'Reducers/auth/actions';
 import Button from 'UI/Button/index';
 import Input from 'UI/Input/index';
 import { addTopic } from 'Reducers/forum/actions';
 import { EForumState } from 'Reducers/forum/types';
 import { useHistory } from 'react-router-dom';
 import Form from 'UI/Form';
+import { EAuthState } from 'Reducers/auth/types';
 
 const NewTopic: FC = () => {
   const auth = useAuthReselect();
@@ -16,13 +17,7 @@ const NewTopic: FC = () => {
   const dispatch = useDispatch();
   const topics = useForumTopics();
   const history = useHistory();
-
-  useEffect(() => {
-    if (auth.state === EAuthState.UNKNOWN) {
-      dispatch(getUserData());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [headerErrorMessage, setHeaderErrorMessage] = useState('');
 
   useEffect(() => {
     if (topics.state === EForumState.FETCHED_TOPICS) {
@@ -31,8 +26,16 @@ const NewTopic: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topics]);
 
+  const checkHeader = (): boolean => {
+    const isEmpty = header.trim() === '';
+    setHeaderErrorMessage(isEmpty ? 'Поле должно быть заполнено' : '');
+    return !isEmpty;
+  };
+
   const onSaveMessageHandler = () => {
-    dispatch(addTopic(header));
+    if (checkHeader()) {
+      dispatch(addTopic(header));
+    }
   };
 
   const onCancelMessageHandler = () => {
@@ -40,11 +43,25 @@ const NewTopic: FC = () => {
   };
 
   return (
-    <Form caption="Новая тема">
-      <Input label="Тема" value={header} onValueChanged={(v) => setHeader(v)} />
-      <Button onClick={onSaveMessageHandler}>Сохранить</Button>
-      <Button onClick={onCancelMessageHandler}>Вернуться</Button>
-    </Form>
+    <>
+      {
+        auth.state === EAuthState.LOGGED
+          ? (
+            <Form caption="Новая тема">
+              <Input
+                label="Тема"
+                value={header}
+                onValueChanged={(v) => setHeader(v)}
+                onBlur={() => checkHeader()}
+                errorMessage={headerErrorMessage}
+              />
+              <Button onClick={onSaveMessageHandler}>Сохранить</Button>
+              <Button onClick={onCancelMessageHandler}>Вернуться</Button>
+            </Form>
+          )
+          : null
+      }
+    </>
   );
 };
 

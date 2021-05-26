@@ -5,15 +5,15 @@ import Button from 'UI/Button/index';
 import Form from 'UI/Form/index';
 import { IUser } from 'Store/types';
 import { useDispatch } from 'react-redux';
-import { changeProfile} from 'Reducers/user/actions';
+import { changeProfile } from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
-import {useAuthReselect, useThemeReselect} from 'Store/hooks';
+import { useAuthReselect, useThemeReselect } from 'Store/hooks';
+import Switcher from 'UI/Switcher';
+import { setUserTheme } from 'Reducers/theme/actions';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
-import Switcher from "UI/Switcher";
-import {setUserTheme} from "Reducers/theme/actions";
 
 const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameField, setFirstName] = useState('');
@@ -65,10 +65,10 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   // }
 
   const changeSwitcherHandler = (value:boolean) => {
-    const userTheme = value ? 'white' : 'dark'
-    dispatch(setUserTheme(userTheme))
-    setTheme(value)
-  }
+    const userTheme = value ? 'white' : 'dark';
+    dispatch(setUserTheme(userTheme));
+    setTheme(value);
+  };
 
   useEffect(() => {
     getUserInfo();
@@ -94,8 +94,8 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     <>
       <Form caption={caption || 'Профиль'}>
         <Switcher
-          firstValue={'Темная тема'}
-          secondValue={'Светлая тема'}
+          firstValue="Темная тема"
+          secondValue="Светлая тема"
           onValueChanged={changeSwitcherHandler}
           checked={themeField}
         />

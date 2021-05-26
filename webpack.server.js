@@ -11,7 +11,11 @@ const resolve = (p) => path.resolve(__dirname, `${p}`);
 module.exports = {
   mode: isDev ? 'development' : 'production',
   target: 'node',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    allowlist: [
+      /\.(?!(?:jsx?|json)$).{1,5}$/i,
+    ],
+  }), '@loadable/component'],
   entry: './src/server/index.tsx',
   output: {
     filename: 'server.js',

@@ -27,6 +27,7 @@ const drawLevel = (w: GameWindowProps) => {
     Math.round((w.left + w.width) / 2),
     Math.round(w.top / 2 + 2),
   );
+  ctx.closePath();
 };
 
 export default drawLevel;

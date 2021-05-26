@@ -1,32 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Main.scss';
-import { useDispatch } from 'react-redux';
 import { EAuthState } from 'Reducers/auth/types';
-import { getUserData } from 'Reducers/auth/actions';
 import { useAuthReselect } from 'Store/hooks';
 import routes from 'Config/routes';
 import OAuth from 'Pages/OAuth';
 
 const Main: React.FC = () => {
-  const dispatch = useDispatch();
   const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
 
   useEffect(() => {
     const { state } = auth;
-    if (state === EAuthState.UNKNOWN) {
-      dispatch(getUserData());
-    } else {
-      setAuthState(auth.state === EAuthState.LOGGED);
-    }
+    setAuthState(state === EAuthState.LOGGED);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
-  useEffect(() => {
-    dispatch(getUserData());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <li className="linkBlock">
       <OAuth />

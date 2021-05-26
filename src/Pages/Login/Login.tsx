@@ -4,7 +4,7 @@ import { LoginProps } from 'Pages/Login/types';
 import Form from 'UI/Form/index';
 import Input from 'UI/Input/index';
 import Button from 'UI/Button/index';
-import { getUserData, loginUser, logoutUser } from 'Reducers/auth/actions';
+import { loginUser, logoutUser } from 'Reducers/auth/actions';
 import './Login.scss';
 import { useDispatch } from 'react-redux';
 import { EAuthState } from 'Reducers/auth/types';
@@ -56,17 +56,15 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   }, [oauth]);
 
   useEffect(() => {
-    if (auth.state === EAuthState.LOGGED) {
-      history.push('/');
-    } else {
+    if (auth.state === EAuthState.UNKNOWN) {
+      //
+    } else if (auth.state === EAuthState.LOGIN_ERROR) {
       setPasswordMessage(auth.reason);
+    } else if (auth.state === EAuthState.LOGGED) {
+      history.push('/');
     }
-  }, [auth, history]);
-
-  useEffect(() => {
-    dispatch(getUserData());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [auth]);
 
   return (
     <>

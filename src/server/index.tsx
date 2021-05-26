@@ -22,6 +22,8 @@ import OAuthRoute from 'Server/routes/OAuth';
 import { EAuthState } from 'Reducers/auth/types';
 import path from 'path';
 import Routes from 'Server/routes/Routes';
+import * as fs from 'fs';
+import { getFileByExt } from 'Server/utils';
 import { isDev } from '../../env.variables';
 import clientConfig from '../../webpack.client.js';
 
@@ -41,14 +43,15 @@ if (isDev) {
         serverSideRender: true,
         writeToDisk: true,
         publicPath: clientConfig.output.publicPath,
+        // stats: 'normal',
         headers: { 'Access-Control-Allow-Origin': '*' },
       },
     ),
   );
-  app.use(webpackHotMiddleware(compiler));
+  app.use(webpackHotMiddleware(compiler, {}));
 }
-const distPath = path.join(__dirname, './');
-app.use(express.static(distPath));
+// const distPath = path.join(__dirname, './');
+// app.use(express.static(distPath));
 
 const routes: Routes[] = [];
 
@@ -63,6 +66,10 @@ routes.push(userRoute);
 routes.push(forumRoute);
 routes.push(leaderRoute);
 routes.push(oauthRoute);
+
+app.get('*.(js|css|json|png)$', (req, res) => {
+  res.sendFile(path.join(__dirname, req.path));
+});
 
 app.get('*', async (req: Request, res: Response) => {
   const context = {};
@@ -92,17 +99,31 @@ app.get('*', async (req: Request, res: Response) => {
     </Provider>,
   );
 
+  let css = 'main.css';
+  let js = 'main.js';
+  const manifestFile = path.join(__dirname, '/', 'resources-manifest.json');
+  try {
+    const sw = JSON.parse(fs.readFileSync(manifestFile) as unknown as string);
+    js = getFileByExt(sw.TO_CACHE, '.js');
+    css = getFileByExt(sw.TO_CACHE, '.css');
+  } catch (e) {
+    console.log(`Cannot read manifest file ${manifestFile}`);
+  }
+
   res.send(renderTemplate(
     {
-      cssPath: 'main.css',
-      jsPath: 'main.js',
+      cssPath: css,
+      jsPath: js,
       content,
       data: JSON.stringify(store.getState()),
     },
   ));
 });
 
+// const server =
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+  // server.timeout = 100;
+  // server.keepAliveTimeout = 0;
   routes.forEach((route) => console.log('Register route', route.getName()));
 });

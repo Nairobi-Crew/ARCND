@@ -14,6 +14,24 @@ const TopicItem: TopicProps = ({ topic }) => {
         <div className="topic__item_header_time"><Link to={topicLink}>{dateFormat(topic.createTime)}</Link></div>
         <div className="topic__item_header_count"><Link to={topicLink}>{topic.messageCount}</Link></div>
       </div>
+      <div className="topic__item_message">
+        <Link to={topicLink}>
+          {dateFormat(topic.lastDate as number)}
+          {' '}
+          <b>
+            {topic.lastAuthor}
+          </b>
+          {' '}
+          написал:
+          {' '}
+          <i>
+            {topic.lastTitle}
+            ,
+            {' '}
+            {topic.lastMessage}
+          </i>
+        </Link>
+      </div>
     </div>
   );
 };

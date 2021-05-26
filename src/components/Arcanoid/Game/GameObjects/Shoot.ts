@@ -43,6 +43,9 @@ class Shoot extends BaseObject {
    * Расчет следующего положения выстрела
    */
   nextMove() {
+    if (!gameProperties.gameStarted) {
+      return;
+    }
     this.y -= SHOOT_SPEED;
   }
 

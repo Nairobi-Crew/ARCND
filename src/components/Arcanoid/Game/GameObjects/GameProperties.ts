@@ -1,4 +1,9 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import isClient from 'Util/isClient';
+import { NO_SHADOWS, ROCKET_WIDTH } from 'Components/Arcanoid/settings';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
+import levels from 'Components/Arcanoid/levels/levelData';
 
 export interface IGameProperties {
   moved: boolean
@@ -38,6 +43,8 @@ export class GameProperties {
 
   menuMode = false; // режим отображения меню
 
+  useShadows = true;
+
   constructor(props: IGameProperties) {
     if (GameProperties.instance) {
       return GameProperties.instance;
@@ -52,6 +59,50 @@ export class GameProperties {
     this.onRocket = props.onRocket;
     this.gameWindow = props.gameWindow;
     GameProperties.instance = this;
+    if (isClient()) {
+      if (NO_SHADOWS) {
+        this.useShadows = false;
+      } else {
+        const isFirefox = typeof (global as any).InstallTrigger !== 'undefined';
+        this.useShadows = !isFirefox;
+      }
+    }
+  }
+
+  newLevel(level: number): Promise<void> {
+    return new Promise((resolve) => {
+      this.gameStarted = false;
+      this.onRocket = true; // шарик на рокетку
+      this.level += 1; // увеличение уровня
+      gameObjects.removeShoots();
+      gameObjects.removeBalls();
+      gameObjects.removeThings(true);
+      rocket.gun = 0;
+      rocket.glue = 0;
+      rocket.width = ROCKET_WIDTH;
+      gameObjects.generateLevel(
+        levels[level],
+      ); // генерация уровня
+      resolve();
+    });
+  }
+
+  resetParams(): Promise<{score: number, level: number}> {
+    return new Promise((resolve) => {
+      const { score, level } = this;
+
+      gameObjects.removeThings(true);
+      rocket.width = ROCKET_WIDTH;
+      rocket.glue = 0;
+      rocket.gun = 0;
+      gameObjects.removeShoots();
+      this.lives = 3;
+      this.onRocket = true;
+      this.score = 0;
+      this.level = 1;
+      gameObjects.generateLevel(levels[this.level - 1]); // генерация уровня
+      resolve({ score, level });
+    });
   }
 }
 

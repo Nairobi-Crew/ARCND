@@ -10,6 +10,7 @@
   color: $fc;
   background: $background-color;
   box-shadow: $shadow-small;
+  margin: 0.5em;
   transition: all linear 0.3s;
 
   &:active {
@@ -19,12 +20,12 @@
 
   &_type_rounded {
     padding: 16px;
-    border-radius: 24px;
+    border-radius: 16px;
   }
 
   &_type_rect {
     padding: 10px 16px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   &_secondary {

@@ -7,6 +7,10 @@ export interface ITopicsItem {
   author: string
   createTime: number
   messageCount: number
+  lastMessage?: string
+  lastTitle?: string
+  lastAuthor?: string
+  lastDate?: number
 }
 
 export type Topics = ITopicsItem[];

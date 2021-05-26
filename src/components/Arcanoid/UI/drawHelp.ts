@@ -25,6 +25,7 @@ const drawHelp = (w: GameWindowProps) => {
     Math.round((w.left + w.width) / 2),
     w.top + w.height + 20,
   );
+  ctx.closePath();
 };
 
 export default drawHelp;

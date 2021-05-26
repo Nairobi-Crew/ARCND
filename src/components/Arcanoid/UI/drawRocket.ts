@@ -17,13 +17,13 @@ const drawRocket = (
   x: number, _y: number, width: number, glue = 0, gun = 0,
 
 ) => {
-  ctx.beginPath();
   // вычисление абсолютных координат
   const startX = x + gameWindow.left;
   const startY = gameWindow.bottom - ROCKET_HEIGHT;
 
-  // создание градиента
   let grd = ctx.createLinearGradient(startX, startY, startX, startY + ROCKET_HEIGHT);
+  ctx.beginPath();
+  // создание градиента
   grd.addColorStop(0, 'gray');
   grd.addColorStop(1, 'gray');
   grd.addColorStop(0.4, 'white');
@@ -57,6 +57,7 @@ const drawRocket = (
     ctx.lineWidth = 1;
     ctx.strokeRect(startGunX, startGunY, GUN_WIDTH, GUN_HEIGHT);
   }
+  ctx.closePath();
 };
 
 export default drawRocket;

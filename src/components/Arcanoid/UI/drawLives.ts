@@ -15,9 +15,11 @@ const drawLives = (w: GameWindowProps) => {
     ctx.beginPath();
     ctx.fillStyle = 'green';
     ctx.strokeStyle = 'lime';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = 10;
-    ctx.shadowOffsetY = 5;
+    if (gameProperties.useShadows) {
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 10;
+      ctx.shadowOffsetY = 5;
+    }
 
     const OneDiv3 = Math.round(LIVES_BALL_RADIUS / 3);
     const grd = ctx.createRadialGradient(
@@ -52,6 +54,7 @@ const drawLives = (w: GameWindowProps) => {
   for (let i = 1; i < gameProperties.lives; i++) {
     drawOneLive(i);
   }
+  ctx.closePath();
 };
 
 export default drawLives;
