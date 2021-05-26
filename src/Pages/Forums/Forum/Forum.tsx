@@ -6,7 +6,7 @@ import './Forum.scss';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
-import { getUserData } from 'Reducers/auth/actions';
+// import { getUserData } from 'Reducers/auth/actions';
 import { useHistory } from 'react-router-dom';
 import { clearState, fetchTopicsAction } from 'Reducers/forum/actions';
 
@@ -16,7 +16,7 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
   const history = useHistory();
   const data = useForumTopics();
   useEffect(() => {
-    dispatch(getUserData());
+    // dispatch(getUserData());
     dispatch(fetchTopicsAction());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

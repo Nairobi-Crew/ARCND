@@ -25,12 +25,22 @@ const EditMessage: FC<EditMessageProps> = (
   const [message, setMessage] = useState('');
   const [parentMessageMessage, setParentMessage] = useState('');
   const [parentMessageHeader, setParentHeader] = useState('');
+  const [headerErrorMessage, setHeaderErrorMessage] = useState('');
+  const [messageErrorMessage, setMessageErrorMessage] = useState('');
   const [topicName, setTopicName] = useState('');
   const topics = useForumTopics();
   const messages = useForumMessages();
   const dispatch = useDispatch();
   const auth = useAuthReselect();
   const history = useHistory();
+
+  const getTopicName = () => {
+    const found = topics.topics.find((item) => item.id.toString() === topicId.toString());
+    if (found) {
+      return found.description;
+    }
+    return '';
+  };
 
   const getMessage = (id: number) => {
     let msg = '';
@@ -54,7 +64,7 @@ const EditMessage: FC<EditMessageProps> = (
   };
 
   useEffect(() => {
-    if (topics.topics && topics.topics.length === 0) {
+    if (!topics.topics) {
       dispatch(fetchTopicsAction());
     }
     const msg = getMessage(messageId);
@@ -71,10 +81,27 @@ const EditMessage: FC<EditMessageProps> = (
     if (auth.state !== EAuthState.LOGGED) {
       history.push('/forum');
     }
+    setTopicName(getTopicName());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const checkFields = (): boolean => {
+    let isEmpty = false;
+    if (header.trim() === '') {
+      setHeaderErrorMessage('Поле должно быть заполенео');
+      isEmpty = true;
+    }
+    if (message.trim() === '') {
+      setMessageErrorMessage('Поле должно быть заполенео');
+      isEmpty = true;
+    }
+    return !isEmpty;
+  };
+
   const saveButtonHandler = () => {
+    if (!checkFields()) {
+      return;
+    }
     dispatch(saveMessage(
       messageId,
       message,
@@ -87,21 +114,6 @@ const EditMessage: FC<EditMessageProps> = (
       onSave();
     }
   };
-
-  useEffect(() => {
-    if (topics.topics) {
-      const foundedTopic = topics.topics.find((item) => item.id === topicId);
-      if (foundedTopic) {
-        setTopicName(foundedTopic.description);
-      }
-    }
-  }, [topics, topicId]);
-
-  // useEffect(() => {
-  //   if (messages.state === EForumState.FETCHED_MESSAGES) {
-  //     // history.push(`/thread/${topicId}`);
-  //   }
-  // }, [messages]);
 
   const emojiClickHandler = (e: number) => {
     if (e) {
@@ -133,8 +145,16 @@ const EditMessage: FC<EditMessageProps> = (
               onValueChanged={(v) => {
                 setHeader(v);
               }}
+              errorMessage={headerErrorMessage}
+              onBlur={() => checkFields()}
             />
-            <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} />
+            <Input
+              label="Сообщение"
+              value={message}
+              onValueChanged={(v) => setMessage(v)}
+              errorMessage={messageErrorMessage}
+              onBlur={() => checkFields()}
+            />
             <EmojiInput current={emoji} onChange={emojiClickHandler} />
             <Button onClick={saveButtonHandler} disabled={header.trim() === '' || message.trim() === ''}>Сохранить</Button>
           </Form>

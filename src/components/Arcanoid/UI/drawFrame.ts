@@ -15,6 +15,7 @@ const drawFrame = (w: GameWindowProps): void => {
   ctx.lineWidth = 1;
   ctx.rect(w.left, w.top, w.width, w.height);
   ctx.stroke();
+  ctx.closePath();
 };
 
 export default drawFrame;

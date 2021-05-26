@@ -7,6 +7,7 @@ import {
   THING_SPLIT_LETTER,
   THING_WIDTH,
 } from 'Components/Arcanoid/settings';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
  * Отрисовка бонуса
@@ -69,9 +70,11 @@ const drawThing = (
   grd.addColorStop(0, color1);
   grd.addColorStop(1, color2);
 
-  ctx.shadowBlur = 20;
-  ctx.shadowOffsetX = 5;
-  ctx.shadowOffsetY = 5;
+  if (gameProperties.useShadows) {
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+  }
 
   ctx.fillStyle = grd;
   ctx.fillRect(startX, startY, THING_WIDTH, THING_HEIGHT);

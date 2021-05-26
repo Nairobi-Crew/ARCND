@@ -1,4 +1,5 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
  * Отрисовка шарика
@@ -28,9 +29,11 @@ const drawGradientBall = (
   grd.addColorStop(0.4, 'rgb(200, 200, 200');
   grd.addColorStop(1, 'rgb(250, 250, 250');
   ctx.fillStyle = grd;
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
+  if (gameProperties.useShadows) {
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+  }
 
   ctx.ellipse( // отрисовка шарика в абсолютных координатах
     centerX,

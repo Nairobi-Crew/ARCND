@@ -30,7 +30,7 @@ export class Rocket extends BaseObject {
 
   movedRight: boolean; // движется вправо?
 
-  gun = 0; // выстрелов у пушки
+  gun = -1; // выстрелов у пушки
 
   glue = 0; // количество клея
 
@@ -73,14 +73,14 @@ export class Rocket extends BaseObject {
     globalBus.on(EVENTS.GUN, () => { // бонус пушки
       this.glue = 0; // отмена бонуса клея
       gameProperties.onRocket = false; // сбрасывание шарика, если он приклеен
-      if (gameObjects.getList('ball').length > 1) {
-        return;
-      }
+      // if (gameObjects.getList('ball').length > 1) {
+      //   return;
+      // }
       this.gun = SHOOT_QTY; // установка бонуса пушки на количество выстрелов
     });
 
     globalBus.on(EVENTS.SPLIT, () => {
-      this.gun = 0;
+      // this.gun = 0;
       this.glue = 0;
     });
   }

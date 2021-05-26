@@ -12,6 +12,9 @@ const TopicList: React.FC<TopicListProps> = ({ topics }) => (
         <div className="topic_list_header_time">Время создания</div>
         <div className="topic_list_header_count">Сообщений</div>
       </div>
+      <div className="topic_list_message">
+        Последнее сообщение
+      </div>
     </div>
     {
       topics && Array.isArray(topics) ? topics.map((topic, idx) => (

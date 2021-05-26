@@ -40,6 +40,9 @@ class Thing extends BaseObject {
    * Расчет положения для следующего кадра
    */
   nextMove() {
+    if (!gameProperties.gameStarted) {
+      return;
+    }
     this.y += THING_SPEED; // передвигаем вверх
     const { gameWindow } = gameProperties;
     if (!gameWindow) {

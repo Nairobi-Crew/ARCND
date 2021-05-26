@@ -5,6 +5,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const { isDev } = require('./env.variables');
 const babelLoader = require('./webpack.babel');
 
@@ -35,17 +36,26 @@ module.exports = {
   // watchOptions: {
   //   ignored: [path.join(__dirname, './')],
   // },
+  // target: 'node',
+  target: 'web',
   entry: [
+    // isDev && 'webpack-hot-middleware/client?noInfo=false&path=/__webpack_hmr&timeout=20000&reload=true',
+    // isDev && 'webpack-hot-middleware/client?path=/__webpack_hmr_&timeout=20000',
+    // isDev && 'webpack-hot-middleware/client?noInfo=true&path=http://localhost:3000/__webpack_hmr',
     isDev && 'webpack-hot-middleware/client?noInfo=true',
     isDev && 'react-hot-loader/patch',
     isDev && 'css-hot-loader/hotModuleReplacement',
     './src/client/index.tsx',
   ].filter(Boolean),
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
+  devtool: 'source-map',
   output: {
+    // filename: '[name].[contenthash].js',
     filename: '[name].js',
-    path: isDev ? __dirname : path.join(__dirname, './dist'),
+    path: isDev ? path.join(__dirname) : path.join(__dirname, './dist'),
     publicPath: '/',
+    // hotUpdateChunkFilename: '[id].[hash].json',
+    // hotUpdateMainFilename: '[id].[hash].js',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -73,9 +83,11 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.WatchIgnorePlugin({ paths: [path.join(__dirname, './'), path.join(__dirname, './dist'), '/'] }),
+    new webpack.WatchIgnorePlugin({ paths: [path.join(__dirname, './'), path.join(__dirname, './dist'), path.join(__dirname, './dist/client'), '/'] }),
+    new Dotenv(),
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin(),
+    // new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
     new CopyPlugin({
       patterns: [
         {

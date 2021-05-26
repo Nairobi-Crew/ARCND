@@ -16,9 +16,6 @@ const OAuth: React.FC<any> = () => {
   const auth = useAuthReselect();
 
   useEffect(() => {
-    if (auth.state === EAuthState.UNKNOWN) {
-      dispatch(getUserData());
-    }
     if (oauth.state === EOAuthState.REDIRECT) {
       dispatch(signInOAUthDoneAction());
       dispatch(getUserData());
@@ -33,7 +30,8 @@ const OAuth: React.FC<any> = () => {
   }, [oauth]);
 
   return (
-    <></>
+    <>
+    </>
   );
 };
 

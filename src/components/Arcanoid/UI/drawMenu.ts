@@ -11,15 +11,18 @@ const drawMenu = (gameWindow: GameWindowProps) => {
     return;
   }
   ctx.beginPath();
-  ctx.shadowBlur = 10;
-  ctx.shadowOffsetX = 10;
-  ctx.shadowOffsetY = 5;
+  if (gameProperties.useShadows) {
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 10;
+    ctx.shadowOffsetY = 5;
+  }
 
   ctx.strokeStyle = 'white';
   ctx.fillStyle = 'black';
   ctx.fillRect(centerX - menuWidth, centerY - menuHeight, menuWidth * 2, menuHeight * 2);
   ctx.textAlign = 'center';
   ctx.strokeText('Выйти? [Y]', centerX, centerY);
+  ctx.closePath();
 };
 
 export default drawMenu;

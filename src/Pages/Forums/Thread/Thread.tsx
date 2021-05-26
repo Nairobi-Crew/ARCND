@@ -4,14 +4,13 @@ import Message from 'Pages/Forums/Thread/Message/index';
 import Button from 'UI/Button/index';
 import './Thread.scss';
 import { useForumMessages, useForumTopics } from 'Store/hooks';
-import { fetchMessages } from 'Reducers/forum/actions';
+import { fetchMessages, fetchTopicsAction } from 'Reducers/forum/actions';
 import { useDispatch } from 'react-redux';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
 import { EForumState, IMessagesItem } from 'Reducers/forum/types';
 
 const Thread: React.FC = () => {
   const threadId = parseInt(useParams<{ threadId: string }>().threadId, 10);
-  // console.log('Thread ID', threadId);
   const [messagesList, setMessagesList] = useState<IMessagesItem[]>([]);
   const history = useHistory();
   const messages = useForumMessages();
@@ -19,16 +18,26 @@ const Thread: React.FC = () => {
   const dispatch = useDispatch();
   const [topicDescription, setTopicDescription] = useState('');
 
+  const setDescription = () => {
+    const found = topics.topics.find((item) => item.id.toString() === threadId.toString());
+    setTopicDescription(found ? found.description : '');
+  };
+
   useEffect(() => {
     dispatch(fetchMessages(threadId));
-    const found = topics.topics.find((item) => item.id === threadId);
-    if (found) {
-      setTopicDescription(found.description);
-    } else {
-      setTopicDescription('');
+    if (!topics.topics || topics.topics.length === 0) {
+      dispatch(fetchTopicsAction());
     }
+    setDescription();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (topics.state === EForumState.FETCHED_TOPICS) {
+      setDescription();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topics]);
 
   useEffect(() => {
     if (messages.state === EForumState.WRONG_THREAD) {
@@ -41,8 +50,11 @@ const Thread: React.FC = () => {
   return (
     <div className="thread" key={`${threadId}-${Date.now()}`}>
       <div className="thread_title">
-        <div>
+        <div className="align-left">
           <Button onClick={() => history.goBack()}>На форумы</Button>
+        </div>
+        <div className="align-right">
+          <Button onClick={() => history.push('/')}>На главную</Button>
         </div>
         { topicDescription }
       </div>

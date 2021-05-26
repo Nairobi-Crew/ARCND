@@ -1,0 +1,7 @@
+{
+  "watch": [
+    "server.js",
+    "./dist"
+  ],
+  "verbose": true
+}

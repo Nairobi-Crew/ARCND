@@ -5,15 +5,16 @@ import {
   LEVEL_BLOCK_SPACE,
   LEVEL_BLOCKS_HEIGHT,
   LEVEL_BLOCKS_WIDTH,
-  LEVEL_STRING_LENGTH,
+  LEVEL_STRING_LENGTH, THING_TYPE_CLEAR,
 } from 'Components/Arcanoid/settings';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
-import Thing from 'Components/Arcanoid/Game/GameObjects/Thing';
+import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import { randomRange } from 'Components/Arcanoid/util/random';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -36,7 +37,17 @@ export default class GameFieldObjects {
   }
 
   getList(filter: GameFieldObjectType): IGameFieldObjectProps[] {
-    return this.data.filter((item) => (item.type === filter));
+    return this.data.filter(
+      (item) => (filter === 'brick'
+        ? item.type === filter && (item.object as Brick).level > 0
+        : item.type === filter),
+    );
+  }
+
+  removeEmptyBricks(): void {
+    this.data = this.data.filter(
+      (item) => item.type !== 'brick' || (item.object as Brick).level > 0,
+    );
   }
 
   render(): void {
@@ -115,6 +126,10 @@ export default class GameFieldObjects {
     this.data = this.data.filter((item) => !(item.type === 'ball' && (item.object) === ball));
   }
 
+  removeBalls() {
+    this.data = this.data.filter((item) => !(item.type === 'ball'));
+  }
+
   removeShoot(shoot: Shoot) {
     this.data = this.data.filter((item) => !(item.type === 'shoot' && (item.object as Shoot) === shoot));
   }
@@ -131,7 +146,6 @@ export default class GameFieldObjects {
     if (!levelData) {
       return;
     }
-    // console.log('Generate level');
     this.data = this.data.filter((x) => x.type !== 'brick');
     const getNextItem = (s: string) => {
       let currentPos = 0;
@@ -203,6 +217,71 @@ export default class GameFieldObjects {
         blockItem = nextItem();
       }
       y += blockHeight;
+    }
+  }
+
+  addBall(onRocket: boolean): void {
+    if (onRocket) {
+      gameProperties.onRocket = true;
+      gameProperties.gameStarted = false;
+    }
+    this.add({
+      object: new Ball({
+        x: 950, // координаты по умолчанию
+        y: 500,
+        radius: 15, // радиус
+        speedX: 5, // сророст и по осям
+        speedY: 5,
+      }),
+      type: 'ball',
+    });
+  }
+
+  crashBlock(block: Brick): void {
+    let thingType: ThingType = 'none';
+    let blockType = block.type;
+    if (blockType === 9) {
+      blockType = randomRange(1, 8);
+    }
+    switch (blockType) {
+      case 2:
+        thingType = 'gun';
+        break;
+      case 3:
+        thingType = 'glue';
+        break;
+      case 4:
+        thingType = 'expand';
+        break;
+      case 5:
+        thingType = 'compress';
+        break;
+      case 6:
+        thingType = 'split';
+        break;
+      default:
+    }
+    switch (THING_TYPE_CLEAR) {
+      case 'if_random':
+        if (blockType !== 9) {
+          block.type = 1;
+        }
+        break;
+      case 'yes':
+        block.type = 1;
+        break;
+      case 'random':
+        if (randomRange(0, 1) === 0) {
+          block.type = 1;
+        }
+        break;
+      default:
+        //
+    }
+    if (thingType !== 'none') {
+      const x = block.x + Math.round(block.width / 2);
+      const y = block.y + Math.round(block.height / 2);
+      this.add({ object: new Thing({ x, y, thingType }), type: 'thing' });
     }
   }
 }

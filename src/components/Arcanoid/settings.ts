@@ -1,10 +1,16 @@
 export const GAME_CANVAS_ID = 'arcanoid';
 
-export const FPS = 80; // максимум кадров/с
+export const FPS = 50; // максимум кадров/с
+export const NO_SHADOWS = false;
 
 // отступы на канвас
 
 export const BALL_SPEED_LIMIT = 1;
+
+export const MARGIN_LEFT = 2;
+export const MARGIN_RIGHT = 2;
+export const MARGIN_TOP = 30;
+export const MARGIN_BOTTOM = 100;
 
 export const ROCKET_HEIGHT = 20; // высота ракетки
 export const ROCKET_WIDTH = 200; // ширина ракетки
@@ -44,11 +50,12 @@ export const THING_GLUE_LETTER = 'К';
 export const THING_EXPAND_LETTER = 'Ш';
 export const THING_COMPRESS_LETTER = 'У';
 export const THING_SPLIT_LETTER = 'Т';
-export const SPLIT_ALL_BALLS = false;
-export const SPLIT_QTY = 3;
+export const THING_TYPE_CLEAR: 'yes' | 'no' | 'random' | 'if_random' = 'random';
+export const SPLIT_ALL_BALLS = true;
+export const SPLIT_QTY = 5;
 
 // выстрелы
-export const SHOOT_INTERVAL = 150; // минимальный интервал между выстрелами, мс
+export const SHOOT_INTERVAL = 250; // минимальный интервал между выстрелами, мс
 export const SHOOT_WIDTH = 8; // ширина выстрела
 export const SHOOT_HEIGHT = 15; // высота выстрела
 export const SHOOT_SPEED = 4; // скорость выстрела, пикс/кадр
