@@ -1,3 +1,4 @@
+import { generateCsp } from 'Server/csp/csp';
 import { isDev } from '../../env.variables';
 
 interface TemplateParams {
@@ -29,12 +30,17 @@ startServiceWorker();
 
         </script>
 `;
+  const [csp, nonce] = generateCsp();
+
   return `<!DOCTYPE html>
   <html lang="en">
+  <base href="/" />
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="/${cssPath}"/>
+        <meta property="csp-nonce" content="${nonce}" />
+        <meta http-equiv="Content-Security-Policy" content="${csp}" />
+        <link rel="stylesheet" href="/${cssPath}" />
 
         <title>Sprint 7</title>
       </head>
@@ -45,7 +51,7 @@ startServiceWorker();
         <div id="root">${content}</div>
 
         <script type="application/json" id="data">${data.replace(/</g, '&lt;')}</script>
-        <script src="/${jsPath}"></script>
+        <script src="/${jsPath}" />
         ${sw}
       </body>
   </html>`;

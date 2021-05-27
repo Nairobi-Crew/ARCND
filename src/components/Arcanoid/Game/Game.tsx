@@ -253,8 +253,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     const onGoal = (ball: Ball) => { // Обработка события ГОЛ
       const balls = gameObjects.getList('ball');
       gameObjects.removeBall(ball);
-      gameObjects.removeThings(true);
-      gameObjects.removeShoots();
+      if (balls.length <= 1) {
+        gameObjects.removeThings(true);
+        gameObjects.removeShoots();
+      }
       if (balls.length <= 1) {
         // gameProperties.resetParams().then();
         if (gameProperties.lives === 1) { // если жизнь последняя
