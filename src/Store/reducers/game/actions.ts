@@ -1,27 +1,24 @@
 import { EGameAction } from 'Reducers/game/types';
-import { Dispatch } from 'react';
-import { GameAction } from 'Reducers/game/game';
+import { ThunkAction } from 'redux-thunk';
+import { IAppState } from 'Store/types';
+import { Action } from 'redux';
 
-export const incScore = (score: number) => (dispatch: Dispatch<GameAction>) => {
+export const incScore = (score: number): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EGameAction.INC_SCORE, payload: { score } });
 };
 
-export const decLive = () => (dispatch: Dispatch<GameAction>) => {
+export const decLive = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EGameAction.DEC_LIVE });
 };
 
-// export const startGame = () => (dispatch: Dispatch<GameAction>) => {
-//   dispatch({ type: EGameAction.START_GAME });
-// };
-//
-export const endGame = () => (dispatch: Dispatch<GameAction>) => {
+export const endGame = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EGameAction.END_GAME });
 };
 
-export const incLevel = () => (dispatch: Dispatch<GameAction>) => {
+export const incLevel = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EGameAction.INC_LEVEL });
 };
 
-export const go = () => (dispatch: Dispatch<GameAction>) => {
+export const go = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EGameAction.GO });
 };

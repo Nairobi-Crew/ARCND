@@ -1,14 +1,14 @@
 import { API_PATH, AUTH_PATH } from 'Config/config';
 import { EAuthAction, EAuthState, UserRegisterParams } from 'Reducers/auth/types';
-import { IUser } from 'Store/types';
-import { Dispatch } from 'react';
-import { AuthAction } from 'Reducers/auth/auth';
+import { IAppState, IUser } from 'Store/types';
+import { ThunkAction } from 'redux-thunk';
+import { Action } from 'redux';
 
 const API = `${API_PATH}${AUTH_PATH}`;
 export const loginUser = (
   login: string,
   password: string,
-) => async (dispatch: Dispatch<AuthAction>) => {
+): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/signin`, {
     method: 'POST',
     credentials: 'include',
@@ -31,7 +31,7 @@ export const loginUser = (
   }
 };
 
-export const getUserData = () => async (dispatch: Dispatch<AuthAction>) => {
+export const getUserData = (): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/user`, {
     method: 'GET',
     credentials: 'include',
@@ -60,7 +60,7 @@ export const getUserData = () => async (dispatch: Dispatch<AuthAction>) => {
   }
 };
 
-export const logoutUser = () => async (dispatch: Dispatch<AuthAction>) => {
+export const logoutUser = (): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/logout`, {
     method: 'POST',
     credentials: 'include',
@@ -79,7 +79,7 @@ export const logoutUser = () => async (dispatch: Dispatch<AuthAction>) => {
   }
 };
 
-export const registerUser = (params: UserRegisterParams) => async (dispatch: Dispatch<AuthAction>) => {
+export const registerUser = (params: UserRegisterParams): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   fetch(`${API}/signup`, {
     method: 'POST',
     credentials: 'include',

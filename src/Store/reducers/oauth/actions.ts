@@ -1,11 +1,12 @@
-import { OAuthAction } from 'Reducers/oauth/oauth';
-import { Dispatch } from 'react';
 import { EOAuthState } from 'Reducers/oauth/types';
 import { API_PATH, OAUTH_PATH } from 'Config/config';
+import { ThunkAction } from 'redux-thunk';
+import { IAppState } from 'Store/types';
+import { Action } from 'redux';
 
 const OAUTH_API = `${API_PATH}${OAUTH_PATH}`;
 
-export const serviceIdAction = (uri: string) => (dispatch: Dispatch<OAuthAction>) => {
+export const serviceIdAction = (uri: string): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   fetch(`${OAUTH_API}/service-id?redirect_uri=${uri}`, { method: 'GET' }).then(async (response) => {
     const result = await response.json();
     dispatch({ type: EOAuthState.SET_ID, payload: result.service_id });
@@ -16,7 +17,7 @@ export const serviceIdAction = (uri: string) => (dispatch: Dispatch<OAuthAction>
   });
 };
 
-export const signInOAuthAction = (code: string, redirect_uri: string) => (dispatch: Dispatch<OAuthAction>) => {
+export const signInOAuthAction = (code: string, redirect_uri: string): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   const body = JSON.stringify({
     code,
     redirect_uri,
@@ -37,6 +38,6 @@ export const signInOAuthAction = (code: string, redirect_uri: string) => (dispat
   });
 };
 
-export const signInOAUthDoneAction = () => (dispatch: Dispatch<OAuthAction>) => {
+export const signInOAUthDoneAction = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EOAuthState.OAUTH_DONE });
 };
