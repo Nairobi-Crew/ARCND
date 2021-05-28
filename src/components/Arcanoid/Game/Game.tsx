@@ -10,7 +10,7 @@ import {
   EVENTS,
   FPS,
   GAME_CANVAS_ID,
-  GUN_HEIGHT,
+  GUN_HEIGHT, ROCKET_WIDTH,
   SHOOT_HEIGHT,
   SHOOT_INTERVAL,
   SHOOT_WIDTH,
@@ -37,6 +37,7 @@ import { useAuthReselect } from 'Store/hooks';
 import { getAvatar, getDisplayName } from 'Store/util';
 import { getUserData } from 'Reducers/auth/actions';
 import { getGameContext, getHeight, getWidth } from 'Components/Arcanoid/util/canvas';
+import GamePad from 'Components/GamePad';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let prevTick = 0;
@@ -178,7 +179,86 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     history.push('/leaderboard');
   };
 
-  // onResize();
+  const shootOrStart = () => {
+    if (!gameProperties.gameStarted) { // если игра на паузе
+      gameProperties.gameStarted = true; // снимаем с паузы
+      dispatch(go());
+      gameProperties.onRocket = false; // отвязка шарика от рокетки
+      const balls = gameObjects.getList('ball');
+      balls.forEach((item) => {
+        const ball = item.object as Ball;
+        if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
+          ball.invertYDirection();
+        }
+      });
+    } else {
+      gameProperties.onRocket = false;
+      if (rocket.glue) {
+        rocket.glue -= 1;
+      }
+      const shot = gameProperties.lastShoot || 0;
+      if (rocket.gun) {
+        rocket.gun -= 1;
+        if (Date.now() - shot > SHOOT_INTERVAL) {
+          if (gameProperties && gameProperties.gameWindow) {
+            gameProperties.lastShoot = Date.now();
+            const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
+            const y = gameProperties.gameWindow.bottom
+              - SHOOT_HEIGHT - rocket.height
+              - GUN_HEIGHT * 2;
+            const object = new Shoot({ x, y });
+            gameObjects.add({ object, type: 'shoot' });
+          }
+        }
+      }
+    }
+  };
+
+  const goLeft = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedLeft = true; // перемещать ракетку влево
+      rocket.movedRight = false; // остановить перемещение ракетки вправо
+    }
+  };
+
+  const goRight = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedRight = true; // перемещать ракетку вправо
+      rocket.movedLeft = false; // остановить перемещение влево
+    }
+  };
+
+  const stop = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedRight = false; // остановить перемещение ракетки вправо
+      rocket.movedLeft = false; // остановить перемещение влево
+    }
+  };
+
+  const onGamepadChange = (list: Gamepad[]) => {
+    if (list.length <= 0) {
+      return;
+    }
+    if (list[0]) {
+      const pad = list[0];
+      const buttonPressed = pad.buttons.find((button) => button.pressed);
+      if (buttonPressed) {
+        shootOrStart();
+      }
+      const axes = pad.axes.find((axe) => axe !== 0);
+      if (axes !== undefined) {
+        if (axes < -0.3) {
+          goLeft();
+        } else if (axes > 0.3) {
+          goRight();
+        } else {
+          stop();
+        }
+      } else {
+        stop();
+      }
+    }
+  };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
@@ -192,52 +272,15 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
       }
       if (key === ' ') { // пробел
-        if (!gameProperties.gameStarted) { // если игра на паузе
-          gameProperties.gameStarted = true; // снимаем с паузы
-          dispatch(go());
-          gameProperties.onRocket = false; // отвязка шарика от рокетки
-          const balls = gameObjects.getList('ball');
-          balls.forEach((item) => {
-            const ball = item.object as Ball;
-            if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
-              ball.invertYDirection();
-            }
-          });
-        } else {
-          gameProperties.onRocket = false;
-          if (rocket.glue) {
-            rocket.glue -= 1;
-          }
-          const shot = gameProperties.lastShoot || 0;
-          if (rocket.gun) {
-            rocket.gun -= 1;
-            if (Date.now() - shot > SHOOT_INTERVAL) {
-              if (gameProperties && gameProperties.gameWindow) {
-                gameProperties.lastShoot = Date.now();
-                const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
-                const y = gameProperties.gameWindow.bottom
-                  - SHOOT_HEIGHT - rocket.height
-                  - GUN_HEIGHT * 2;
-                const object = new Shoot({ x, y });
-                gameObjects.add({ object, type: 'shoot' });
-              }
-            }
-          }
-        }
+        shootOrStart();
       } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
         if (gameProperties.menuMode) { // если режим меню
           gameProperties.resetParams().then(({ level, score }) => gameOver({ level, score }));
         }
       } else if (key === 'ArrowLeft') { // если стрелка ВЛЕВО
-        if (!gameProperties.menuMode) { // не режим меню
-          rocket.movedLeft = true; // перемещать ракетку влево
-          rocket.movedRight = false; // остановить перемещение ракетки вправо
-        }
+        goLeft();
       } else if (key === 'ArrowRight') { // если стрелка ВПРАВО
-        if (!gameProperties.menuMode) { // не режим меню
-          rocket.movedRight = true; // перемещать ракетку вправо
-          rocket.movedLeft = false; // остановить перемещение влево
-        }
+        goRight();
       }
     };
 
@@ -252,6 +295,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
     const onGoal = (ball: Ball) => { // Обработка события ГОЛ
       const balls = gameObjects.getList('ball');
+      rocket.gun = 0;
+      rocket.glue = 0;
+      rocket.width = ROCKET_WIDTH;
       gameObjects.removeBall(ball);
       if (balls.length <= 1) {
         gameObjects.removeThings(true);
@@ -361,7 +407,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   }, []);
 
   return (
-    <></>
+    <>
+      <GamePad onChange={onGamepadChange} />
+    </>
   );
 };
 
