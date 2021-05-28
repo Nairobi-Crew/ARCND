@@ -1,0 +1,27 @@
+name: deploy to nairobi-arcnd-4.ya-praktikum.tech
+on:
+  push:
+    branches: [deploy]
+  pull_request:
+    branches: [deploy]
+
+#env:
+#  FIRST_NAME: Terry 1
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy to YC
+        uses: tarunjangra/ssh-remote-cmd@master
+        with:
+          command: |
+            cd /work/ARCND
+            git pull
+            docker-compose build
+            dosker-compose up -d
+#            echo "env_var:$FIRST_NAME"
+          host: ${{ secrets.HOST }}
+          user: deploy
+          key: ${{ secrets.PRIVATE_KEY}}
+          pass: ${{ secrets.PASS }}
+          args: "-tt -vvv"
