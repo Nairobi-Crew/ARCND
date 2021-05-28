@@ -3,7 +3,7 @@ import { LeaderProps } from './types';
 import './Leader.scss';
 
 const Leader: LeaderProps = ({
-  name, avatar, score, index=0,
+  name, avatar, score, index = 0,
 }) => (
   <>
     <li className="leader">
