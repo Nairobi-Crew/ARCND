@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: deploy to YC
-        uses: tarunjangra/ssh-remote-cmd@master
+        uses: nerd4ever/ssh-action@master
         with:
           command: |
             cd /work/ARCND
