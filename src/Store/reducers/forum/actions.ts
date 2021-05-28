@@ -1,10 +1,11 @@
 import { EForumState, IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
-import { Dispatch } from 'react';
-import { ForumAction } from 'Reducers/forum/forum';
 import { API_PATH, FORUM_PATH } from 'Config/config';
+import { ThunkAction } from 'redux-thunk';
+import { Action } from 'redux';
+import { IAppState } from 'Store/types';
 
 const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
-export const clearState = () => (dispatch: Dispatch<ForumAction>) => {
+export const clearState = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EForumState.UNKNOWN });
 };
 
@@ -23,14 +24,14 @@ export const fetchTopics = (): Promise<ITopicsItem[]> => new Promise((resolve, r
   });
 });
 
-export const fetchTopicsAction = () => async (dispatch: Dispatch<ForumAction>) => {
+export const fetchTopicsAction = (): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   dispatch({ type: EForumState.FETCH_START });
   fetchTopics().then((items) => {
     dispatch({ type: EForumState.FETCHED_TOPICS, payload: { topics: items } });
   }).catch(() => dispatch({ type: EForumState.UNKNOWN, payload: { topics: [] } }));
 };
 
-export const fetchMessages = (thread: number) => async (dispatch: Dispatch<ForumAction>) => {
+export const fetchMessages = (thread: number): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   dispatch({ type: EForumState.FETCH_START });
   fetch(`${FORUM_URL}/thread/${thread}`, {
     method: 'GET',
@@ -74,7 +75,7 @@ export const saveMessage = (
   topic: number,
   header: string,
   emoji = 5,
-) => (dispatch: Dispatch<ForumAction>) => {
+): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EForumState.FETCH_START });
   fetch(`${FORUM_URL}/thread/${_id}`, {
     method: 'POST',
@@ -123,7 +124,7 @@ export const saveMessage = (
   });
 };
 
-export const addTopic = (description: string) => async (dispatch: Dispatch<ForumAction>) => {
+export const addTopic = (description: string): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   dispatch({ type: EForumState.FETCH_START });
   fetch(`${FORUM_URL}/`, {
     method: 'POST',

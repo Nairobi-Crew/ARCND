@@ -1,10 +1,12 @@
-import { ILeaderUser, LeaderAction } from 'Reducers/leader/leader';
+import { ILeaderUser } from 'Reducers/leader/leader';
 import { API_PATH, LEADER_PATH } from 'Config/config';
 import { ELeaderAction } from 'Reducers/leader/types';
-import { Dispatch } from 'react';
+import { ThunkAction } from 'redux-thunk';
+import { IAppState } from 'Store/types';
+import { Action } from 'redux';
 
 const API = `${API_PATH}${LEADER_PATH}`;
-export const addLeader = (leader: ILeaderUser) => async (dispatch: Dispatch<LeaderAction>) => {
+export const addLeader = (leader: ILeaderUser): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   try {
     const response = await fetch(`${API}`, {
       method: 'POST',
@@ -24,7 +26,7 @@ export const addLeader = (leader: ILeaderUser) => async (dispatch: Dispatch<Lead
   }
 };
 
-export const getLeaders = () => async (dispatch: Dispatch<LeaderAction>) => {
+export const getLeaders = (): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   try {
     const response = await fetch(`${API}/all`, {
       method: 'POST',

@@ -32,14 +32,18 @@ startServiceWorker();
 `;
   const [csp, nonce] = generateCsp();
 
+  const useCSP = isDev ? '' : `
+        <meta property="csp-nonce" content="${nonce}" />
+        <meta http-equiv="Content-Security-Policy" content="${csp}" />
+  `;
+
   return `<!DOCTYPE html>
   <html lang="en">
   <base href="/" />
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta property="csp-nonce" content="${nonce}" />
-        <meta http-equiv="Content-Security-Policy" content="${csp}" />
+        ${useCSP}
         <link rel="stylesheet" href="/${cssPath}" />
 
         <title>Sprint 7</title>
@@ -51,7 +55,7 @@ startServiceWorker();
         <div id="root">${content}</div>
 
         <script type="application/json" id="data">${data.replace(/</g, '&lt;')}</script>
-        <script src="/${jsPath}" />
+        <script src="/${jsPath}"></script>
         ${sw}
       </body>
   </html>`;

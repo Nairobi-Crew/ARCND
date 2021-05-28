@@ -15,22 +15,28 @@ const TopicItem: TopicProps = ({ topic }) => {
         <div className="topic__item_header_count"><Link to={topicLink}>{topic.messageCount}</Link></div>
       </div>
       <div className="topic__item_message">
-        <Link to={topicLink}>
-          {dateFormat(topic.lastDate as number)}
-          {' '}
-          <b>
-            {topic.lastAuthor}
-          </b>
-          {' '}
-          написал:
-          {' '}
-          <i>
-            {topic.lastTitle}
-            ,
-            {' '}
-            {topic.lastMessage}
-          </i>
-        </Link>
+        {
+          topic.messageCount > 0
+            ? (
+              <Link to={topicLink}>
+                {dateFormat(topic.lastDate as number)}
+                {' '}
+                <b>
+                  {topic.lastAuthor}
+                </b>
+                {' '}
+                написал:
+                {' '}
+                <i>
+                  {topic.lastTitle}
+                  ,
+                  {' '}
+                  {topic.lastMessage}
+                </i>
+              </Link>
+            )
+            : null
+        }
       </div>
     </div>
   );

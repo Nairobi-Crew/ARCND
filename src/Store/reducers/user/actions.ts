@@ -1,11 +1,11 @@
-import { IUser } from 'Store/types';
+import { IAppState, IUser } from 'Store/types';
 import { API_PATH, USER_PATH } from 'Config/config';
 import { EUserAction } from 'Reducers/user/types';
-import { UserAction } from 'Reducers/user/user';
-import { Dispatch } from 'react';
+import { ThunkAction } from 'redux-thunk';
+import { Action } from 'redux';
 
 const API = `${API_PATH}${USER_PATH}`;
-export const changeProfile = (user: IUser) => async (dispatch: Dispatch<UserAction>) => {
+export const changeProfile = (user: IUser): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/profile`,
     {
       method: 'PUT',
@@ -36,7 +36,7 @@ export const changeProfile = (user: IUser) => async (dispatch: Dispatch<UserActi
 export const changePassword = (
   oldPassword: string,
   newPassword: string,
-) => async (dispatch: Dispatch<UserAction>) => {
+): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/password`,
     {
       method: 'PUT',
@@ -58,7 +58,7 @@ export const changePassword = (
   }
 };
 
-export const getUserById = (id: number) => async (dispatch: Dispatch<UserAction>) => {
+export const getUserById = (id: number): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/${id}`,
     {
       method: 'GET',
@@ -79,6 +79,6 @@ export const getUserById = (id: number) => async (dispatch: Dispatch<UserAction>
   }
 };
 
-export const clearLastAction = () => (dispatch: Dispatch<UserAction>) => {
+export const clearLastAction = (): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
   dispatch({ type: EUserAction.USER_UNKNOWN });
 };

@@ -1,7 +1,9 @@
-import {EThemeAction} from "Reducers/theme/types";
-import {ThemeAction} from "Reducers/theme/theme";
-import {Dispatch} from "redux";
+import { EThemeAction } from 'Reducers/theme/types';
+import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { IAppState } from 'Store/types';
 
-export const setUserTheme = (theme:string) => (dispatch: Dispatch<ThemeAction>) => {
-  dispatch({ type: EThemeAction.SET_THEME ,payload: { theme }});
+// eslint-disable-next-line import/prefer-default-export
+export const setUserTheme = (theme:string): ThunkAction<void, IAppState, unknown, Action<string>> => (dispatch) => {
+  dispatch({ type: EThemeAction.SET_THEME, payload: { theme } });
 };
