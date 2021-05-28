@@ -27,7 +27,7 @@ export default class Auth extends Routes {
         const answerText = await answer.text();
         res.status(EHttpStatusCodes.OK).send(answerText);
       } catch (e) {
-        res.status(EHttpStatusCodes.FORBIDDEN).send(e);
+        res.status(EHttpStatusCodes.FORBIDDEN).send(await e.json());
       }
     });
 

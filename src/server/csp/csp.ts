@@ -7,7 +7,7 @@ export const generateCsp = (): [csp: string, nonce: string] => {
   hash.update(v4());
   const nonce = hash.digest('base64');
 
-  const csp = `default-src 'self' 'nonce-${nonce};`;
+  const csp = `default-src 'self' 'nonce-${nonce}';`;
 
   return [csp, nonce];
 };

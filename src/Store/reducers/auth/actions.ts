@@ -22,9 +22,9 @@ export const loginUser = (
   } else {
     try {
       const reason = await response.json();
-      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason } });
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: reason });
     } catch (e) {
-      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: 'Unknown error' } });
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: 'Unknown error' });
       // eslint-disable-next-line no-console
       console.log('Error parse JSON', e);
     }

@@ -47,8 +47,10 @@ module.exports = {
     isDev && 'css-hot-loader/hotModuleReplacement',
     './src/client/index.tsx',
   ].filter(Boolean),
-  // devtool: 'inline-source-map',
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
+  // devtool: 'source-map',
+  // devtool: 'eval-source-map',
+  // devtool: false,
   output: {
     // filename: '[name].[contenthash].js',
     filename: '[name].js',
