@@ -79,6 +79,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       if (!canvas) {
         return false;
       }
+      canvas.onclick = () => canvas.requestPointerLock();
       const { width, height } = canvas;
       const firstRender = ((width || 300) + (height || 150)) === 450;
       canvas.width = window.innerWidth;
