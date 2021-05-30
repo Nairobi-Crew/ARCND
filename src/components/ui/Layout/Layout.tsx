@@ -5,15 +5,17 @@ import Form from "UI/Form";
 import Input from "UI/Input";
 import routes from "Config/routes";
 import './Layout.scss'
-import {Link} from "react-router-dom";
+import {Link,useLocation} from "react-router-dom";
 import {EAuthState} from "Reducers/auth/types";
 import {LayoutProps} from "UI/Layout/types";
 
 const Layout: LayoutProps = ({children}) => {
   const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
+  const path = useLocation()
   const theme = useThemeReselect()
   const [formVisible,setFormVisible] = useState(false)
+  const [navOpened, setNavOpened] = useState(false)
   const [name,setName] = useState('')
   const [message,setMessage] = useState('')
   useEffect(() => {
@@ -21,10 +23,15 @@ const Layout: LayoutProps = ({children}) => {
     setAuthState(state === EAuthState.LOGGED);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
+  useEffect(() => {
+    setNavOpened(false)
+    setFormVisible(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[path])
   return (
-    <div className={`layout root${theme&&` root_theme_${theme.theme.color}`}`}>
+    <div className={`layout${path.pathname ==='/game'?' layout_fullscreen':''} root${theme&&` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">
-        <nav className="layout__nav">
+        <nav className={`layout__nav${navOpened ? ' layout__nav_opened':''}`}>
           {
             routes.filter(
               (item) => {
@@ -45,6 +52,8 @@ const Layout: LayoutProps = ({children}) => {
               ),
             )
           }
+          {
+            path.pathname ==='/game'&&<Button aria-label='Открыть меню' className='layout__open-nav-btn' onClick={() => setNavOpened(!navOpened)} />}
         </nav>
         <main>
           {children}

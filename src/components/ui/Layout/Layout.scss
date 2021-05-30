@@ -1,8 +1,61 @@
 @import "src/common/utils";
 
 .layout {
-  padding-top: 80px;
+  $block: &;
+  padding-top: 120px;
   background: $background-color;
+
+  &_fullscreen {
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+
+    #{$block} {
+
+      &__main-content {
+        padding: 0;
+      }
+      &__nav {
+        transform: translateY(-100%);
+        transition: transform 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+
+        &_opened {
+          transform: translateY(0);
+        }
+      }
+
+      &__open-nav-btn {
+        margin: 0;
+        border-radius: 0 0 5px 5px;
+        border: none;
+        position: absolute;
+        top: 100%;
+        right: 20px;
+        height: 30px;
+        width: 30px;
+        background:inherit;
+        z-index: 0;
+        box-shadow: 0 5px 11px 3px #575260;
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-size: 80%;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' %3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg height='32px' id='Layer_1' style='enable-background:new 0 0 32 32;' version='1.1' viewBox='0 0 32 32' width='32px' xml:space='preserve' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cpath d='M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2 s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2 S29.104,22,28,22z'/%3E%3C/svg%3E");
+        }
+      }
+
+      &__footer {
+        display: none;
+      }
+    }
+  }
 
   &__nav {
     background: $background-color;
@@ -14,6 +67,7 @@
     padding-right: 1em;
     padding-left: 1em;
     display: flex;
+    z-index: 10;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 -5px 5px 10px #575260;
@@ -35,6 +89,7 @@
 
   &__main-content {
     min-height: 100vh;
+    padding-bottom: 40px;
   }
 
   &__footer {
@@ -62,6 +117,7 @@
     transform: translateX(100%);
     transition: transform .6s cubic-bezier(.785, .135, .15, .86);
     display: flex;
+    z-index: 20;
     justify-content: center;
     align-items: center;
 
@@ -69,19 +125,6 @@
       transform: translateX(0);
     }
   }
-
-  //
-  //&__form {
-  //  position: absolute;
-  //  top: 50%;
-  //  left: 50%;
-  //  min-height: 100vh;
-  //  width: 100vw;
-  //  display: flex;
-  //  justify-content: center;
-  //  align-items: center;
-  //  transform: translate(-50%, -50%);
-  //}
 
   &__form-close {
     position: absolute;

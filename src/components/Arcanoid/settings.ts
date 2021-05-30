@@ -9,8 +9,8 @@ export const BALL_SPEED_LIMIT = 1;
 
 export const MARGIN_LEFT = 2;
 export const MARGIN_RIGHT = 2;
-export const MARGIN_TOP = 30;
-export const MARGIN_BOTTOM = 100;
+export const MARGIN_TOP = 100;
+export const MARGIN_BOTTOM = 30;
 
 export const ROCKET_HEIGHT = 20; // высота ракетки
 export const ROCKET_WIDTH = 200; // ширина ракетки
