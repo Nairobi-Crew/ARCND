@@ -61,7 +61,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswo
   };
 
   return (
-    <Form caption={caption || 'Change password'}>
+    <Form caption={caption || 'Change password'}
+          visible={true} header={false} maxHeight={false}>
       <Input
         label="Старый пароль"
         value={oldPassword}

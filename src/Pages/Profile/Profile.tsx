@@ -92,7 +92,10 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   return (
     <>
-      <Form caption={caption || 'Профиль'}>
+      <Form caption={caption || 'Профиль'}
+            header={false}
+            visible={true}
+            name="profile">
         <Switcher
           firstValue="Темная тема"
           secondValue="Светлая тема"
@@ -104,6 +107,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
         </div>
         <Input
+          name="firstName"
           value={firstNameField}
           onValueChanged={(val) => setFirstName(val)}
           label="Имя"
@@ -111,17 +115,20 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           onBlur={() => setFirstNameMessage(firstNameField.trim().length === 0 ? 'Поле должно быть заполнено' : '')}
         />
         <Input
+          name="secondName"
           value={secondNameField}
           onValueChanged={(val) => setSecondName(val)}
           label="Фамилия"
           onBlur={() => setFirstNameMessage(secondNameField.trim().length === 0 ? 'Поле должно быть заполнено' : '')}
         />
         <Input
+          name="displayName"
           value={displayNameField}
           onValueChanged={(val) => setDisplayName(val)}
           label="Имя в чате"
         />
         <Input
+          name="login"
           value={loginField}
           onValueChanged={(val) => setLogin(val)}
           label="Логин"
@@ -130,6 +137,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           onBlur={() => setLoginMessage(loginIsValid(loginField) ? '' : 'Неверный логин')}
         />
         <Input
+          name="email"
           value={emailField}
           onValueChanged={(val) => setEmail(val)}
           label="Email"
@@ -138,6 +146,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           onBlur={() => setEmailMessage(emailIsValid(emailField) ? '' : 'Неверный email')}
         />
         <Input
+          name="phone"
           value={phoneField}
           onValueChanged={(val) => setPhone(val)}
           label="Phone"

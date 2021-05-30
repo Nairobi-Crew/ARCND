@@ -1,13 +1,15 @@
-import React, { FormEventHandler, useEffect, useState } from 'react';
-import { FormProps } from 'UI/Form/types';
+import React, {FormEventHandler, useEffect, useRef, useState} from 'react';
+import {FormProps} from 'UI/Form/types';
 import './Form.scss';
 import Header from 'UI/Header/Header';
+import {setNativeInputValue} from "Util/setNativeInputValue";
 
 const Form: FormProps = ({
   children,
   onSubmit,
   caption,
   visible,
+  name='',
   header = true,
   maxHeight = true,
 }) => {
@@ -18,12 +20,24 @@ const Form: FormProps = ({
       onSubmit();
     }
   };
+  const formRef = useRef<HTMLFormElement | null>(null)
 
   useEffect(() => {
     if (visible === undefined || visible) {
       setFormVisible('');
     } else {
       setFormVisible('hidden');
+    }
+    if (window) {
+      const inputs:[HTMLInputElement] = JSON.parse(localStorage.getItem(`form_${name}`) as string) || []
+      const elems = formRef?.current?.elements || []
+      for (let i = 0; i < elems.length; i++) {
+        if (elems[i].tagName === 'INPUT') {
+          const elem = elems[i] as HTMLInputElement
+          const value = inputs?.find(input => input.name === elem.name)?.value ?? ''
+          setNativeInputValue(elem,value)
+        }
+      }
     }
   }, [visible]);
 
@@ -41,7 +55,24 @@ const Form: FormProps = ({
       </div>
       <div className="form__form_column">
         <h1 className="form__form_column caption">{caption}</h1>
-        <form onSubmit={onSubmitHandler}>
+        <form ref={formRef} onSubmit={onSubmitHandler}
+              onInput={({currentTarget}) => {
+                if(!name) return
+                const elements = currentTarget.elements
+                const inputs = []
+                for (let i = 0; i < elements.length; i++) {
+                  if (elements[i].tagName === 'INPUT') {
+                    const elem = elements[i] as HTMLInputElement
+                    (elem.type !== 'password' && !elem.name.includes('password')) && inputs.push({
+                      value: elem.value,
+                      name: elem.name,
+                    })
+                  }
+                }
+                localStorage.setItem(`form_${name}`, JSON.stringify(
+                  inputs
+                ))
+              }}>
           {children}
         </form>
       </div>
