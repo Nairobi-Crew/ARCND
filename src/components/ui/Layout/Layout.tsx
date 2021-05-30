@@ -23,6 +23,11 @@ const Layout: LayoutProps = ({children}) => {
     setAuthState(state === EAuthState.LOGGED);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
+  useEffect(() => {
+    setNavOpened(false)
+    setFormVisible(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[path])
   return (
     <div className={`layout${path.pathname ==='/game'?' layout_fullscreen':''} root${theme&&` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">

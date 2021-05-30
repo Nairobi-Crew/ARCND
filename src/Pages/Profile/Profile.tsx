@@ -92,7 +92,9 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   return (
     <>
-      <Form caption={caption || 'Профиль'}>
+      <Form caption={caption || 'Профиль'}
+            header={false}
+            visible={true}>
         <Switcher
           firstValue="Темная тема"
           secondValue="Светлая тема"

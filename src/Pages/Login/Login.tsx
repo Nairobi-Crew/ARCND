@@ -68,7 +68,8 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
 
   return (
     <>
-      <Form caption={caption || 'SING IN'}>
+      <Form caption={caption || 'SING IN'}
+            visible={true} header={false} maxHeight={false}>
         <Input
           className="input__input"
           id="login_login"
