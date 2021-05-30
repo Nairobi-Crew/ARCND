@@ -15,6 +15,7 @@ const Layout: LayoutProps = ({children}) => {
   const path = useLocation()
   const theme = useThemeReselect()
   const [formVisible,setFormVisible] = useState(false)
+  const [navOpened, setNavOpened] = useState(false)
   const [name,setName] = useState('')
   const [message,setMessage] = useState('')
   useEffect(() => {
@@ -25,7 +26,7 @@ const Layout: LayoutProps = ({children}) => {
   return (
     <div className={`layout${path.pathname ==='/game'?' layout_fullscreen':''} root${theme&&` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">
-        <nav className="layout__nav">
+        <nav className={`layout__nav${navOpened ? ' layout__nav_opened':''}`}>
           {
             routes.filter(
               (item) => {
@@ -46,6 +47,8 @@ const Layout: LayoutProps = ({children}) => {
               ),
             )
           }
+          {
+            path.pathname ==='/game'&&<Button aria-label='Открыть меню' className='layout__open-nav-btn' onClick={() => setNavOpened(!navOpened)} />}
         </nav>
         <main>
           {children}
