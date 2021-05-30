@@ -10,7 +10,8 @@ import {
   EVENTS,
   FPS,
   GAME_CANVAS_ID,
-  GUN_HEIGHT, ROCKET_WIDTH,
+  GUN_HEIGHT,
+  ROCKET_WIDTH,
   SHOOT_HEIGHT,
   SHOOT_INTERVAL,
   SHOOT_WIDTH,
@@ -37,7 +38,10 @@ import { useAuthReselect } from 'Store/hooks';
 import { getAvatar, getDisplayName } from 'Store/util';
 import { getUserData } from 'Reducers/auth/actions';
 import { getGameContext, getHeight, getWidth } from 'Components/Arcanoid/util/canvas';
-import GamePad from 'Components/GamePad';
+import GamePad from 'Components/Arcanoid/Game/GamePad';
+import Touch from 'Components/Arcanoid/Game/Touch';
+import drawDebugInfo from 'Components/Arcanoid/UI/drawDebugInfo';
+import { TouchDirection, TouchPoint } from 'Components/Arcanoid/Game/Touch/types';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let prevTick = 0;
@@ -73,6 +77,8 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     return true;
   };
 
+  gameProperties.debug = '';
+
   const doResizeCanvas = (): boolean => {
     if (isClient()) {
       const canvas = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
@@ -89,73 +95,6 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     }
     return false;
   };
-
-  const drawGame = () => { // отрисовка кадра игры
-    if (!checkContext()) { // проверка канваса
-      return;
-    }
-
-    // функция проверки шарика на столкновение с кирпичами
-    // и уменьшение уровня кирпича на 1 при столкновении
-    const bricks = gameObjects.getList('brick');
-
-    const balls = gameObjects.getList('ball');
-
-    // если шариков на поле 0, то приклеиваем новый на ракетку
-    if (balls.length === 0) {
-      gameObjects.addBall(true);
-    }
-
-    balls.forEach(
-      (ball) => bricks.forEach(
-        (item) => (
-              item.object as Brick).intersect((ball.object as Ball)),
-      ),
-    );
-
-    // удаление кирпичей с уровнем 0
-    gameObjects.removeEmptyBricks();
-
-    if (gameObjects.brickCount <= 0) { // если количество кирпичей = 0, то уровень пройден
-      const level = Math.min(gameProperties.level - 1, levels.length - 1);
-      gameProperties.newLevel(level).then(() => {
-        dispatch(incLevel());
-        doResizeCanvas();
-      });
-    }
-    balls.forEach((ball) => (ball.object as Ball).nextMove());
-    rocket.nextMove(); // перемещение ракетки на следующий кадр
-    const context = gameProperties.ctx;
-    const gameContext = getGameContext();
-    if (!context || !gameContext) {
-      return;
-    }
-
-    context.beginPath();
-    context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
-    context.closePath();
-    gameObjects.render(); // отрисовка кирпичей
-    balls.forEach((ball) => (ball.object as Ball).render());
-    rocket.render(); // рокетки
-
-    drawFrame(gameContext); // рамки
-    drawHelp(gameContext); // строки состояния
-    drawScore(gameContext); // счета
-    drawLevel(gameContext); // уровня
-    drawLives(gameContext); // жизней
-    if (gameProperties.menuMode) { // если режим меню
-      drawMenu(gameContext); // то меню рисуем
-    }
-  };
-
-  function loop() { // обработка отрисовки кадра анимации
-    frameId.current = requestAnimationFrame(loop);
-
-    const now = Math.round((FPS * Date.now()) / 1000);
-    if (now === prevTick) return;
-    prevTick = now;
-    drawGame();
-  }
 
   const onResize = () => {
     if (doResizeCanvas()) {
@@ -216,24 +155,27 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   };
 
   const goLeft = () => {
-    if (!gameProperties.menuMode) { // не режим меню
-      rocket.movedLeft = true; // перемещать ракетку влево
-      rocket.movedRight = false; // остановить перемещение ракетки вправо
+    if (gameProperties.menuMode) { // не режим меню
+      return;
     }
+    rocket.movedLeft = true; // перемещать ракетку влево
+    rocket.movedRight = false; // остановить перемещение ракетки вправо
   };
 
   const goRight = () => {
-    if (!gameProperties.menuMode) { // не режим меню
-      rocket.movedRight = true; // перемещать ракетку вправо
-      rocket.movedLeft = false; // остановить перемещение влево
+    if (gameProperties.menuMode) { // не режим меню
+      return;
     }
+    rocket.movedRight = true; // перемещать ракетку вправо
+    rocket.movedLeft = false; // остановить перемещение влево
   };
 
   const stop = () => {
-    if (!gameProperties.menuMode) { // не режим меню
-      rocket.movedRight = false; // остановить перемещение ракетки вправо
-      rocket.movedLeft = false; // остановить перемещение влево
+    if (gameProperties.menuMode) { // не режим меню
+      return;
     }
+    rocket.movedRight = false; // остановить перемещение ракетки вправо
+    rocket.movedLeft = false; // остановить перемещение влево
   };
 
   const onGamepadChange = (list: Gamepad[]) => {
@@ -260,6 +202,108 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       }
     }
   };
+
+  const onTouchMove = (direction: TouchDirection) => {
+    switch (direction) {
+      case 'up':
+        shootOrStart();
+        break;
+      case 'left':
+        // goLeft();
+        break;
+      case 'right':
+        // goRight();
+        break;
+      default:
+        // stop();
+    }
+  };
+
+  const onTouchCancel = () => {
+    stop();
+  };
+
+  const onTouchStart = (_e: TouchEvent, point: TouchPoint) => {
+    if (!point) {
+      return;
+    }
+    if (gameProperties?.gameWindow?.width) {
+      const half = gameProperties.gameWindow.width / 2;
+      if (point.x < half) {
+        goLeft();
+      } else {
+        goRight();
+      }
+    }
+  };
+
+  const drawGame = () => { // отрисовка кадра игры
+    if (!checkContext()) { // проверка канваса
+      return;
+    }
+
+    // функция проверки шарика на столкновение с кирпичами
+    // и уменьшение уровня кирпича на 1 при столкновении
+    const bricks = gameObjects.getList('brick');
+
+    const balls = gameObjects.getList('ball');
+
+    // если шариков на поле 0, то приклеиваем новый на ракетку
+    if (balls.length === 0) {
+      gameObjects.addBall(true);
+    }
+
+    balls.forEach(
+      (ball) => bricks.forEach(
+        (item) => (
+              item.object as Brick).intersect((ball.object as Ball)),
+      ),
+    );
+
+    // удаление кирпичей с уровнем 0
+    gameObjects.removeEmptyBricks();
+
+    if (gameObjects.brickCount <= 0) { // если количество кирпичей = 0, то уровень пройден
+      const level = Math.min(gameProperties.level - 1, levels.length - 1);
+      gameProperties.newLevel(level).then(() => {
+        dispatch(incLevel());
+        doResizeCanvas();
+      });
+    }
+    balls.forEach((ball) => (ball.object as Ball).nextMove());
+    rocket.nextMove(); // перемещение ракетки на следующий кадр
+    const context = gameProperties.ctx;
+    const gameContext = getGameContext();
+    if (!context || !gameContext) {
+      return;
+    }
+
+    context.beginPath();
+    context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
+    context.closePath();
+    gameObjects.render(); // отрисовка кирпичей
+    balls.forEach((ball) => (ball.object as Ball).render());
+    rocket.render(); // рокетки
+
+    drawFrame(gameContext); // рамки
+    drawHelp(gameContext); // строки состояния
+    drawScore(gameContext); // счета
+    drawLevel(gameContext); // уровня
+    drawLives(gameContext); // жизней
+    if (gameProperties.menuMode) { // если режим меню
+      drawMenu(gameContext); // то меню рисуем
+    }
+    drawDebugInfo();
+  };
+
+  function loop() { // обработка отрисовки кадра анимации
+    frameId.current = requestAnimationFrame(loop);
+
+    const now = Math.round((FPS * Date.now()) / 1000);
+    if (now === prevTick) return;
+    prevTick = now;
+    drawGame();
+  }
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
@@ -410,6 +454,13 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   return (
     <>
       <GamePad onChange={onGamepadChange} />
+      <Touch
+        id={GAME_CANVAS_ID}
+        onMove={onTouchMove}
+        onCancel={onTouchCancel}
+        onEnd={onTouchCancel}
+        onStart={onTouchStart}
+      />
     </>
   );
 };
