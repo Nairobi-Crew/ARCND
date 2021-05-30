@@ -28,6 +28,7 @@ exports[`Render Form Render form correct 1`] = `
       className="form__form_column caption"
     />
     <form
+      onInput={[Function]}
       onSubmit={[Function]}
     >
       <div
