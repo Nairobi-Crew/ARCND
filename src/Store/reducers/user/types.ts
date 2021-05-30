@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-shadow,import/prefer-default-export
 export enum EUserAction {
   USER_GET_INFO_BY = 'USER:GET_INFO',
   USER_CHANGE_PASSWORD = 'USER:CHANGE_PASSWORD',

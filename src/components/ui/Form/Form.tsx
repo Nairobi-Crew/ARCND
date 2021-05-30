@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEventHandler, useEffect, useState } from 'react';
 import { FormProps } from 'UI/Form/types';
 import './Form.scss';
 import Header from 'UI/Header/Header';
@@ -11,16 +11,16 @@ const Form: FormProps = ({
   header = true,
   maxHeight = true,
 }) => {
-  const [formVisible, setFormVisible] = useState(visible === undefined || visible === true ? '' : 'hidden');
-  const onSubmitHandler = (evt) => {
-    evt.preventDefault();
+  const [formVisible, setFormVisible] = useState(visible === undefined || visible ? '' : 'hidden');
+  const onSubmitHandler: FormEventHandler<HTMLFormElement> = (event) => {
+    ((event as unknown) as Event).preventDefault();
     if (onSubmit) {
       onSubmit();
     }
   };
 
   useEffect(() => {
-    if (visible === undefined || visible === true) {
+    if (visible === undefined || visible) {
       setFormVisible('');
     } else {
       setFormVisible('hidden');

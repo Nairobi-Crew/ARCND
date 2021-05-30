@@ -1,7 +1,10 @@
 import BaseObject from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 
+type TOnGamepadStateChange = (gamepads: Gamepad[]) => void;
+
 export type GameProps = {
-  ctx: CanvasRenderingContext2D
+  ctx?: CanvasRenderingContext2D
+  onGamepadStateChange?: TOnGamepadStateChange
 }
 
 // размер игрового окна
@@ -14,7 +17,9 @@ export type GameWindowProps = {
   height: number // высота
 };
 
+export type GameFieldObjectType = 'ball' | 'brick' | 'thing' | 'shoot';
+
 export interface IGameFieldObjectProps {
-  type: string
+  type: GameFieldObjectType
   object: BaseObject
 }

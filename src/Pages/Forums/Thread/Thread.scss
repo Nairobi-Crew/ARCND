@@ -54,3 +54,14 @@
     }
   }
 }
+
+.align-left {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.align-right {
+  display: inline-block;
+  margin-right: 10px;
+  float: right;
+}

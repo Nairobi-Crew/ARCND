@@ -1,6 +1,5 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
-import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { globalBus } from 'Util/EventBus';
@@ -32,21 +31,21 @@ export class Brick extends BaseObject {
 
   /**
    * Отрисовка блока
-   * @param {GameWindowProps | undefined} gameWindow
    */
-  render(gameWindow: GameWindowProps | undefined = undefined): void {
-    super.render(gameWindow);
-    if (!this.gameWindow) {
+  render(): void {
+    super.render();
+    super.render();
+    const { ctx, gameWindow } = gameProperties;
+    if (!ctx || !gameWindow) {
       return;
     }
-    const { ctx } = this;
     drawBrick(ctx, gameWindow, this.x, this.y, this.width, this.height, this.level, this.type);
   }
 
   /**
    * Проверка пересечения, шарика и блока
    */
-  intersect():void { // проверка пересечения кирпича и шарика
+  intersect(ball: Ball):void { // проверка пересечения кирпича и шарика
     if (ball.x - ball.radius > this.x + this.width // не перекрываются по оси Х
       || ball.x + ball.radius < this.x) {
       return;

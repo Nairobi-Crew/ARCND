@@ -5,9 +5,9 @@ import './Input.scss';
 const Input: InputProps = ({
   label, value, onValueChanged, errorMessage, ...restProps
 }) => {
-  const [inputValue, setInputValue] = useState(value || '');
+  const [inputValue, setInputValue] = useState<string>(value as string || '');
   useEffect(() => {
-    setInputValue(value);
+    setInputValue(value as string);
   }, [value]);
   const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     if (e.target) {
@@ -21,6 +21,7 @@ const Input: InputProps = ({
 
   return (
     <div className="input">
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className="input__label">
         <input
           className="input__input"

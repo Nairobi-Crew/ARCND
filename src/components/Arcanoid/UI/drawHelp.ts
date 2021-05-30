@@ -2,10 +2,10 @@ import {
   HELP_FILL_STYLE, HELP_FONT, HELP_STROKE_STYLE, HELP_TEXT,
 } from 'Components/Arcanoid/settings';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawHelp = (w: GameWindowProps) => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
 
   if (!ctx) {
     return;
@@ -25,6 +25,7 @@ const drawHelp = (w: GameWindowProps) => {
     Math.round((w.left + w.width) / 2),
     w.top + w.height + 20,
   );
+  ctx.closePath();
 };
 
 export default drawHelp;

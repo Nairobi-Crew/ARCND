@@ -4,11 +4,10 @@ import {
   LEVEL_FONT,
   LEVEL_STROKE_STYLE, LEVEL_TEXT,
 } from 'Components/Arcanoid/settings';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawLevel = (w: GameWindowProps) => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
 
   if (!ctx) {
     return;
@@ -28,6 +27,7 @@ const drawLevel = (w: GameWindowProps) => {
     Math.round((w.left + w.width) / 2),
     Math.round(w.top / 2 + 2),
   );
+  ctx.closePath();
 };
 
 export default drawLevel;

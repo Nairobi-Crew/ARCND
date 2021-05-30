@@ -1,7 +1,7 @@
 export type EditMessageProps = {
-  parentMessage: string,
-  topicId: string,
-  messageId: string,
+  parentMessage: number,
+  topicId: number,
+  messageId: number,
   visible?: boolean,
   onSave?: Function,
 };

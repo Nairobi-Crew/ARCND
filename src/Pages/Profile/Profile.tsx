@@ -8,7 +8,9 @@ import { useDispatch } from 'react-redux';
 import { changeProfile } from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
-import { useAuthReselect } from 'Store/hooks';
+import { useAuthReselect, useThemeReselect } from 'Store/hooks';
+import Switcher from 'UI/Switcher';
+import { setUserTheme } from 'Reducers/theme/actions';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
@@ -21,12 +23,14 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [emailField, setEmail] = useState('');
   const [phoneField, setPhone] = useState('');
   const [avatarField, setAvatar] = useState('');
+  const [themeField, setTheme] = useState(false);
   const [emailMessage, setEmailMessage] = useState('');
   const [phoneMessage, setPhoneMessage] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
   const auth = useAuthReselect();
+  const theme = useThemeReselect();
   const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
@@ -38,7 +42,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
       phone: phoneField,
       display_name: displayNameField,
       login: loginField,
-      id: auth.user.id,
+      id: auth?.user?.id,
     };
     dispatch(changeProfile(user));
   };
@@ -56,9 +60,24 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setAvatar(auth.user.avatar || '');
   };
 
+  // const getTheme = () => {
+  //   setTheme(themeField)
+  // }
+
+  const changeSwitcherHandler = (value:boolean) => {
+    const userTheme = value ? 'white' : 'dark';
+    dispatch(setUserTheme(userTheme));
+    setTheme(value);
+  };
+
   useEffect(() => {
     getUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
+
+  useEffect(() => {
+    // getTheme();
+  }, [theme]);
 
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);
@@ -68,11 +87,18 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     if (auth.state === EAuthState.LOGGED && !auth.user) {
       dispatch(getUserData());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <Form caption={caption || 'Профиль'}>
+        <Switcher
+          firstValue="Темная тема"
+          secondValue="Светлая тема"
+          onValueChanged={changeSwitcherHandler}
+          checked={themeField}
+        />
         <div style={{ textAlign: 'center' }}>
           {avatarField ? <img src={avatarField} width="50" height="50" alt="Avatar" /> : ''}
 

@@ -23,6 +23,7 @@ export const getLeaders = (data: ILeaderboardStatsData) => async (dispatch) => {
 };
 
 export const pushResult = ({score,name,avatar,level}: ILeaderResult) => async (dispatch) => {
+  console.warn('pushResult')
   const response = await fetch(`${API_URL}leaderboard`,
     {
       method: 'POST',

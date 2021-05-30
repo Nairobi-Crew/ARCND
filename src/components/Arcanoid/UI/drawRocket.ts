@@ -6,7 +6,7 @@ import { GameWindowProps } from 'Components/Arcanoid/Game/types';
  * @param {CanvasRenderingContext2D} ctx контекст канваса
  * @param {GameWindowProps} gameWindow объект с размерами игрового окна
  * @param {number} x координата относительно игрового окна
- * @param {number} y координата относительно игрового окна
+ * @param {number} _y координата относительно игрового окна
  * @param {number} width ширина ракетки
  * @param {number} glue клей - 0 рисовать не надо
  * @param {number} gun ствол - 0 рисовать не надо
@@ -14,16 +14,16 @@ import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 const drawRocket = (
   ctx: CanvasRenderingContext2D,
   gameWindow: GameWindowProps,
-  x: number, y: number, width: number, glue = 0, gun = 0,
+  x: number, _y: number, width: number, glue = 0, gun = 0,
 
 ) => {
-  ctx.beginPath();
   // вычисление абсолютных координат
   const startX = x + gameWindow.left;
   const startY = gameWindow.bottom - ROCKET_HEIGHT;
 
-  // создание градиента
   let grd = ctx.createLinearGradient(startX, startY, startX, startY + ROCKET_HEIGHT);
+  ctx.beginPath();
+  // создание градиента
   grd.addColorStop(0, 'gray');
   grd.addColorStop(1, 'gray');
   grd.addColorStop(0.4, 'white');
@@ -57,6 +57,7 @@ const drawRocket = (
     ctx.lineWidth = 1;
     ctx.strokeRect(startGunX, startGunY, GUN_WIDTH, GUN_HEIGHT);
   }
+  ctx.closePath();
 };
 
 export default drawRocket;

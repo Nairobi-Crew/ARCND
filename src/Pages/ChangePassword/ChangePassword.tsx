@@ -28,12 +28,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ caption }: ChangePasswo
     } else {
       setOldPasswordErrorMessage(user.reason);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {
     if (user.state !== EUserAction.USER_UNKNOWN) {
       dispatch(clearLastAction());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changePasswordHandler = () => {

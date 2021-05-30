@@ -1,22 +1,25 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { LIVES_BALL_RADIUS } from 'Components/Arcanoid/settings';
-import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 const drawLives = (w: GameWindowProps) => {
-  const { ctx } = gameObjects;
+  const { ctx } = gameProperties;
 
   // eslint-disable-next-line no-shadow
   const drawOneLive = (current: number) => {
     const baseX = w.right - (current * 30) + 10;
     const baseY = Math.round(w.top / 2);
+    if (!ctx) {
+      return;
+    }
     ctx.beginPath();
-    ctx.fillStyle = ball.fillStyle;
-    ctx.strokeStyle = ball.strokeStyle;
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = 10;
-    ctx.shadowOffsetY = 5;
+    ctx.fillStyle = 'green';
+    ctx.strokeStyle = 'lime';
+    if (gameProperties.useShadows) {
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 10;
+      ctx.shadowOffsetY = 5;
+    }
 
     const OneDiv3 = Math.round(LIVES_BALL_RADIUS / 3);
     const grd = ctx.createRadialGradient(
@@ -51,6 +54,7 @@ const drawLives = (w: GameWindowProps) => {
   for (let i = 1; i < gameProperties.lives; i++) {
     drawOneLive(i);
   }
+  ctx.closePath();
 };
 
 export default drawLives;

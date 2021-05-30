@@ -1,12 +1,21 @@
-import React, { useEffect } from 'react';
-import { GameProps, GameWindowProps } from 'Components/Arcanoid/Game/types';
-import { ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import React, { useEffect, useRef } from 'react';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { GameProps } from 'Components/Arcanoid/Game/types';
+import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { globalBus } from 'Util/EventBus';
 import {
-  EVENTS, FPS, GAME_CANVAS_ID, GUN_HEIGHT, ROCKET_WIDTH, SHOOT_HEIGHT, SHOOT_INTERVAL, SHOOT_WIDTH,
+  EVENTS,
+  FPS,
+  GAME_CANVAS_ID,
+  GUN_HEIGHT, ROCKET_WIDTH,
+  SHOOT_HEIGHT,
+  SHOOT_INTERVAL,
+  SHOOT_WIDTH,
+  SPLIT_ALL_BALLS,
+  SPLIT_QTY,
 } from 'Components/Arcanoid/settings';
 import drawFrame from 'Components/Arcanoid/UI/drawFrame';
 import drawHelp from 'Components/Arcanoid/UI/drawHelp';
@@ -16,89 +25,69 @@ import drawLives from 'Components/Arcanoid/UI/drawLives';
 import levels from 'Components/Arcanoid/levels/levelData';
 import drawMenu from 'Components/Arcanoid/UI/drawMenu';
 import { useHistory } from 'react-router-dom';
-import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { useDispatch } from 'react-redux';
 import {
   decLive, endGame, go, incLevel, incScore,
 } from 'Reducers/game/actions';
-import Thing, { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { randomRange } from 'Components/Arcanoid/util/random';
 import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
-import {pushResult} from "Reducers/leaderboard/actions";
+import isClient from 'Util/isClient';
+import { addLeader } from 'Reducers/leader/actions';
+import { useAuthReselect } from 'Store/hooks';
+import { getAvatar, getDisplayName } from 'Store/util';
+import { getUserData } from 'Reducers/auth/actions';
+import { getGameContext, getHeight, getWidth } from 'Components/Arcanoid/util/canvas';
+import GamePad from 'Components/GamePad';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
-  let canvasId;
-
+  let prevTick = 0;
+  const frameId = useRef(0);
   const dispatch = useDispatch();
-
-  const getWidth = () => { // ширина канваса
-    if (canvasId) {
-      // return canvasId.width;
-    }
-    canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
-    if (canvasId) {
-      return canvasId.width;
-    }
-    return 0;
-  };
-
-  const getHeight = () => { // высота канваса
-    if (canvasId) {
-      // return canvasId.height;
-    }
-    canvasId = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
-    if (canvasId) {
-      return canvasId.height;
-    }
-    return 0;
-  };
+  const auth = useAuthReselect();
 
   const history = useHistory();
 
   useEffect(() => { // при изменении контекста канваса, меняем его у
-    gameObjects.setContext(ctx);
-    ball.setContext(ctx);
-    rocket.setContext(ctx);
+    gameProperties.ctx = ctx;
   }, [ctx]);
 
-  // устанавливаем размер игрового поля
-  const getGameContext = (): GameWindowProps => ({
-    top: 30,
-    left: 2,
-    width: getWidth() - 4,
-    height: getHeight() - 60,
-    right: getWidth() - 30,
-    bottom: getHeight() - 30,
-  });
+  gameProperties.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
 
-  gameObjects.gameWindow = getGameContext(); // для кирпичей устанавливаем размер поля
-
-  const toggleFullScreen = () => { // переключатель в полноэкранный режим
+  const toggleFullScreen = async () => { // переключатель в полноэкранный режим
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+      await document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
-      document.exitFullscreen();
+      await document.exitFullscreen();
     }
   };
 
   // проверка установлен ли канвас в объектах для отрисовки и установка его
   const checkContext = (): boolean => {
-    if (!gameObjects.ctx) {
+    if (!gameProperties.ctx) {
       if (ctx) {
-        gameObjects.ctx = ctx;
-        ball.setContext(ctx);
-        rocket.setContext(ctx);
+        gameProperties.ctx = ctx;
         return true;
       }
       return false;
     }
-    if (!ball.ctx) {
-      ball.setContext(gameObjects.ctx);
-    }
-    if (!rocket.ctx) {
-      rocket.setContext(gameObjects.ctx);
-    }
     return true;
+  };
+
+  const doResizeCanvas = (): boolean => {
+    if (isClient()) {
+      const canvas = document.getElementById(GAME_CANVAS_ID) as HTMLCanvasElement;
+      if (!canvas) {
+        return false;
+      }
+      canvas.onclick = () => canvas.requestPointerLock();
+      const { width, height } = canvas;
+      const firstRender = ((width || 300) + (height || 150)) === 450;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gameProperties.gameWindow = getGameContext();
+      return firstRender;
+    }
+    return false;
   };
 
   const drawGame = () => { // отрисовка кадра игры
@@ -108,40 +97,46 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
     // функция проверки шарика на столкновение с кирпичами
     // и уменьшение уровня кирпича на 1 при столкновении
-    gameObjects.data // фильтр на кирпичи с уровнем < 1
-      .filter((item) => item.type === 'brick' && (item.object as Brick).level > 0)
-      .forEach((item) => (item.object as Brick).intersect());
+    const bricks = gameObjects.getList('brick');
 
-    // удаление кирпичей с уровнем 0
-    gameObjects.data = gameObjects.data.filter(
-      (item) => item.type !== 'brick' || (item.object as Brick).level > 0,
+    const balls = gameObjects.getList('ball');
+
+    // если шариков на поле 0, то приклеиваем новый на ракетку
+    if (balls.length === 0) {
+      gameObjects.addBall(true);
+    }
+
+    balls.forEach(
+      (ball) => bricks.forEach(
+        (item) => (
+              item.object as Brick).intersect((ball.object as Ball)),
+      ),
     );
 
+    // удаление кирпичей с уровнем 0
+    gameObjects.removeEmptyBricks();
+
     if (gameObjects.brickCount <= 0) { // если количество кирпичей = 0, то уровень пройден
-      gameProperties.gameStarted = false; // игра на паузу
-      gameProperties.onRocket = true; // шарик на рокетку
-      gameProperties.level += 1; // увеличение уровня
-      gameObjects.removeShoots();
-      dispatch(incLevel());
-      rocket.gun = 0;
-      rocket.glue = 0;
-      rocket.width = ROCKET_WIDTH;
       const level = Math.min(gameProperties.level - 1, levels.length - 1);
-      gameObjects.generateLevel(
-        levels[level],
-      ); // генерация уровня
+      gameProperties.newLevel(level).then(() => {
+        dispatch(incLevel());
+        doResizeCanvas();
+      });
     }
-    ball.nextMove(); // перемещение шарика на следующий кадр
+    balls.forEach((ball) => (ball.object as Ball).nextMove());
     rocket.nextMove(); // перемещение ракетки на следующий кадр
-    const context = gameObjects.ctx;
+    const context = gameProperties.ctx;
     const gameContext = getGameContext();
-    gameObjects.gameWindow = gameContext;
+    if (!context || !gameContext) {
+      return;
+    }
 
     context.beginPath();
     context.clearRect(0, 0, getWidth(), getHeight()); // очистка игрового поля
+    context.closePath();
     gameObjects.render(); // отрисовка кирпичей
-    ball.render(gameContext); // шарика
-    rocket.render(gameContext); // рокетки
+    balls.forEach((ball) => (ball.object as Ball).render());
+    rocket.render(); // рокетки
 
     drawFrame(gameContext); // рамки
     drawHelp(gameContext); // строки состояния
@@ -153,27 +148,124 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     }
   };
 
-  let now; // для текущего времени
-  let then = Date.now(); // текущее время
-  const interval = 1000 / FPS; // интервал в мс для обновления согласно нужного ФПС
-  let delta;
-
   function loop() { // обработка отрисовки кадра анимации
-    requestAnimationFrame(loop);
-    now = Date.now();
-    delta = now - then; // сколько прошло времени
+    frameId.current = requestAnimationFrame(loop);
 
-    if (delta > interval) { // больше, чем интервал с ФПС
-      then = now - (delta % interval);
-      drawGame(); // рисуем кадр
-    }
+    const now = Math.round((FPS * Date.now()) / 1000);
+    if (now === prevTick) return;
+    prevTick = now;
+    drawGame();
   }
+
+  const onResize = () => {
+    if (doResizeCanvas()) {
+      // loop();
+    }
+  };
+
+  type GameOverProperties = {
+    score: number
+    level: number
+  }
+
+  const gameOver = (params: GameOverProperties) => {
+    const { level, score } = params;
+    dispatch(addLeader({
+      name: getDisplayName(auth.user) as string,
+      avatar: getAvatar(auth.user),
+      level,
+      score_arcnd: score,
+    }));
+    dispatch(endGame());
+    history.push('/leaderboard');
+  };
+
+  const shootOrStart = () => {
+    if (!gameProperties.gameStarted) { // если игра на паузе
+      gameProperties.gameStarted = true; // снимаем с паузы
+      dispatch(go());
+      gameProperties.onRocket = false; // отвязка шарика от рокетки
+      const balls = gameObjects.getList('ball');
+      balls.forEach((item) => {
+        const ball = item.object as Ball;
+        if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
+          ball.invertYDirection();
+        }
+      });
+    } else {
+      gameProperties.onRocket = false;
+      if (rocket.glue) {
+        rocket.glue -= 1;
+      }
+      const shot = gameProperties.lastShoot || 0;
+      if (rocket.gun) {
+        rocket.gun -= 1;
+        if (Date.now() - shot > SHOOT_INTERVAL) {
+          if (gameProperties && gameProperties.gameWindow) {
+            gameProperties.lastShoot = Date.now();
+            const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
+            const y = gameProperties.gameWindow.bottom
+              - SHOOT_HEIGHT - rocket.height
+              - GUN_HEIGHT * 2;
+            const object = new Shoot({ x, y });
+            gameObjects.add({ object, type: 'shoot' });
+          }
+        }
+      }
+    }
+  };
+
+  const goLeft = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedLeft = true; // перемещать ракетку влево
+      rocket.movedRight = false; // остановить перемещение ракетки вправо
+    }
+  };
+
+  const goRight = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedRight = true; // перемещать ракетку вправо
+      rocket.movedLeft = false; // остановить перемещение влево
+    }
+  };
+
+  const stop = () => {
+    if (!gameProperties.menuMode) { // не режим меню
+      rocket.movedRight = false; // остановить перемещение ракетки вправо
+      rocket.movedLeft = false; // остановить перемещение влево
+    }
+  };
+
+  const onGamepadChange = (list: Gamepad[]) => {
+    if (list.length <= 0) {
+      return;
+    }
+    if (list[0]) {
+      const pad = list[0];
+      const buttonPressed = pad.buttons.find((button) => button.pressed);
+      if (buttonPressed) {
+        shootOrStart();
+      }
+      const axes = pad.axes.find((axe) => axe !== 0);
+      if (axes !== undefined) {
+        if (axes < -0.3) {
+          goLeft();
+        } else if (axes > 0.3) {
+          goRight();
+        } else {
+          stop();
+        }
+      } else {
+        stop();
+      }
+    }
+  };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
       const { key, keyCode } = e;
       if (keyCode === 13) { // Энтер - переключение полноэкранного режима
-        toggleFullScreen();
+        toggleFullScreen().then(() => {});
       }
 
       if (keyCode === 27) { // ESC переключение режима меню
@@ -181,47 +273,15 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
       }
       if (key === ' ') { // пробел
-        if (!gameProperties.gameStarted) { // если игра на паузе
-          gameProperties.gameStarted = true; // снимаем с паузы
-          dispatch(go());
-          gameProperties.onRocket = false; // отвязка шарика от рокетки
-          if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
-            ball.invertYDirection();
-          }
-        } else {
-          gameProperties.onRocket = false;
-          if (rocket.glue) {
-            rocket.glue -= 1;
-          }
-          const shot = gameProperties.lastShoot || 0;
-          if (rocket.gun) {
-            rocket.gun -= 1;
-            if (Date.now() - shot > SHOOT_INTERVAL) {
-              gameProperties.lastShoot = Date.now();
-              const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
-              const y = rocket.y
-                - SHOOT_HEIGHT - rocket.height
-                - gameObjects.gameWindow.top - GUN_HEIGHT;
-              const object = new Shoot({ x, y });
-              gameObjects.add({ object, type: 'shoot' });
-            }
-          }
-        }
+        shootOrStart();
       } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
         if (gameProperties.menuMode) { // если режим меню
-          // history.goBack(); // то идем НАЗАД
-          history.push('/');
+          gameProperties.resetParams().then(({ level, score }) => gameOver({ level, score }));
         }
       } else if (key === 'ArrowLeft') { // если стрелка ВЛЕВО
-        if (!gameProperties.menuMode) { // не режим меню
-          rocket.movedLeft = true; // перемещать ракетку влево
-          rocket.movedRight = false; // остановить перемещение ракетки вправо
-        }
+        goLeft();
       } else if (key === 'ArrowRight') { // если стрелка ВПРАВО
-        if (!gameProperties.menuMode) { // не режим меню
-          rocket.movedRight = true; // перемещать ракетку вправо
-          rocket.movedLeft = false; // остановить перемещение влево
-        }
+        goRight();
       }
     };
 
@@ -234,30 +294,26 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       }
     };
 
-    const onGoal = () => { // Обработка события ГОЛ
-      gameObjects.removeThings(true);
-      rocket.width = ROCKET_WIDTH;
-      rocket.glue = 0;
+    const onGoal = (ball: Ball) => { // Обработка события ГОЛ
+      const balls = gameObjects.getList('ball');
       rocket.gun = 0;
-      gameObjects.removeShoots();
-      if (gameProperties.lives === 1) { // если жизнь последняя
-        // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
-        dispatch(endGame());
-        dispatch(pushResult({score: gameProperties.score, avatar: '', level:gameProperties.level, name:'name'}));
-        rocket.width = ROCKET_WIDTH;
-        globalBus.emit(EVENTS.GAME_OVER, gameProperties.score, gameProperties.level);
-        gameProperties.lives = 3; // теперь жизней 3
-        gameProperties.onRocket = true; // шарик приклеен к рокетке
-        // gameProperties.gameStarted = false; // игра на паузе
-        gameProperties.score = 0; // счет 0
-        gameProperties.level = 1; // уровень 1
-        history.push('/leaderboard');
-        gameObjects.generateLevel(levels[gameProperties.level - 1]); // генерация уровня
-      } else { // если не последняя
-        dispatch(decLive());
-        gameProperties.lives -= 1; // уменьшаем количество жизней
-        gameProperties.onRocket = true; // шарик на рокетке
-        gameProperties.gameStarted = false; // на паузу
+      rocket.glue = 0;
+      rocket.width = ROCKET_WIDTH;
+      gameObjects.removeBall(ball);
+      if (balls.length <= 1) {
+        gameObjects.removeThings(true);
+        gameObjects.removeShoots();
+      }
+      if (balls.length <= 1) {
+        // gameProperties.resetParams().then();
+        if (gameProperties.lives === 1) { // если жизнь последняя
+          // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
+          gameProperties.resetParams().then(({ score, level }) => gameOver({ score, level }));
+        } else { // если не последняя
+          dispatch(decLive());
+          gameProperties.lives -= 1; // уменьшаем количество жизней
+          gameObjects.addBall(true);
+        }
       }
     };
 
@@ -271,65 +327,90 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
     const onBlockCrash = (score: number, block: Brick) => {
       dispatch(incScore(score));
-      let thingType: ThingType = 'none';
-      let blockType = block.type;
-      if (blockType === 9) {
-        blockType = randomRange(1, 8);
-      }
-      switch (blockType) {
-        case 2:
-          thingType = 'gun';
-          break;
-        case 3:
-          thingType = 'glue';
-          break;
-        case 4:
-          thingType = 'expand';
-          break;
-        case 5:
-          thingType = 'compress';
-          break;
-        default:
-      }
-      if (thingType !== 'none') {
-        const x = block.x + Math.round(block.width / 2);
-        const y = block.y + Math.round(block.height / 2);
-        gameObjects.add({ object: new Thing({ x, y, thingType }), type: 'thing' });
-      }
+      gameObjects.crashBlock(block);
     };
 
     const onBlockShoot = () => {
       gameProperties.score += 1;
       dispatch(incScore(1));
     };
-    // получаем размер поля
-    gameObjects.gameWindow = getGameContext();
+
+    const onSplitBall = () => {
+      const splitBall = (ball: Ball) => {
+        for (let i = 0; i < SPLIT_QTY; i += 1) {
+          let speedX = randomRange(-5, 5);
+          if (speedX === 0) {
+            speedX += 1;
+          }
+          let speedY = randomRange(-5, 5);
+          if (speedY === 0) {
+            speedY += 1;
+          }
+          speedX *= 2;
+          speedY *= 2;
+          gameObjects.add({
+            object: new Ball({
+              x: ball.x,
+              y: ball.y,
+              radius: ball.radius,
+              speedX,
+              speedY,
+            }),
+            type: 'ball',
+          });
+        }
+      };
+      const balls = gameObjects.getList('ball');
+      if (SPLIT_ALL_BALLS) {
+        balls.forEach((ball) => splitBall(ball.object as Ball));
+      } else {
+        splitBall(balls[0].object as Ball);
+      }
+    };
+    dispatch(getUserData());
+
     // генерируем уровень
-    gameObjects.generateLevel(levels[gameProperties.level - 1]);
+    gameProperties.level = -1;
 
     // события на нажатие клавиши
-    window.addEventListener('keydown', onKeyDown);
-    // события на отпускание клавиши
-    window.addEventListener('keyup', onKeyUp);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', onKeyDown);
+      // события на отпускание клавиши
+      window.addEventListener('keyup', onKeyUp);
+      window.addEventListener('resize', onResize);
+    }
     // события на ГОЛ
     globalBus.on(EVENTS.GOAL, onGoal);
     // события на отбивание шарика
     globalBus.on(EVENTS.BALL_RETURN, onBallReturn);
     globalBus.on(EVENTS.BLOCK, onBlockCrash);
     globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
-    loop(); // запуск игрового цикла
+    globalBus.on(EVENTS.SPLIT, onSplitBall);
+    gameObjects.data = [];
+    if (isClient()) {
+      // onResize();
+      loop(); // запуск игрового цикла
+    }
     return () => { // очистка обработчиков события
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      cancelAnimationFrame(frameId.current);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        window.removeEventListener('resize', onResize);
+      }
       globalBus.off(EVENTS.GOAL, onGoal);
       globalBus.off(EVENTS.BALL_RETURN, onBallReturn);
       globalBus.off(EVENTS.BLOCK, onBlockCrash);
       globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
+      globalBus.off(EVENTS.SPLIT, onSplitBall);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <></>
+    <>
+      <GamePad onChange={onGamepadChange} />
+    </>
   );
 };
 

@@ -37,6 +37,7 @@ const dateFormat = (
 
     return result;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(`Ошибка в дате ${date}`);
     return 'Неверная дата';
   }

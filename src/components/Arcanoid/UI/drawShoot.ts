@@ -1,4 +1,5 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 
 /**
  * Отрисовка выстрела
@@ -34,9 +35,11 @@ const drawShoot = (
   grd.addColorStop(0, color1);
   grd.addColorStop(1, color2);
 
-  ctx.shadowBlur = 10;
-  ctx.shadowOffsetX = 2;
-  ctx.shadowOffsetY = 2;
+  if (gameProperties.useShadows) {
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+  }
 
   ctx.fillStyle = grd;
   ctx.fillRect(startX, startY, width, height);
