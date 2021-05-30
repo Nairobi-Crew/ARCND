@@ -32,7 +32,7 @@ startServiceWorker();
 `;
   const [csp, nonce] = generateCsp();
 
-  const useCSP = isDev ? '' : `
+  const useCSP = `
         <meta property="csp-nonce" content="${nonce}" />
         <meta http-equiv="Content-Security-Policy" content="${csp}" />
   `;
@@ -54,7 +54,7 @@ startServiceWorker();
         </noscript>
         <div id="root">${content}</div>
 
-        <script type="application/json" id="data">${data.replace(/</g, '&lt;')}</script>
+        <script nonce="${nonce}" type="application/json" id="data">${data.replace(/</g, '&lt;')}</script>
         <script src="/${jsPath}"></script>
         ${sw}
       </body>

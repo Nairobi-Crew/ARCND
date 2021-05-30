@@ -11,6 +11,7 @@ import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import drawBall from 'Components/Arcanoid/UI/drawBall';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 
 export interface IBallProps extends IBaseObjectProps {
   radius: number
@@ -149,6 +150,9 @@ export class Ball extends BaseObject {
       needInvert = true; // поменяем направление по оси Х
     }
     this.invertXDirection(needInvert);
+    if (needInvert) {
+      gameObjects.playSound(7);
+    }
     needInvert = false;
 
     this.y += this.speedY; // перемещаем по оси У
@@ -160,6 +164,9 @@ export class Ball extends BaseObject {
     } else if (topOfBall < 0) { // долетел до верхнего края
       this.y = this.radius;
       needInvert = true; // разворачиваем
+    }
+    if (needInvert) {
+      gameObjects.playSound(7);
     }
     this.invertYDirection(needInvert);
   }
