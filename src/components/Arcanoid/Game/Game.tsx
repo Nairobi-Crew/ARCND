@@ -149,6 +149,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
               - GUN_HEIGHT * 2;
             const object = new Shoot({ x, y });
             gameObjects.add({ object, type: 'shoot' });
+            gameObjects.playSound(6);
           }
         }
       }
@@ -358,9 +359,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           gameObjects.addBall(true);
         }
       }
-      // if (balls.length <= 1) {
-      //   // gameProperties.resetParams().then();
-      // }
+      gameObjects.playSound(0);
     };
 
     const onBallReturn = () => { // если шарик отбит ракеткой
@@ -368,6 +367,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       if (rocket.glue) {
         gameProperties.onRocket = true;
       }
+      gameObjects.playSound(1);
       dispatch(incScore(1));
     };
 
@@ -375,11 +375,13 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       navigator.vibrate(100);
       dispatch(incScore(score));
       gameObjects.crashBlock(block);
+      gameObjects.playSound(2);
     };
 
     const onBlockShoot = () => {
       gameProperties.score += 1;
       dispatch(incScore(1));
+      gameObjects.playSound(3);
     };
 
     const onSplitBall = () => {
@@ -408,6 +410,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         }
       };
       const balls = gameObjects.getList('ball');
+      gameObjects.playSound(5);
       if (SPLIT_ALL_BALLS) {
         balls.forEach((ball) => splitBall(ball.object as Ball));
       } else {
@@ -435,9 +438,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.SPLIT, onSplitBall);
     gameObjects.data = [];
     if (isClient()) {
-      // onResize();
       loop(); // запуск игрового цикла
     }
+
     return () => { // очистка обработчиков события
       cancelAnimationFrame(frameId.current);
       if (typeof window !== 'undefined') {
