@@ -78,33 +78,38 @@ const Register: RegisterProps = ({ caption }) => {
   }, [auth]);
 
   return (
-    <Form caption={caption || 'SING UP'}>
+    <Form caption={caption || 'SING UP'} name="signUp">
       <Input
         label="Фамилия"
         onValueChanged={(val) => setSecondName(val)}
         value={secondName}
+        name="secondName"
       />
       <Input
         label="Имя"
         onValueChanged={(val) => setFirstName(val)}
         value={firstName}
+        name="firstName"
       />
       <Input
         label="Логин"
         onValueChanged={(val) => setLogin(val)}
         value={login}
+        name="login"
         errorMessage={loginError}
       />
       <Input
         label="E-Mail"
         onValueChanged={(val) => setEmail(val)}
         value={email}
+        name="email"
         errorMessage={emailError}
       />
       <Input
         label="Phone"
         onValueChanged={(val) => setPhone(val)}
         value={phone}
+        name="phone"
         errorMessage={phoneError}
       />
       <Input
@@ -112,6 +117,7 @@ const Register: RegisterProps = ({ caption }) => {
         label="Пароль"
         onValueChanged={(val) => setPassword1(val)}
         value={password1}
+        name="password1"
         errorMessage={password1Error}
       />
       <Input
@@ -119,6 +125,7 @@ const Register: RegisterProps = ({ caption }) => {
         label="Повтор"
         onValueChanged={(val) => setPassword2(val)}
         value={password2}
+        name="password2"
       />
       <Button
         className="registration__submit button button_type_rounded"

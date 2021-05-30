@@ -47,9 +47,11 @@ const NewTopic: FC = () => {
       {
         auth.state === EAuthState.LOGGED
           ? (
-            <Form caption="Новая тема">
+            <Form caption="Новая тема"
+                  name="newTheme">
               <Input
                 label="Тема"
+                name="newTheme"
                 value={header}
                 onValueChanged={(v) => setHeader(v)}
                 onBlur={() => checkHeader()}

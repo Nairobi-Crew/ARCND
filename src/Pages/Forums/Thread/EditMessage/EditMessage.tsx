@@ -141,6 +141,7 @@ const EditMessage: FC<EditMessageProps> = (
             ) : null }
             <Input
               label="Заголовок"
+              name="title"
               value={header}
               onValueChanged={(v) => {
                 setHeader(v);
