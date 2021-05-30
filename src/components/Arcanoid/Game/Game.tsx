@@ -109,6 +109,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
 
   const gameOver = (params: GameOverProperties) => {
     const { level, score } = params;
+    navigator.vibrate([200, 100, 200, 200, 200]);
     dispatch(addLeader({
       name: getDisplayName(auth.user) as string,
       avatar: getAvatar(auth.user),
@@ -345,11 +346,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       rocket.width = ROCKET_WIDTH;
       gameObjects.removeBall(ball);
       if (balls.length <= 1) {
+        navigator.vibrate(500);
         gameObjects.removeThings(true);
         gameObjects.removeShoots();
-      }
-      if (balls.length <= 1) {
-        // gameProperties.resetParams().then();
         if (gameProperties.lives === 1) { // если жизнь последняя
           // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
           gameProperties.resetParams().then(({ score, level }) => gameOver({ score, level }));
@@ -359,6 +358,9 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           gameObjects.addBall(true);
         }
       }
+      // if (balls.length <= 1) {
+      //   // gameProperties.resetParams().then();
+      // }
     };
 
     const onBallReturn = () => { // если шарик отбит ракеткой
@@ -370,6 +372,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     };
 
     const onBlockCrash = (score: number, block: Brick) => {
+      navigator.vibrate(100);
       dispatch(incScore(score));
       gameObjects.crashBlock(block);
     };
