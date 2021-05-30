@@ -117,6 +117,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       score_arcnd: score,
     }));
     dispatch(endGame());
+    gameObjects.playSound(9);
     history.push('/leaderboard');
   };
 
@@ -145,7 +146,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
             gameProperties.lastShoot = Date.now();
             const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
             const y = gameProperties.gameWindow.bottom
-              - SHOOT_HEIGHT - rocket.height
+              - SHOOT_HEIGHT - rocket.height - gameProperties.gameWindow.top
               - GUN_HEIGHT * 2;
             const object = new Shoot({ x, y });
             gameObjects.add({ object, type: 'shoot' });
