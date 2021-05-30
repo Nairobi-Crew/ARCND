@@ -12,15 +12,17 @@ import Leaderboard from 'Pages/Leaderboard/Leaderboard';
 import NewTopic from 'Pages/Forums/NewTopic';
 import Thread from 'Pages/Forums/Thread';
 import OAuth from 'Pages/OAuth/index';
-import { OAUTH_REDIRECT_PATH } from 'Config/config';
+import {OAUTH_REDIRECT_PATH} from 'Config/config';
 
 export interface ILink {
   title: string
   visibility: 'never' | 'always' | 'auth' | 'unauth'
-  exact : boolean
+  exact: boolean
   key: string;
   path: string;
   component: React.ComponentClass | React.FunctionComponent;
+  params?: Object
+  showLayout?: boolean;
 }
 
 const routes: ILink[] = [
@@ -31,6 +33,7 @@ const routes: ILink[] = [
     title: 'Игра',
     component: Arcanoid,
     key: 'game',
+    showLayout: false,
   },
   {
     visibility: 'unauth',

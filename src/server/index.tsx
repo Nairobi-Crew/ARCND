@@ -48,7 +48,10 @@ if (isDev) {
       },
     ),
   );
-  app.use(webpackHotMiddleware(compiler, {}));
+  app.use(webpackHotMiddleware(compiler, {
+    path: '/__webpack_hmr',
+    log: console.log
+  }));
 }
 // const distPath = path.join(__dirname, './');
 // app.use(express.static(distPath));

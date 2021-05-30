@@ -17,7 +17,7 @@ const Main: React.FC = () => {
   }, [auth]);
 
   return (
-    <li className="linkBlock">
+    <ul className="linkBlock">
       <OAuth />
       {
         routes.filter(
@@ -32,15 +32,15 @@ const Main: React.FC = () => {
           },
         ).map(
           (link) => (
-            <ul key={link.path}>
+            <li key={link.path}>
               <div className="link">
                 <Link to={link.path}>{link.title}</Link>
               </div>
-            </ul>
+            </li>
           ),
         )
       }
-    </li>
+    </ul>
   );
 };
 
