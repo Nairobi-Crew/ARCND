@@ -1,8 +1,24 @@
 @import "src/common/utils";
 
 .layout {
+  $block: &;
   padding-top: 80px;
   background: $background-color;
+
+  &_fullscreen {
+    padding-top: 0;
+
+    #{$block} {
+      &__nav {
+        display: none;
+      }
+
+      &__footer {
+        display: none;
+      }
+    }
+
+  }
 
   &__nav {
     background: $background-color;
