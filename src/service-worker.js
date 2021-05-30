@@ -1,4 +1,4 @@
-const VERSION = 3841;
+const VERSION = 3848;
 const APP_NAME = 'Arcanoid-Game';
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 const BUILD_FOLDER = '';

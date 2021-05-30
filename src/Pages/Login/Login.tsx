@@ -69,13 +69,15 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   return (
     <>
       <Form caption={caption || 'SING IN'}
-            visible={true} header={false} maxHeight={false}>
+            visible={true} header={false} maxHeight={false}
+            name="login">
         <Input
           className="input__input"
           id="login_login"
           label="Имя пользователя"
           value={login}
           onValueChanged={onLoginChangedHandler}
+          name="login"
         />
         <Input
           id="login_password"
@@ -85,6 +87,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
           className="input__input"
           onValueChanged={onPasswordChangedHandler}
           errorMessage={passwordMessage}
+          name="password"
         />
         <Button onClick={loginButtonHandle} buttonType="round">login</Button>
         <Button onClick={loginOAuthButtonHandle} buttonType="round">login with Yandex</Button>
