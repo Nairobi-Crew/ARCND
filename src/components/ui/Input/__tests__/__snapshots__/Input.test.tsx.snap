@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render Input Render correct 1`] = `
+exports[`Render Textarea Render correct 1`] = `
 <div
   className="input"
 >

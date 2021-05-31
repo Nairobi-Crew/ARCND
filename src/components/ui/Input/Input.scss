@@ -8,6 +8,10 @@
   @include font-color;
   margin: 0 0 40px;
 
+  textarea {
+    padding-top: 12px;
+  }
+
   &__label {
     position: relative;
     display: block;
@@ -19,6 +23,7 @@
   }
 
   &__input {
+    resize: none;
     height: 100%;
     width: 100%;
     outline: none;
@@ -33,12 +38,12 @@
     border-color: $primary-btn;
   }
 
-  &__input:invalid,
-  &__input._error {
+  &__input:invalid:not(:placeholder-shown),
+  &__input_error {
     border-color: $error;
   }
 
-  &__input:valid:not(:placeholder-shown):not(:focus):not(._error) {
+  &__input:valid:not(:placeholder-shown):not(:focus):not(&__input_error) {
     border-color: $secondary-btn;
   }
 
