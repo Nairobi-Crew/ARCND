@@ -45,6 +45,8 @@ export class GameProperties {
 
   useShadows = true;
 
+  debug: string = '';
+
   constructor(props: IGameProperties) {
     if (GameProperties.instance) {
       return GameProperties.instance;

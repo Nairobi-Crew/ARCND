@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { GamePadProps } from 'Components/GamePad/types';
+import { GamePadProps } from 'Components/Arcanoid/Game/GamePad/types';
 import { isEqual } from 'Util/objectsIsEqual';
 
 const GamePad: GamePadProps = ({ children, onChange }) => {
