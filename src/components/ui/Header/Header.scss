@@ -1,10 +1,10 @@
-@import "src/common/vars";
+@import "src/common/common";
 
 .header {
   padding: 15px 130px;
 
   &__title {
-    color: $fc;
+    @include font-color;
     font: {
       family: $ff;
       weight: 600;
