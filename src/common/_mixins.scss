@@ -6,7 +6,7 @@ $tablet: 1200px;
 
 // Media queries
 
-@mixin respond-to($media) {
+@mixin brakepoint($media) {
   @if $media == mobile {
     @media only screen and (max-width: $mobile - 1px) {
       @content;
@@ -123,5 +123,58 @@ $tablet: 1200px;
       weight: 600;
       size: $f-xxl;
     }
+  }
+}
+
+@mixin background-color {
+  & {
+    background: $background-color
+  }
+  .root_theme_white &,
+  &.root_theme_white{
+    background: $background-color-white;
+  }
+}
+
+@mixin background-footer {
+  & {
+    background-color: #403e40;
+  }
+  .root_theme_white &,
+  &.root_theme_white{
+    background: lighten(#403e40,.5);
+  }
+}
+
+@mixin font-color {
+  & {
+    color: $fc
+  }
+
+  .root_theme_white &,
+  &.root_theme_white{
+    color: $fc-dark;
+  }
+}
+
+@mixin shadow {
+  & {
+    box-shadow: $shadow;
+  }
+
+  .root_theme_white &,
+  &.root_theme_white{
+    box-shadow: $shadow-white;
+  }
+}
+
+@mixin shadow-small {
+  & {
+    box-shadow: $shadow-small;
+  }
+
+  .root_theme_white &,
+  &.root_theme_white{
+    box-shadow: $shadow-small-white;
   }
 }

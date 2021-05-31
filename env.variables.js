@@ -1,3 +1,5 @@
+const { _bot_token_ } = require('./bot_token');
+
 const pg_connection_dev = {
   address: '10.0.2.4',
   port: 5432,
@@ -23,4 +25,5 @@ module.exports = {
   CLIENT_ID: 'a45f6b218e5d436da82cc542f603245f', // 0e3bdbec820c48a29b1cff6b8bef3754
   serverPort: isDev ? process.env.PORT || 3000 : process.env.PORT || 5000,
   pg_connection: isDev ? pg_connection_dev : pg_connection_prod,
+  tg_bot_token: process.env.BOT_TOKEN || _bot_token_,
 };

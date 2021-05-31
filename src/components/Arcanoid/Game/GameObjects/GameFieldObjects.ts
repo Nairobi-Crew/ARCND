@@ -216,7 +216,7 @@ export default class GameFieldObjects {
     let y = 0;
     this.brickCount = 0;
     for (let i = 0; i < ld.length; i += 1) {
-      const item = padString(ld[i], LEVEL_STRING_LENGTH, ' ');
+      const item = padString(ld[i].split(' ').join(''), LEVEL_STRING_LENGTH, ' ');
       const nextItem = getNextItem(item);
       let blockItem = nextItem();
       let x = 0;

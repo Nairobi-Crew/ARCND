@@ -12,9 +12,19 @@ import {
   GAME_CANVAS_ID,
   GUN_HEIGHT,
   ROCKET_WIDTH,
+  SCORES_BLOCK,
+  SCORES_ROCKET,
   SHOOT_HEIGHT,
   SHOOT_INTERVAL,
   SHOOT_WIDTH,
+  SOUND_BLOCK,
+  SOUND_BLOCK_SHOOT,
+  SOUND_GAME_OVER,
+  SOUND_GOAL,
+  SOUND_LIVES,
+  SOUND_ROCKET,
+  SOUND_SHOOT,
+  SOUND_SPLIT,
   SPLIT_ALL_BALLS,
   SPLIT_QTY,
 } from 'Components/Arcanoid/settings';
@@ -117,7 +127,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       score_arcnd: score,
     }));
     dispatch(endGame());
-    gameObjects.playSound(9);
+    gameObjects.playSound(SOUND_GAME_OVER);
     history.push('/leaderboard');
   };
 
@@ -150,7 +160,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
               - GUN_HEIGHT * 2;
             const object = new Shoot({ x, y });
             gameObjects.add({ object, type: 'shoot' });
-            gameObjects.playSound(6);
+            gameObjects.playSound(SOUND_SHOOT);
           }
         }
       }
@@ -358,31 +368,33 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
           dispatch(decLive());
           gameProperties.lives -= 1; // уменьшаем количество жизней
           gameObjects.addBall(true);
+          gameObjects.playSound(SOUND_LIVES);
         }
+      } else {
+        gameObjects.playSound(SOUND_GOAL);
       }
-      gameObjects.playSound(0);
     };
 
     const onBallReturn = () => { // если шарик отбит ракеткой
-      gameProperties.score += 1; // счет увеличивается
+      gameProperties.score += SCORES_ROCKET; // счет увеличивается
       if (rocket.glue) {
         gameProperties.onRocket = true;
       }
-      gameObjects.playSound(1);
-      dispatch(incScore(1));
+      gameObjects.playSound(SOUND_ROCKET);
+      dispatch(incScore(SCORES_ROCKET));
     };
 
     const onBlockCrash = (score: number, block: Brick) => {
       navigator.vibrate(100);
       dispatch(incScore(score));
       gameObjects.crashBlock(block);
-      gameObjects.playSound(2);
+      gameObjects.playSound(SOUND_BLOCK);
     };
 
     const onBlockShoot = () => {
-      gameProperties.score += 1;
-      dispatch(incScore(1));
-      gameObjects.playSound(3);
+      gameProperties.score += SCORES_BLOCK;
+      dispatch(incScore(SCORES_BLOCK));
+      gameObjects.playSound(SOUND_BLOCK_SHOOT);
     };
 
     const onSplitBall = () => {
@@ -411,7 +423,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         }
       };
       const balls = gameObjects.getList('ball');
-      gameObjects.playSound(5);
+      gameObjects.playSound(SOUND_SPLIT);
       if (SPLIT_ALL_BALLS) {
         balls.forEach((ball) => splitBall(ball.object as Ball));
       } else {

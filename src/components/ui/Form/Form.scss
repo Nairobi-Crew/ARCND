@@ -1,4 +1,4 @@
-@import "../../../common/vars";
+@import "../../../common/common";
 
 .form {
   &__container {
@@ -25,16 +25,17 @@
       font-family: $ff;
       text-align: center;
       padding: 15px 30px;
-      box-shadow: $shadow-small;
+      @include shadow-small;
       text-transform: uppercase;
+      @include font-color;
       margin: 0 0 30px;
     }
 
     align-items: center;
     align-content: center;
-    background: $form-background-color;
+    @include background-color;
     border-radius: $form-border-radius;
-    box-shadow: $shadow;
+    @include shadow;
     flex: 1;
     padding: 40px;
 

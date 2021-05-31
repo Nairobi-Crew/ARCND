@@ -5,7 +5,7 @@ import {
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
   ROCKET_PART_SPEED_MULT,
-  ROCKET_PARTS,
+  ROCKET_PARTS, SOUND_WALL,
 } from 'Components/Arcanoid/settings';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
@@ -151,7 +151,7 @@ export class Ball extends BaseObject {
     }
     this.invertXDirection(needInvert);
     if (needInvert) {
-      gameObjects.playSound(7);
+      gameObjects.playSound(SOUND_WALL);
     }
     needInvert = false;
 
@@ -166,15 +166,8 @@ export class Ball extends BaseObject {
       needInvert = true; // разворачиваем
     }
     if (needInvert) {
-      gameObjects.playSound(7);
+      gameObjects.playSound(SOUND_WALL);
     }
     this.invertYDirection(needInvert);
   }
 }
-// export const ball = new Ball({
-//   x: 950, // координаты по умолчанию
-//   y: 500,
-//   radius: 15, // радиус
-//   speedX: 5, // сророст и по осям
-//   speedY: 5,
-// }, true);

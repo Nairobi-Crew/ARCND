@@ -2,8 +2,8 @@
 
 html,
 body, {
-  color: $fc;
-  //background: $background-color;
+  @include font-color;
+  //@include background-color;
   min-width: 360px;
   box-sizing: border-box;
 }
