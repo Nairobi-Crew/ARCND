@@ -8,7 +8,7 @@ exports[`Render Textarea Render correct 1`] = `
     className="input__label"
   >
     <input
-      className="input__input"
+      className="input__input input__input_error"
       disabled={false}
       onChange={[Function]}
       onInput={[Function]}
