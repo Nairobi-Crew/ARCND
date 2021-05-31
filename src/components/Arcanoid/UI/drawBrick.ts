@@ -1,5 +1,7 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
+  brickColor,
+  brickColors,
   THING_COMPRESS_LETTER,
   THING_EXPAND_LETTER,
   THING_GLUE_LETTER,
@@ -16,23 +18,14 @@ export type brickStyle = {
 
 // генерация стилей по уровню кирпича и по типу в перспективе
 const stylesByLevelType = (level: number, type = 0): brickStyle => {
-  const res: brickStyle = { fillStyle: 'red', strokeStyle: 'blue', bonusLetter: '' };
-  if (level === 1) {
-    res.strokeStyle = 'gray';
-    res.fillStyle = 'white';
-  } else if (level === 2) {
-    res.strokeStyle = 'rgb(0, 100, 100)';
-    res.fillStyle = 'rgb(0, 200, 200)';
-  } else if (level === 3) {
-    res.strokeStyle = 'green';
-    res.fillStyle = 'lime';
-  } else if (level === 4) {
-    res.strokeStyle = 'navy';
-    res.fillStyle = 'blue';
-  } else if (level === 5) {
-    res.strokeStyle = 'rgb(128, 0, 0)';
-    res.fillStyle = 'rgb(255, 0, 0)';
+  const defaultStyle: brickColor = brickColors[0];
+  let style: brickColor;
+  if (level <= brickColors.length) {
+    style = brickColors[level];
+  } else {
+    style = defaultStyle;
   }
+  const res: brickStyle = { fillStyle: style.fill, strokeStyle: style.stroke, bonusLetter: '' };
 
   switch (type) {
     case 2:

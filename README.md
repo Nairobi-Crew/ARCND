@@ -5,7 +5,6 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 ### :zap:DEVS:
 * Николай Сидоров
 * Олег Белоновский
-* Александр Степанов
 <hr>
 
 ### URL's:
@@ -15,7 +14,22 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 ## **Игра Арканоид** *классический*
 ####Выполнена без использования растровой графики
 
-###Использованное Web API:
+##Об игре
+Отбивая шарик ракеткой разбить все блоки<br>
+На прохождение игры есть 3 "**жизни**"<br>
+Блоки бывают [N] уровней. В текущем конфиге - 5. Для добавления нужно в массив со стилями [brickColors](src/components/Arcanoid/settings.ts) добавить элементы или же блоки выше N-го уровня будут использовать один и тот же стиль.
+Каждый уровень имеет свой цвет, и для того чтобы разбить блок уровня [N] необходимо попасть в него шариком [N] раз. Однако, при проверке геймплея была выявлена ошибка, неверная проверка столкновения шарика с блоком. При попадании в "угол" уровень уменьшался на 2, и могло выпасть 2 бонуса. Решили применить старую и секретную технологию превращения бага в фичу ).
+При попадании шариком из блока может вылететь "**бонус**". Изменяя константу [THING_SHOW_TYPE](src/components/Arcanoid/settings.ts) управляем отображением типа бонуса на блоке.
+**Бонусы бывают:**<br>
+  - Клей. Если количество шариков = 1, то он приклеивается к ракетке, позволяя прицеливаться для следующего удара. Количество приклеиваний указано в константе [GLUE_QTY](src/components/Arcanoid/settings.ts). Отрицательное число - бесконечно много ;)
+  - Пушка. Позволяет стрелять в блоки вертикально вверх. Количество выстрелов ограничивается константой [SHOOT_QTY](src/components/Arcanoid/settings.ts). Отрицательное число-бесконечно много. Минимальный интервал между выстрелами - [SHOOT_INTERVAL](src/components/Arcanoid/settings.ts). Скорость полета "пули" - [SHOOT_SPEED](src/components/Arcanoid/settings.ts).
+  - Сужение ракетки. Ракетка сужается на 10%. Бонус работает до смены уровня или уменьшение количества "жизней".
+  - Расширение ракетки. Ракетка расширяется на 10%. Бонус работает до смены уровня или уменьшение количества "жизней".
+  - Разделение шарика. Количество разделений - [SPLIT_QTY](src/components/Arcanoid/settings.ts). Если параметр [SPLIT_ALL_BALLS](src/components/Arcanoid/settings.ts) = true, разделяются все шарики, иначе только один.
+  - и случайный бонус. С вероятностью 50% выпадает 1 из предыдущих бонусов
+
+
+##Использованное Web API:
 1. [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 2. [Console API ;)](https://developer.mozilla.org/en-US/docs/Web/API/Console_API)
 3. [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
@@ -27,19 +41,19 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 9. [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)
 10. [WEB Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
-####В проекте настроено [CI](.github/workflows/CI.yml)/[CD](.github/workflows/CD.yml) при помощи [Github Actions](https://github.com/features/actions)
-####Тестирование компонент: [Jest](https://jestjs.io)/[Enzyme](https://enzymejs.github.io/enzyme)
-####Доска в [Trello](https://trello.com/b/NVMJzxq2/the-game)
+###В проекте настроено [CI](.github/workflows/CI.yml)/[CD](.github/workflows/CD.yml) при помощи [Github Actions](https://github.com/features/actions)
+##Тестирование компонент: [Jest](https://jestjs.io)/[Enzyme](https://enzymejs.github.io/enzyme)
+##Доска в [Trello](https://trello.com/b/NVMJzxq2/the-game)
 Работа тестировалась на актуальных версиях браузеров:
 1. Chrome
-2. Firefox (Убрана отрисовка теней объектов из-за падения произодительности в 50 раз :( )
+2. Firefox (Убрана отрисовка теней объектов из-за падения производительности в 50 раз :( )
 3. Safari
 
 ##Управление
 ###Ракетка влево-вправо:
-####Клавиатура - стрелками
-####Геймпад - любой осью
-####Для устройств с тачскрином - тач на леваой-правой половине экрана
+###Клавиатура - стрелками
+###Геймпад - любой осью
+###Для устройств с тачскрином - тач на левой-правой половине экрана
 ###Выстрел/сброс шарика
 ####Клавиатура - пробел
 ####Геймпад - любая кнопка
