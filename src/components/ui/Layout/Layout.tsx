@@ -80,6 +80,9 @@ const Layout: LayoutProps = ({children}) => {
               onSubmit={()=>setFormVisible(false)}>
           <Input label="Ваше имя" value={name} onValueChanged={(v) => setName(v)} />
           <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} />
+          <Button>
+            Отправить
+          </Button>
         </Form>
       </div>}
     </div>

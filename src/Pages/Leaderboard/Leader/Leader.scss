@@ -6,9 +6,9 @@
   height: 96px;
   border-radius: 96px;
   padding: 0 24px;
-  box-shadow: $shadow-small;
+  @include shadow-small;
 
-  @include respond-to(tablet) {
+  @include brakepoint(tablet) {
     height: 64px;
     border-radius: 64px;
   }
