@@ -77,6 +77,8 @@ export default class Auth extends Routes {
         const result = await answer.json();
         res.status(EHttpStatusCodes.OK).send(result);
       } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('Error get user info', { error: e.statusText, cookie: Cookies.getCookies(req) });
         res.status(EHttpStatusCodes.UNAUTHORIZED).send(e.statusText);
       }
     });
