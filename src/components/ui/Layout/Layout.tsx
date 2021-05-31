@@ -5,21 +5,22 @@ import Form from "UI/Form";
 import Input from "UI/Input";
 import routes from "Config/routes";
 import './Layout.scss'
-import {Link,useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {EAuthState} from "Reducers/auth/types";
 import {LayoutProps} from "UI/Layout/types";
+import Textarea from "UI/Textarea";
 
 const Layout: LayoutProps = ({children}) => {
   const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
   const path = useLocation()
   const theme = useThemeReselect()
-  const [formVisible,setFormVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
   const [navOpened, setNavOpened] = useState(false)
-  const [name,setName] = useState('')
-  const [message,setMessage] = useState('')
+  const [name, setName] = useState('')
+  const [message, setMessage] = useState('')
   useEffect(() => {
-    const { state } = auth;
+    const {state} = auth;
     setAuthState(state === EAuthState.LOGGED);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
@@ -27,11 +28,11 @@ const Layout: LayoutProps = ({children}) => {
     setNavOpened(false)
     setFormVisible(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[path])
+  }, [path])
   return (
-    <div className={`layout${path.pathname ==='/game'?' layout_fullscreen':''} root${theme&&` root_theme_${theme.theme.color}`}`}>
+    <div className={`layout${path.pathname === '/game' ? ' layout_fullscreen' : ''} root${theme && ` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">
-        <nav className={`layout__nav${navOpened ? ' layout__nav_opened':''}`}>
+        <nav className={`layout__nav${navOpened ? ' layout__nav_opened' : ''}`}>
           {
             routes.filter(
               (item) => {
@@ -53,7 +54,8 @@ const Layout: LayoutProps = ({children}) => {
             )
           }
           {
-            path.pathname ==='/game'&&<Button aria-label='Открыть меню' className='layout__open-nav-btn' onClick={() => setNavOpened(!navOpened)} />}
+            path.pathname === '/game' &&
+            <Button aria-label='Открыть меню' className='layout__open-nav-btn' onClick={() => setNavOpened(!navOpened)} />}
         </nav>
         <main>
           {children}
@@ -64,22 +66,24 @@ const Layout: LayoutProps = ({children}) => {
           Made by Nairobi-Crew
         </a>
 
-        <span className="layout__btn" onClick={()=>{
+        <span className="layout__btn" onClick={() => {
           setFormVisible(true)
         }}>Напиште нам
         </span>
       </footer>
       {<div className={`layout__popup${formVisible ? ' layout__popup_active' : ''}`}>
-        <Button className="layout__form-close" onClick={()=>setFormVisible(false)}>
-          х
+        <Button
+          className="layout__form-close"
+          onClick={() => setFormVisible(false)}>
+          x
         </Button>
         <Form className="layout__form"
               caption='Обратная связь'
               header={false}
               maxHeight={false}
-              onSubmit={()=>setFormVisible(false)}>
-          <Input label="Ваше имя" value={name} onValueChanged={(v) => setName(v)} />
-          <Input label="Сообщение" value={message} onValueChanged={(v) => setMessage(v)} />
+              onSubmit={() => setFormVisible(false)}>
+          <Input label="Ваше имя" value={name} required={true} onValueChanged={(v) => setName(v)} />
+          <Textarea label="Сообщение" value={message} required={true} onValueChanged={(v) => setMessage(v)} />
         </Form>
       </div>}
     </div>
