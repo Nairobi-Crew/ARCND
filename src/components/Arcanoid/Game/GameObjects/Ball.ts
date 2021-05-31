@@ -5,12 +5,13 @@ import {
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
   ROCKET_PART_SPEED_MULT,
-  ROCKET_PARTS,
+  ROCKET_PARTS, SOUND_WALL,
 } from 'Components/Arcanoid/settings';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { globalBus } from 'Util/EventBus';
 import drawBall from 'Components/Arcanoid/UI/drawBall';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
+import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 
 export interface IBallProps extends IBaseObjectProps {
   radius: number
@@ -149,6 +150,9 @@ export class Ball extends BaseObject {
       needInvert = true; // поменяем направление по оси Х
     }
     this.invertXDirection(needInvert);
+    if (needInvert) {
+      gameObjects.playSound(SOUND_WALL);
+    }
     needInvert = false;
 
     this.y += this.speedY; // перемещаем по оси У
@@ -161,13 +165,9 @@ export class Ball extends BaseObject {
       this.y = this.radius;
       needInvert = true; // разворачиваем
     }
+    if (needInvert) {
+      gameObjects.playSound(SOUND_WALL);
+    }
     this.invertYDirection(needInvert);
   }
 }
-// export const ball = new Ball({
-//   x: 950, // координаты по умолчанию
-//   y: 500,
-//   radius: 15, // радиус
-//   speedX: 5, // сророст и по осям
-//   speedY: 5,
-// }, true);

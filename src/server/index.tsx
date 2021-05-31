@@ -24,6 +24,7 @@ import path from 'path';
 import Routes from 'Server/routes/Routes';
 import * as fs from 'fs';
 import { getFileByExt } from 'Server/utils';
+import Comment from 'Server/routes/Comment';
 import { isDev } from '../../env.variables';
 import clientConfig from '../../webpack.client.js';
 
@@ -50,7 +51,7 @@ if (isDev) {
   );
   app.use(webpackHotMiddleware(compiler, {
     path: '/__webpack_hmr',
-    log: console.log
+    log: console.log,
   }));
 }
 // const distPath = path.join(__dirname, './');
@@ -63,12 +64,14 @@ const userRoute = new UserRoute(app);
 const forumRoute = new ForumRoute(app);
 const leaderRoute = new LeaderRoute(app);
 const oauthRoute = new OAuthRoute(app);
+const commentRoute = new Comment(app);
 
 routes.push(authRoute);
 routes.push(userRoute);
 routes.push(forumRoute);
 routes.push(leaderRoute);
 routes.push(oauthRoute);
+routes.push(commentRoute);
 
 app.get('*.(js|css|json|png)$', (req, res) => {
   res.sendFile(path.join(__dirname, req.path));

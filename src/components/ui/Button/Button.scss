@@ -7,9 +7,9 @@
   border: none;
   outline: none;
   cursor: pointer;
-  color: $fc;
-  background: $background-color;
-  box-shadow: $shadow-small;
+  @include font-color;
+  @include background-color;
+  @include shadow-small;
   margin: 0.5em;
   transition: all linear 0.3s;
 

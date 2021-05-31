@@ -1,34 +1,37 @@
-import React, {useEffect, useState} from "react";
-import {useAuthReselect, useThemeReselect} from "Store/hooks";
-import Button from "UI/Button";
-import Form from "UI/Form";
-import Input from "UI/Input";
-import routes from "Config/routes";
-import './Layout.scss'
-import {Link, useLocation} from "react-router-dom";
-import {EAuthState} from "Reducers/auth/types";
-import {LayoutProps} from "UI/Layout/types";
+import React, { useEffect, useState } from 'react';
+import { useAuthReselect, useThemeReselect } from 'Store/hooks';
+import Button from 'UI/Button';
+import Form from 'UI/Form';
+import Input from 'UI/Input';
+import routes from 'Config/routes';
+import './Layout.scss';
+import { Link, useLocation } from 'react-router-dom';
+import { EAuthState } from 'Reducers/auth/types';
+import { LayoutProps } from 'UI/Layout/types';
+import sendComment from 'Util/sendComment';
 import Textarea from "UI/Textarea";
 
-const Layout: LayoutProps = ({children}) => {
+const Layout: LayoutProps = ({ children }) => {
   const auth = useAuthReselect();
   const [authState, setAuthState] = useState(auth.state === EAuthState.LOGGED);
-  const path = useLocation()
-  const theme = useThemeReselect()
-  const [formVisible, setFormVisible] = useState(false)
-  const [navOpened, setNavOpened] = useState(false)
-  const [name, setName] = useState('')
-  const [message, setMessage] = useState('')
+  const path = useLocation();
+  const theme = useThemeReselect();
+  const [formVisible, setFormVisible] = useState(false);
+  const [navOpened, setNavOpened] = useState(false);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
     const {state} = auth;
     setAuthState(state === EAuthState.LOGGED);
+    setName(name ?? auth?.user?.first_name)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
   useEffect(() => {
-    setNavOpened(false)
-    setFormVisible(false)
+    setNavOpened(false);
+    setFormVisible(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path])
+  }, [path]);
   return (
     <div className={`layout${path.pathname === '/game' ? ' layout_fullscreen' : ''} root${theme && ` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">
@@ -55,7 +58,8 @@ const Layout: LayoutProps = ({children}) => {
           }
           {
             path.pathname === '/game' &&
-            <Button aria-label='Открыть меню' className='layout__open-nav-btn' onClick={() => setNavOpened(!navOpened)} />}
+            <Button aria-label="Открыть меню" className="layout__open-nav-btn" onClick={() => setNavOpened(!navOpened)} />
+}
         </nav>
         <main>
           {children}
@@ -66,28 +70,43 @@ const Layout: LayoutProps = ({children}) => {
           Made by Nairobi-Crew
         </a>
 
-        <span className="layout__btn" onClick={() => {
-          setFormVisible(true)
-        }}>Напиште нам
+        <span
+          className="layout__btn"
+          onClick={() => {
+            setFormVisible(true);
+          }}
+        >
+          Напиште нам
         </span>
       </footer>
-      {<div className={`layout__popup${formVisible ? ' layout__popup_active' : ''}`}>
+      <div className={`layout__popup${formVisible ? ' layout__popup_active' : ''}`}>
         <Button
           className="layout__form-close"
           onClick={() => setFormVisible(false)}>
           x
         </Button>
-        <Form className="layout__form"
-              caption='Обратная связь'
-              header={false}
-              maxHeight={false}
-              onSubmit={() => setFormVisible(false)}>
+        <Form
+          className="layout__form"
+          caption="Обратная связь"
+          header={false}
+          maxHeight={false}
+          onSubmit={() => {
+            sendComment(`Автор: ${name}, Текст: ${message}`).then(() => {
+              setFormVisible(false);
+            }).catch((e) => {
+              setErrorMessage(e);
+            });
+          }}
+        >
           <Input label="Ваше имя" value={name} required={true} onValueChanged={(v) => setName(v)} />
-          <Textarea label="Сообщение" value={message} required={true} onValueChanged={(v) => setMessage(v)} />
+          <Textarea label="Сообщение" value={message} required={true} onValueChanged={(v) => setMessage(v)} errorMessage={errorMessage} />
+          <Button>
+            Отправить
+          </Button>
         </Form>
-      </div>}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

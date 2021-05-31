@@ -15,6 +15,7 @@ import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { randomRange } from 'Components/Arcanoid/util/random';
+import isClient from 'Util/isClient';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -24,12 +25,39 @@ export default class GameFieldObjects {
 
   brickCount: number = 0; // количество кирпичей
 
+  audio: AudioContext;
+
+  sounds: AudioBuffer[] = [];
+
   constructor() {
     if (GameFieldObjects.instance) {
       return GameFieldObjects.instance;
     }
 
     GameFieldObjects.instance = this;
+    if (isClient()) {
+      this.audio = new AudioContext();
+      for (let i = 1; i < 10; i += 1) {
+        fetch(`/sounds/0${i}.mp3`, { method: 'GET' }).then(async (response) => {
+          const buffer = await response.arrayBuffer();
+          const audioBuffer = await this.audio.decodeAudioData(buffer);
+          this.sounds.push(audioBuffer);
+        });
+      }
+    }
+  }
+
+  playSound(n: number) {
+    if (n < 0 || n > 9) {
+      return;
+    }
+    if (this.sounds[n]) {
+      const sound = this.sounds[n];
+      const player = this.audio.createBufferSource();
+      player.connect(this.audio.destination);
+      player.buffer = sound;
+      player.start();
+    }
   }
 
   add(item: IGameFieldObjectProps): void {
@@ -188,7 +216,7 @@ export default class GameFieldObjects {
     let y = 0;
     this.brickCount = 0;
     for (let i = 0; i < ld.length; i += 1) {
-      const item = padString(ld[i], LEVEL_STRING_LENGTH, ' ');
+      const item = padString(ld[i].split(' ').join(''), LEVEL_STRING_LENGTH, ' ');
       const nextItem = getNextItem(item);
       let blockItem = nextItem();
       let x = 0;

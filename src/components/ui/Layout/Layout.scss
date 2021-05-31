@@ -3,7 +3,7 @@
 .layout {
   $block: &;
   padding-top: 120px;
-  background: $background-color;
+  @include background-color;
 
   &_fullscreen {
     padding: 0;
@@ -58,7 +58,7 @@
   }
 
   &__nav {
-    background: $background-color;
+    @include background-color;
     position: fixed;
     top: 0;
     left: 0;
@@ -99,7 +99,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #403e40;
+    @include background-footer;
   }
 
   &__btn {
@@ -113,7 +113,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: $background-color;
+    @include background-color;
     transform: translateX(100%);
     transition: transform .6s cubic-bezier(.785, .135, .15, .86);
     display: flex;

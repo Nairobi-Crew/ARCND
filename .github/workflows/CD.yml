@@ -24,17 +24,10 @@ jobs:
           username: deploy
           passphrase: ${{ secrets.PASS }}
           privateKey: ${{ secrets.PRIVATE_KEY}}
-
-#        uses: nerd4ever/ssh-action@master
-#        with:
-#          command: |
-#            cd /work/ARCND
-#            git pull
-#            docker-compose build
-#            dosker-compose up -d
-##            echo "env_var:$FIRST_NAME"
-#          host: ${{ secrets.HOST }}
-#          user: deploy
-#          key: ${{ secrets.PRIVATE_KEY}}
-#          pass: ${{ secrets.PASS }}
-#          args: "-tt -vvv"
+      - name: Notify
+        if: cancelled() == false
+        uses: xinthink/action-telegram@v1.1
+        with:
+          botToken: ${{ secrets.BotToken }}
+          chatId: ${{ secrets.ChatID }}
+          jobStatus: ${{ job.status }}

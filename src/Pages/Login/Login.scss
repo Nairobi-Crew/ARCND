@@ -5,9 +5,9 @@
   &__submit {
     font-family: $ff;
     font-size: $f-m;
-    color: $fc;
     text-transform: uppercase;
     font-weight: bold;
+    @include font-color;
   }
 
   &__submit {
