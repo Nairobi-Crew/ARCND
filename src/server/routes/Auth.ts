@@ -72,10 +72,16 @@ export default class Auth extends Routes {
     const user = '/user';
     this.app.get(`${AUTH_URL}${user}`, [logger({})], async (req: Request, res: Response) => {
       try {
-        const Cookie = Cookies.getCookies(req);
-        const answer = await Fetch.get(`${AUTH_SERVER_URL}${user}`, { headers: { Cookie } });
-        const result = await answer.json();
-        res.status(EHttpStatusCodes.OK).send(result);
+        // eslint-disable-next-line no-shadow
+        const user = await Auth.getUser(req);
+        // const Cookie = Cookies.getCookies(req);
+        // const answer = await Fetch.get(`${AUTH_SERVER_URL}${user}`, { headers: { Cookie } });
+        // const result = await answer.json();
+        if (user) {
+          res.status(EHttpStatusCodes.OK).send(user);
+        } else {
+          res.status(EHttpStatusCodes.UNAUTHORIZED).send({ reason: 'Error get user info' });
+        }
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log('Error get user info', { error: e.statusText, cookie: Cookies.getCookies(req) });
@@ -91,7 +97,11 @@ export default class Auth extends Routes {
     try {
       const answer = await Fetch.get(`${AUTH_SERVER_URL}/user`, { headers: { Cookie } });
       user = await answer.json() as IUser;
-      await checkDBUser(user);
+      const found = await checkDBUser(user);
+      if (found) {
+        const cloned = JSON.parse(JSON.stringify(found));
+        user.theme = cloned.theme;
+      }
       return user;
     } catch (e) {
       return null;

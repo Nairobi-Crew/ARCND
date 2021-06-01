@@ -7,8 +7,18 @@ const Input: InputProps = ({
 }) => {
   const [inputValue, setInputValue] = useState<string>(value as string || '');
   useEffect(() => {
-    setInputValue(value as string);
+    if (value) {
+      if ('type' in restProps) {
+        const t = restProps.type;
+        if (t === 'file') {
+          return;
+        }
+      }
+      setInputValue(value as string);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+
   const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     if (e.target) {
       const v = (e.target as HTMLInputElement).value;

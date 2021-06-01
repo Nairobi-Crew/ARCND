@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {SwitchProps} from 'UI/Switcher/types';
+import React, { useEffect, useState } from 'react';
+import { SwitchProps } from 'UI/Switcher/types';
 import './Switcher.scss';
 
 const Switcher: SwitchProps = ({
- firstValue, secondValue, name = '', onValueChanged, value = false,
- classes = [] }) => {
-
+  firstValue, secondValue, name = '', onValueChanged, value = false,
+  classes = [],
+}) => {
   const [inputValue, setInputValue] = useState(value);
   useEffect(() => {
     setInputValue(value);
@@ -28,7 +28,8 @@ const Switcher: SwitchProps = ({
           type="checkbox"
           name={name}
           checked={inputValue}
-          onChange={onInputHandler} />
+          onChange={onInputHandler}
+        />
         <span className="switch__switcher" />
       </label>
       <span>{secondValue}</span>

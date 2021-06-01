@@ -2,34 +2,10 @@ import { API_PATH, AUTH_PATH } from 'Config/config';
 import { EAuthAction, EAuthState, UserRegisterParams } from 'Reducers/auth/types';
 import { IAppState, IUser } from 'Store/types';
 import { ThunkAction } from 'redux-thunk';
-import { Action } from 'redux';
+import { Action, Dispatch } from 'redux';
+import { EThemeAction } from 'Reducers/theme/types';
 
 const API = `${API_PATH}${AUTH_PATH}`;
-export const loginUser = (
-  login: string,
-  password: string,
-): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
-  const response = await fetch(`${API}/signin`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify({ login, password }),
-  });
-  if (response.status === 200) {
-    dispatch({ type: EAuthAction.AUTH_LOGIN });
-  } else {
-    try {
-      const reason = await response.json();
-      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: reason });
-    } catch (e) {
-      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: 'Unknown error' });
-      // eslint-disable-next-line no-console
-      console.log('Error parse JSON', e);
-    }
-  }
-};
 
 export const getUserData = (): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/user`, {
@@ -53,10 +29,55 @@ export const getUserData = (): ThunkAction<void, IAppState, unknown, Action<stri
       phone: json.phone || '',
       id: json.id || 0,
       login: json.login || '',
+      theme: json.theme || 'dark',
     };
-    dispatch({ type: EAuthAction.USER_GET_DATA, payload: { user, status: EAuthState.LOGGED } });
+    dispatch({
+      type: EAuthAction.USER_GET_DATA,
+      payload: {
+        user,
+        status: EAuthState.LOGGED,
+      },
+    });
+    dispatch({
+      type: EThemeAction.SET_THEME,
+      payload: { theme: user.theme },
+    });
   } else {
-    dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: { reason: json?.reason || '', status: EAuthState.LOGIN_ERROR } });
+    dispatch({
+      type: EAuthAction.AUTH_LOGIN_ERROR,
+      payload: {
+        reason: json?.reason || '',
+        status: EAuthState.LOGIN_ERROR,
+      },
+    });
+  }
+};
+
+export const loginUser = (
+  login: string,
+  password: string,
+  dsp: Dispatch<any>,
+): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
+  const response = await fetch(`${API}/signin`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({ login, password }),
+  });
+  if (response.status === 200) {
+    dispatch({ type: EAuthAction.AUTH_LOGIN });
+    dsp(getUserData());
+  } else {
+    try {
+      const reason = await response.json();
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: reason });
+    } catch (e) {
+      dispatch({ type: EAuthAction.AUTH_LOGIN_ERROR, payload: 'Unknown error' });
+      // eslint-disable-next-line no-console
+      console.log('Error parse JSON', e);
+    }
   }
 };
 
@@ -67,6 +88,7 @@ export const logoutUser = (): ThunkAction<void, IAppState, unknown, Action<strin
   });
   if (response.status === 200) {
     dispatch({ type: EAuthAction.AUTH_LOGOUT });
+    dispatch({ type: EThemeAction.SET_THEME, payload: 'dark' });
   } else {
     try {
       const reason = await response.json();

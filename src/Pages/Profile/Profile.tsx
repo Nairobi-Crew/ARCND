@@ -8,9 +8,11 @@ import { useDispatch } from 'react-redux';
 import { changeProfile } from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
-import { useAuthReselect, useThemeReselect } from 'Store/hooks';
+import { useAuthReselect } from 'Store/hooks';
 import Switcher from 'UI/Switcher';
 import { setUserTheme } from 'Reducers/theme/actions';
+import { API_HOST } from 'Config/config';
+import InputFile from 'UI/InputFile';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
@@ -22,15 +24,15 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [loginField, setLogin] = useState('');
   const [emailField, setEmail] = useState('');
   const [phoneField, setPhone] = useState('');
-  const [avatarField, setAvatar] = useState('');
+  const [avatarField, setAvatarField] = useState('');
   const [themeField, setTheme] = useState(false);
   const [emailMessage, setEmailMessage] = useState('');
   const [phoneMessage, setPhoneMessage] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
+  const [avatar, setAvatar] = useState<File>();
   const auth = useAuthReselect();
-  const theme = useThemeReselect();
   const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
@@ -44,7 +46,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
       login: loginField,
       id: auth?.user?.id,
     };
-    dispatch(changeProfile(user));
+    dispatch(changeProfile(user, avatar));
   };
 
   const getUserInfo = () => {
@@ -57,12 +59,10 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setDisplayName(auth.user.display_name || '');
     setEmail(auth.user.email);
     setPhone(auth.user.phone);
-    setAvatar(auth.user.avatar || '');
+    setAvatarField(auth.user.avatar || '');
+    const sw = auth.user.theme === 'white';
+    setTheme(sw);
   };
-
-  // const getTheme = () => {
-  //   setTheme(themeField)
-  // }
 
   const changeSwitcherHandler = (value:boolean) => {
     const userTheme = value ? 'white' : 'dark';
@@ -70,14 +70,16 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setTheme(value);
   };
 
+  const changeAvatarHandler = (files: FileList | null) => {
+    if (files && files[0]) {
+      setAvatar(files[0]);
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
-
-  useEffect(() => {
-    // getTheme();
-  }, [theme]);
 
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);
@@ -92,10 +94,12 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   return (
     <>
-      <Form caption={caption || 'Профиль'}
-            header={false}
-            visible={true}
-            name="profile">
+      <Form
+        caption={caption || 'Профиль'}
+        header={false}
+        visible
+        name="profile"
+      >
         <Switcher
           firstValue="Темная тема"
           secondValue="Светлая тема"
@@ -103,8 +107,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           checked={themeField}
         />
         <div style={{ textAlign: 'center' }}>
-          {avatarField ? <img src={avatarField} width="50" height="50" alt="Avatar" /> : ''}
-
+          {avatarField ? <img src={`${API_HOST}${avatarField}`} width="50" height="50" alt="Avatar" /> : <img src="images/avatar.png" width="50" height="50" alt="Avatar" />}
         </div>
         <Input
           name="firstName"
@@ -154,7 +157,11 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           errorMessage={phoneMessage}
           onBlur={() => setPhoneMessage(phoneIsValid(phoneField) ? '' : 'Неверный номер телефона')}
         />
-
+        <InputFile
+          name="avatarInput"
+          label="Avatar"
+          onChange={(e) => changeAvatarHandler(e.target?.files)}
+        />
         <Button onClick={saveProfileButtonHandler} disabled={!formValid}>Сохранить</Button>
       </Form>
     </>
