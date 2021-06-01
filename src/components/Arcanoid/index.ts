@@ -1,3 +1,4 @@
 import Arcanoid from 'Components/Arcanoid/Arcanoid';
+import AuthOnly from 'Components/HOC/AuthOnly';
 
-export default Arcanoid;
+export default AuthOnly(Arcanoid, '/');

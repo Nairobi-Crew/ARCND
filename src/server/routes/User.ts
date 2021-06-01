@@ -12,6 +12,9 @@ import { USER_SERVER_URL, USER_URL } from 'Config/config';
 import FormData from 'form-data';
 import Multer from 'multer';
 import { getUser } from 'Server/db/users';
+import Auth from 'Server/routes/Auth';
+
+import fs from 'fs';
 
 export default class User extends Routes {
   constructor(app: express.Application) {
@@ -42,6 +45,7 @@ export default class User extends Routes {
     this.app.put(`${USER_URL}${avatar}`, [m.single('avatar'), isLogged(), bodyChecker(), logger({ needBody: true })], async (req: Request, res: Response) => {
       const { file } = req;
       const form: any = new FormData();
+      let av;
       form.append('avatar', file.buffer, {
         filename: file.originalname,
       });
@@ -53,12 +57,38 @@ export default class User extends Routes {
         data: form,
       }).then(async (answer) => {
         const result = await answer.json();
+        av = result.avatar;
         res.status(EHttpStatusCodes.OK).send(result);
       }).catch(async (e) => {
         const answer = await e.json();
         console.log('Avatar error', { e, answer });
         res.status(e.status).send(answer);
       });
+      try {
+        await Auth.getAvatar(req, av);
+      } catch (e) {
+        //
+      }
+    });
+
+    this.app.get('/api/v2/avatar/*', [isLogged(), logger({ needParams: true })], async (req: Request, res: Response) => {
+      const params = req.url.split('/');
+      const avatarName = `/${params.slice(4).join('/')}`;
+      console.log('Avatar', avatarName);
+      const avatarData = await Auth.getAvatar(req, avatarName);
+      if (avatarData) {
+        try {
+          const buffer = await (avatarData as Blob).arrayBuffer();
+          const view = new Uint8Array(buffer);
+          fs.writeFileSync(`${__dirname}/avatar.png`, view);
+          res.sendFile(`${__dirname}/avatar.png`);
+        } catch (e) {
+          console.log('Error', e);
+          res.send('');
+        }
+      } else {
+        res.status(EHttpStatusCodes.OK).send('');
+      }
     });
 
     const password = '/password';

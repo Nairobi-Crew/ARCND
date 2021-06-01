@@ -9,7 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { EAuthState } from 'Reducers/auth/types';
 import { LayoutProps } from 'UI/Layout/types';
 import sendComment from 'Util/sendComment';
-import Textarea from "UI/Textarea";
+import Textarea from 'UI/Textarea';
 
 const Layout: LayoutProps = ({ children }) => {
   const auth = useAuthReselect();
@@ -22,9 +22,9 @@ const Layout: LayoutProps = ({ children }) => {
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
-    const {state} = auth;
+    const { state } = auth;
     setAuthState(state === EAuthState.LOGGED);
-    setName(name ?? auth?.user?.first_name)
+    setName(name ?? auth?.user?.first_name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
   useEffect(() => {
@@ -32,6 +32,8 @@ const Layout: LayoutProps = ({ children }) => {
     setFormVisible(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
+
+  // TODO: поправить цвета ссылок в светлой теме
   return (
     <div className={`layout${path.pathname === '/game' ? ' layout_fullscreen' : ''} root${theme && ` root_theme_${theme.theme.color}`}`}>
       <div className="layout__main-content">
@@ -57,8 +59,8 @@ const Layout: LayoutProps = ({ children }) => {
             )
           }
           {
-            path.pathname === '/game' &&
-            <Button aria-label="Открыть меню" className="layout__open-nav-btn" onClick={() => setNavOpened(!navOpened)} />
+            path.pathname === '/game'
+            && <Button aria-label="Открыть меню" className="layout__open-nav-btn" onClick={() => setNavOpened(!navOpened)} />
 }
         </nav>
         <main>
@@ -82,7 +84,8 @@ const Layout: LayoutProps = ({ children }) => {
       <div className={`layout__popup${formVisible ? ' layout__popup_active' : ''}`}>
         <Button
           className="layout__form-close"
-          onClick={() => setFormVisible(false)}>
+          onClick={() => setFormVisible(false)}
+        >
           x
         </Button>
         <Form
@@ -98,8 +101,8 @@ const Layout: LayoutProps = ({ children }) => {
             });
           }}
         >
-          <Input label="Ваше имя" value={name} required={true} onValueChanged={(v) => setName(v)} />
-          <Textarea label="Сообщение" value={message} required={true} onValueChanged={(v) => setMessage(v)} errorMessage={errorMessage} />
+          <Input label="Ваше имя" value={name} required onValueChanged={(v) => setName(v)} />
+          <Textarea label="Сообщение" value={message} required onValueChanged={(v) => setMessage(v)} errorMessage={errorMessage} />
           <Button>
             Отправить
           </Button>
