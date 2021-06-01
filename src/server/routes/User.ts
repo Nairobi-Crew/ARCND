@@ -12,8 +12,6 @@ import { USER_SERVER_URL, USER_URL } from 'Config/config';
 import FormData from 'form-data';
 import Multer from 'multer';
 import { getUser } from 'Server/db/users';
-// import fs from 'fs';
-// import path from 'path';
 
 export default class User extends Routes {
   constructor(app: express.Application) {
