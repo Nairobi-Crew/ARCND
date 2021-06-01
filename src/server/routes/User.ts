@@ -43,7 +43,7 @@ export default class User extends Routes {
     const m = Multer();
     this.app.put(`${USER_URL}${avatar}`, [m.single('avatar'), isLogged(), bodyChecker(), logger({ needBody: true })], async (req: Request, res: Response) => {
       const { file } = req;
-      const form = new FormData();
+      const form: any = new FormData();
       form.append('avatar', file.buffer, {
         filename: file.originalname,
       });
