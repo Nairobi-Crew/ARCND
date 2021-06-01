@@ -161,7 +161,7 @@ sequelize.addModels([UserModel, TopicModel, MessageModel]);
 TopicModel.hasMany(MessageModel);
 MessageModel.belongsTo(TopicModel);
 const forceSync = force_sync;
-console.log(` ------------------------------ FORCE SYNC MODELS ${forceSync} ${process.env.FORCE_SYNC}------------------------------------------`);
+console.log(` ------------------------------ FORCE SYNC MODELS ${forceSync}------------------------------------------`);
 syncForumModels(forceSync).then(() => {
 }).catch(() => {
   // eslint-disable-next-line no-console
