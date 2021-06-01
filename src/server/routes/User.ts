@@ -9,7 +9,7 @@ import Fetch from 'Server/fetch/Fetch';
 import { EHttpStatusCodes } from 'Server/types';
 import { USER_SERVER_URL, USER_URL } from 'Config/config';
 // @ts-ignore
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 import Multer from 'multer';
 import { getUser } from 'Server/db/users';
 // import fs from 'fs';
