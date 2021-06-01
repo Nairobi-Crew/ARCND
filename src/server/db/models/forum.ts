@@ -159,8 +159,9 @@ export const syncForumModels = (force: boolean) => new Promise<void>((resolve, r
 sequelize.addModels([UserModel, TopicModel, MessageModel]);
 TopicModel.hasMany(MessageModel);
 MessageModel.belongsTo(TopicModel);
-
-syncForumModels(process.env.FORCE_SYNC === 'yes' || false).then(() => {
+const forceSync = process.env.FORCE_SYNC === 'yes' || false;
+console.log(` ------------------------------ FORCE SYNC MODELS ${forceSync}------------------------------------------`);
+syncForumModels(forceSync).then(() => {
 }).catch(() => {
   // eslint-disable-next-line no-console
   console.log('Synchronization failed');
