@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import Input from 'UI/Input/Input';
 
-describe('Render InputFile', () => {
+describe('Render Textarea', () => {
   it('Render correct', () => {
     const Component = () => (
       <Input
