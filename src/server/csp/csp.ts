@@ -7,8 +7,9 @@ export const generateCsp = (): [csp: string, nonce: string] => {
   hash.update(v4());
   const nonce = hash.digest('base64');
 
-  const csp = `default-src 'self' 'nonce-${nonce}' 'unsafe-eval';
-  img-src data: 'self' 'unsafe-eval';`;
+  const csp = `default-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://ya-praktikum.tech/;
+  img-src data: 'self' 'unsafe-eval' https://ya-praktikum.tech/;
+  style-src data: 'self' 'unsafe-inline'`;
 
   return [csp, nonce];
 };

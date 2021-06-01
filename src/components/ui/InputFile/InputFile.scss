@@ -1,0 +1,78 @@
+@import "src/common/utils";
+
+.input {
+  font-weight: 400;
+  height: 56px;
+  width: 100%;
+  background-color: inherit;
+  @include font-color;
+  margin: 0 0 40px;
+
+  &__label {
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 100%;
+    font-family: $ff;
+    @include font-color;
+    background-color: inherit;
+  }
+
+  &__input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #49005d;
+    background-color: inherit;
+    font-family: $ff;
+    @include font-color;
+  }
+
+  &__input:focus {
+    border-color: $primary-btn;
+  }
+
+  &__input:invalid,
+  &__input._error {
+    border-color: $error;
+  }
+
+  &__input:valid:not(:placeholder-shown):not(:focus):not(._error) {
+    border-color: $secondary-btn;
+  }
+
+  &__input::placeholder {
+    opacity: 0;
+  }
+
+  &__label-text {
+    position: absolute;
+    font-size: $f-m;
+    font-family: $ff;
+    top: 50%;
+    left: 0;
+    padding: 2px 8px 2px 2px;
+    background-color: inherit;
+    transform: translateY(-50%);
+    transition: all 0.3s;
+  }
+
+  &__label-text > sup {
+    position: absolute;
+    bottom: 5px;
+    right: 2px;
+    color: $error;
+  }
+
+  &__input:not(:placeholder-shown) + &__label-text,
+  &__input:focus + &__label-text {
+    top: 0;
+    font-size: 9px;
+  }
+
+  &__error-message {
+    font-size: $f-m;
+    color: $error;
+  }
+}

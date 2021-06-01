@@ -26,7 +26,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   const getRedirect = () => (isClient() ? `${window.location.origin}${OAuthPath}` : OAuthPath);
 
   const loginButtonHandle = () => {
-    dispatch(loginUser(login, password));
+    dispatch(loginUser(login, password, dispatch));
   };
 
   const logoutButtonHandle = () => {
@@ -68,9 +68,13 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
 
   return (
     <>
-      <Form caption={caption || 'SING IN'}
-            visible={true} header={false} maxHeight={false}
-            name="login">
+      <Form
+        caption={caption || 'SING IN'}
+        visible
+        header={false}
+        maxHeight={false}
+        name="login"
+      >
         <Input
           className="input__input"
           id="login_login"

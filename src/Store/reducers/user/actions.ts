@@ -5,7 +5,7 @@ import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 
 const API = `${API_PATH}${USER_PATH}`;
-export const changeProfile = (user: IUser): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
+export const changeProfile = (user: IUser, avatar: string | Blob | undefined): ThunkAction<void, IAppState, unknown, Action<string>> => async (dispatch) => {
   const response = await fetch(`${API}/profile`,
     {
       method: 'PUT',
@@ -31,6 +31,30 @@ export const changeProfile = (user: IUser): ThunkAction<void, IAppState, unknown
       dispatch({ type: EUserAction.ERROR_USER_CHANGE_PROFILE, payload: { reason: 'Unknown error' } });
     }
   }
+  if (avatar) {
+    const url = `${API}/profile/avatar`;
+    const fileReader = new FileReader();
+    fileReader.onloadend = () => {
+      const a = new FormData();
+      a.append('avatar', avatar);
+      fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          Accept: 'Application/json',
+        },
+        body: a,
+      })
+        .then(async (result) => {
+          const answer = await result.json();
+          dispatch({ type: EUserAction.ERROR_USER_CHANGE_AVATAR, payload: answer });
+        }).catch((e) => {
+        // eslint-disable-next-line no-console
+          console.log('Error', e);
+        });
+    };
+    fileReader.readAsDataURL(avatar as Blob);
+  }
 };
 
 export const changePassword = (
@@ -55,6 +79,22 @@ export const changePassword = (
     dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, payload: { reason: 'Unauthorized' } });
   } else {
     dispatch({ type: EUserAction.ERROR_USER_CHANGE_PASSWORD, payload: { reason: 'Unknown error' } });
+  }
+};
+
+export const setTheme = (theme: string): ThunkAction<void, IAppState, unknown, Action<string>> => async () => {
+  try {
+    await fetch(`${API}/theme`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ theme }),
+        credentials: 'include',
+        headers: {
+          'Content-type': 'applications/json',
+        },
+      });
+  } catch (e) {
+    //
   }
 };
 
