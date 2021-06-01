@@ -77,6 +77,7 @@ export default class Auth extends Routes {
         // const Cookie = Cookies.getCookies(req);
         // const answer = await Fetch.get(`${AUTH_SERVER_URL}${user}`, { headers: { Cookie } });
         // const result = await answer.json();
+        console.log('User', user);
         if (user) {
           res.status(EHttpStatusCodes.OK).send(user);
         } else {
@@ -96,7 +97,9 @@ export default class Auth extends Routes {
     let user: IUser;
     try {
       const answer = await Fetch.get(`${AUTH_SERVER_URL}/user`, { headers: { Cookie } });
+      console.log('Answer from get user', answer);
       user = await answer.json() as IUser;
+      console.log('Answer user', user);
       const found = await checkDBUser(user);
       if (found) {
         const cloned = JSON.parse(JSON.stringify(found));
