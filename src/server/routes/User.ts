@@ -9,7 +9,7 @@ import Fetch from 'Server/fetch/Fetch';
 import { EHttpStatusCodes } from 'Server/types';
 import { USER_SERVER_URL, USER_URL } from 'Config/config';
 // @ts-ignore
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 import Multer from 'multer';
 import { getUser } from 'Server/db/users';
 // import fs from 'fs';
@@ -43,7 +43,7 @@ export default class User extends Routes {
     const m = Multer();
     this.app.put(`${USER_URL}${avatar}`, [m.single('avatar'), isLogged(), bodyChecker(), logger({ needBody: true })], async (req: Request, res: Response) => {
       const { file } = req;
-      const form = new FormData();
+      const form: any = new FormData();
       form.append('avatar', file.buffer, {
         filename: file.originalname,
       });
