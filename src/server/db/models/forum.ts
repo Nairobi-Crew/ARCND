@@ -160,7 +160,7 @@ sequelize.addModels([UserModel, TopicModel, MessageModel]);
 TopicModel.hasMany(MessageModel);
 MessageModel.belongsTo(TopicModel);
 
-syncForumModels(false).then(() => {
+syncForumModels(process.env.FORCE_SYNC === 'yes' || false).then(() => {
 }).catch(() => {
   // eslint-disable-next-line no-console
   console.log('Synchronization failed');

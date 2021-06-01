@@ -48,6 +48,7 @@ export const checkDBUser = (user: IUser): Promise<void | UserModel> => new Promi
         login: user.login,
         phone: user.phone,
         avatar: user.avatar,
+        theme: 'dark',
       },
     });
     resolve(found[0]);

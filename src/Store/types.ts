@@ -38,4 +38,5 @@ export interface IUser {
   login: string,
   id?: number
   avatar?: string
+  theme?: string
 }

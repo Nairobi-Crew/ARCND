@@ -15,6 +15,7 @@ export interface UserAttributes {
   OAUth?: string
   hash?: string
   avatar?: string
+  theme?: string
 }
 
 export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
@@ -88,6 +89,12 @@ export class UserModel extends Model<UserAttributes, UserCreationAttributes> {
     defaultValue: '',
   })
   avatar: string
+
+  @Column({
+    type: DataType.STRING(100),
+    defaultValue: 'white',
+  })
+  theme: string
 }
 
 export const syncUserModel = (
