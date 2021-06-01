@@ -53,7 +53,6 @@ class Fetch {
     const fetchObject = {
       method, body, headers, credentials: 'include', mode: 'cors',
     };
-    // console.log('Fetch object', { url, fetchObject });
     return fetch(url, fetchObject).then((res) => {
       if (res.ok) {
         return res;
