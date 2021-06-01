@@ -77,7 +77,7 @@ export default class Auth extends Routes {
         // const Cookie = Cookies.getCookies(req);
         // const answer = await Fetch.get(`${AUTH_SERVER_URL}${user}`, { headers: { Cookie } });
         // const result = await answer.json();
-        console.log('User', user);
+        // console.log('User', user);
         if (user) {
           res.status(EHttpStatusCodes.OK).send(user);
         } else {
@@ -92,22 +92,47 @@ export default class Auth extends Routes {
     return this.app;
   }
 
+  static async getAvatar(req: Request, avatar: string | undefined): Promise<unknown | void> {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve, reject) => {
+      if (!avatar) {
+        reject();
+        return;
+      }
+      const Cookie = Cookies.getCookies(req);
+      try {
+        const a = await Fetch.get(`https://ya-praktikum.tech/api/v2/resources${avatar}`, {
+          method: 'GET',
+          headers: {
+            Cookie,
+          },
+        });
+        resolve(await a.blob());
+      } catch (_e) {
+        reject();
+      }
+    });
+  }
+
   static async getUser(req: Request): Promise<IUser | null> {
     const Cookie = Cookies.getCookies(req);
     let user: IUser;
     try {
       const answer = await Fetch.get(`${AUTH_SERVER_URL}/user`, { headers: { Cookie } });
-      console.log('Answer from get user', answer);
       user = await answer.json() as IUser;
-      console.log('Answer user', user);
+    } catch (e) {
+      return null;
+    }
+    try {
       const found = await checkDBUser(user);
       if (found) {
         const cloned = JSON.parse(JSON.stringify(found));
         user.theme = cloned.theme;
       }
-      return user;
+      await Auth.getAvatar(req, user.avatar);
     } catch (e) {
-      return null;
+      //
     }
+    return user;
   }
 }

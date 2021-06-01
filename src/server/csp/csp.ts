@@ -10,7 +10,7 @@ export const generateCsp = (): [csp: string, nonce: string] => {
   const csp = `default-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://ya-praktikum.tech/;
   img-src data: 'self' 'unsafe-eval' https://ya-praktikum.tech/;
   style-src data: 'self' 'unsafe-inline';
-  script-src data: 'self' 'unsafe-inline'`;
+  script-src data: 'self' 'unsafe-inline' 'unsafe-eval'`;
 
   return [csp, nonce];
 };
