@@ -26,4 +26,5 @@ module.exports = {
   serverPort: isDev ? process.env.PORT || 3000 : process.env.PORT || 5000,
   pg_connection: isDev ? pg_connection_dev : pg_connection_prod,
   tg_bot_token: process.env.BOT_TOKEN || _bot_token_,
+  force_sync: process.env.FORCE_SYNC === 'yes' || false,
 };
