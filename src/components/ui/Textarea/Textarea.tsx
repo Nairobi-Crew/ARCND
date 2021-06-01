@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { InputProps } from 'UI/Input/types';
-import './Input.scss';
+import { TextareaProps } from 'UI/Textarea/types';
+import 'UI/Input/Input.scss';
 
-const Input: InputProps = ({
+const Textarea: TextareaProps = ({
   label, value, onValueChanged, errorMessage, ...restProps
 }) => {
   const [inputValue, setInputValue] = useState<string>(value as string || '');
   useEffect(() => {
-    if (value) {
-      if ('type' in restProps) {
-        const t = restProps.type;
-        if (t === 'file') {
-          return;
-        }
-      }
-      setInputValue(value as string);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setInputValue(value as string);
   }, [value]);
-
-  const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
+  const onInputHandler = (e: React.FormEvent<HTMLTextAreaElement>): void => {
     if (e.target) {
       const v = (e.target as HTMLInputElement).value;
       setInputValue(v);
@@ -33,7 +23,7 @@ const Input: InputProps = ({
     <div className="input">
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className="input__label">
-        <input
+        <textarea
           className={`input__input${errorMessage ? ` input__input_error`: '' }`}
           value={inputValue}
           placeholder={label}
@@ -47,4 +37,4 @@ const Input: InputProps = ({
   );
 };
 
-export default Input;
+export default Textarea;
