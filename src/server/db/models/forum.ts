@@ -13,6 +13,7 @@ import sequelize from 'Server/db/connection';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Optional } from 'sequelize';
 import { syncUserModel, UserModel } from 'Server/db/models/user';
+import { force_sync } from '../../../../env.variables';
 
 export interface TopicAttributes {
   id?: number
@@ -159,7 +160,7 @@ export const syncForumModels = (force: boolean) => new Promise<void>((resolve, r
 sequelize.addModels([UserModel, TopicModel, MessageModel]);
 TopicModel.hasMany(MessageModel);
 MessageModel.belongsTo(TopicModel);
-const forceSync = process.env.FORCE_SYNC === 'yes' || false;
+const forceSync = force_sync;
 console.log(` ------------------------------ FORCE SYNC MODELS ${forceSync}------------------------------------------`);
 syncForumModels(forceSync).then(() => {
 }).catch(() => {

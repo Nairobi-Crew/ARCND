@@ -40,6 +40,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 8. [TouchEvents API](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events)
 9. [Vibration API](https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API)
 10. [WEB Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+11. [WEB Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
 
 ###В проекте настроено [CI](.github/workflows/CI.yml)/[CD](.github/workflows/CD.yml) при помощи [Github Actions](https://github.com/features/actions)
 ##Тестирование компонент: [Jest](https://jestjs.io)/[Enzyme](https://enzymejs.github.io/enzyme)
