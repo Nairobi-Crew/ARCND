@@ -11,7 +11,6 @@ import { getUserData } from 'Reducers/auth/actions';
 import { useAuthReselect } from 'Store/hooks';
 import Switcher from 'UI/Switcher';
 import { setUserTheme } from 'Reducers/theme/actions';
-import { API_HOST } from 'Config/config';
 import InputFile from 'UI/InputFile';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
@@ -92,6 +91,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // TODO: не работает свитч на тему при старте. Всегда встает на темную тему
   return (
     <>
       <Form
@@ -107,7 +107,11 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           checked={themeField}
         />
         <div style={{ textAlign: 'center' }}>
-          {avatarField ? <img src={`${API_HOST}${avatarField}`} width="50" height="50" alt="Avatar" /> : <img src="images/avatar.png" width="50" height="50" alt="Avatar" />}
+          {
+            avatarField
+              ? <img src={`/api/v2/avatar${avatarField}`} width="50" height="50" alt="Avatar" />
+              : <img src="images/avatar.png" width="50" height="50" alt="Avatar" />
+}
         </div>
         <Input
           name="firstName"

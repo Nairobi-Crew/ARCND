@@ -1,18 +1,18 @@
 import React from 'react';
-import Arcanoid from 'Components/Arcanoid';
+import Arcanoid from 'Components/Arcanoid/index';
 import Login from 'Pages/Login';
-import Profile from 'Pages/Profile';
-import ChangePassword from 'Pages/ChangePassword';
-import Register from 'Pages/Register';
-import Forum from 'Pages/Forums/Forum';
+import Profile from 'Pages/Profile/index';
+import ChangePassword from 'Pages/ChangePassword/index';
+import Register from 'Pages/Register/index';
+import Forum from 'Pages/Forums/Forum/index';
 import Logout from 'Pages/Logout/Logout';
 import Page404 from 'Pages/404/404';
 import Main from 'Pages/Main';
-import Leaderboard from 'Pages/Leaderboard/Leaderboard';
-import NewTopic from 'Pages/Forums/NewTopic';
-import Thread from 'Pages/Forums/Thread';
+import Leaderboard from 'Pages/Leaderboard/index';
+import NewTopic from 'Pages/Forums/NewTopic/index';
+import Thread from 'Pages/Forums/Thread/index';
 import OAuth from 'Pages/OAuth/index';
-import {OAUTH_REDIRECT_PATH} from 'Config/config';
+import { OAUTH_REDIRECT_PATH } from 'Config/config';
 
 export interface ILink {
   title: string
@@ -27,7 +27,7 @@ export interface ILink {
 
 const routes: ILink[] = [
   {
-    visibility: 'always',
+    visibility: 'auth',
     exact: false,
     path: '/game',
     title: 'Игра',
@@ -84,7 +84,7 @@ const routes: ILink[] = [
     key: 'logout',
   },
   {
-    visibility: 'always',
+    visibility: 'auth',
     exact: false,
     path: '/leaderboard',
     title: 'Лидеры',

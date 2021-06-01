@@ -1,5 +1,4 @@
-import { memo } from 'react';
-import { OwnLeaderboardProps } from 'Pages/Leaderboard/types';
 import Leaderboard from 'Pages/Leaderboard/Leaderboard';
+import AuthOnly from 'Components/HOC/AuthOnly';
 
-export default memo<OwnLeaderboardProps>(Leaderboard);
+export default AuthOnly(Leaderboard, '/signin');
