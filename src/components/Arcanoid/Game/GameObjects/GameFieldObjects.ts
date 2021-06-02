@@ -123,6 +123,9 @@ export default class GameFieldObjects {
               case 'split':
                 e = EVENTS.SPLIT;
                 break;
+              case 'fireball':
+                e = EVENTS.FIREBALL;
+                break;
               default:
                 break;
             }
@@ -216,7 +219,7 @@ export default class GameFieldObjects {
     let y = 0;
     this.brickCount = 0;
     for (let i = 0; i < ld.length; i += 1) {
-      const item = padString(ld[i].split(' ').join(''), LEVEL_STRING_LENGTH, ' ');
+      const item = padString(ld[i].split(' ').join('').split('_').join(''), LEVEL_STRING_LENGTH, ' ');
       const nextItem = getNextItem(item);
       let blockItem = nextItem();
       let x = 0;
@@ -269,7 +272,7 @@ export default class GameFieldObjects {
     let thingType: ThingType = 'none';
     let blockType = block.type;
     if (blockType === 9) {
-      blockType = randomRange(1, 8);
+      blockType = randomRange(1, 14);
     }
     switch (blockType) {
       case 2:
@@ -286,6 +289,9 @@ export default class GameFieldObjects {
         break;
       case 6:
         thingType = 'split';
+        break;
+      case 7:
+        thingType = 'fireball';
         break;
       default:
     }

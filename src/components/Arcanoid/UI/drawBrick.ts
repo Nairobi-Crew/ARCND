@@ -3,7 +3,7 @@ import {
   brickColor,
   brickColors,
   THING_COMPRESS_LETTER,
-  THING_EXPAND_LETTER,
+  THING_EXPAND_LETTER, THING_FIREBALL_LETTER,
   THING_GLUE_LETTER,
   THING_GUN_LETTER,
   THING_SHOW_TYPE, THING_SPLIT_LETTER,
@@ -42,6 +42,9 @@ const stylesByLevelType = (level: number, type = 0): brickStyle => {
       break;
     case 6:
       res.bonusLetter = THING_SPLIT_LETTER;
+      break;
+    case 7:
+      res.bonusLetter = THING_FIREBALL_LETTER;
       break;
     case 9:
       res.bonusLetter = '?';

@@ -13,8 +13,9 @@ import FormData from 'form-data';
 import Multer from 'multer';
 import { getUser } from 'Server/db/users';
 import Auth from 'Server/routes/Auth';
-
+import path from 'path';
 import fs from 'fs';
+import { createDirectories } from 'Server/utils';
 
 export default class User extends Routes {
   constructor(app: express.Application) {
@@ -74,14 +75,15 @@ export default class User extends Routes {
     this.app.get('/api/v2/avatar/*', [isLogged(), logger({ needParams: true })], async (req: Request, res: Response) => {
       const params = req.url.split('/');
       const avatarName = `/${params.slice(4).join('/')}`;
-      console.log('Avatar', avatarName);
       const avatarData = await Auth.getAvatar(req, avatarName);
       if (avatarData) {
         try {
           const buffer = await (avatarData as Blob).arrayBuffer();
           const view = new Uint8Array(buffer);
-          fs.writeFileSync(`${__dirname}/avatar.png`, view);
-          res.sendFile(`${__dirname}/avatar.png`);
+          const fileName = path.join(__dirname, avatarName);
+          createDirectories(avatarName);
+          fs.writeFileSync(fileName, view);
+          res.sendFile(fileName);
         } catch (e) {
           console.log('Error', e);
           res.send('');

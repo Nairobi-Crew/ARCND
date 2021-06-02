@@ -1,7 +1,7 @@
 import { ThingType } from 'Components/Arcanoid/Game/GameObjects/Thing';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
-  THING_COMPRESS_LETTER, THING_EXPAND_LETTER,
+  THING_COMPRESS_LETTER, THING_EXPAND_LETTER, THING_FIREBALL_LETTER,
   THING_FONT, THING_GLUE_LETTER, THING_GUN_LETTER,
   THING_HEIGHT,
   THING_SPLIT_LETTER,
@@ -56,12 +56,17 @@ const drawThing = (
       break;
     case 'compress':
       letter = THING_COMPRESS_LETTER;
-      color1 = 'red';
+      color1 = 'darkgray';
       color2 = 'gray';
       break;
     case 'split':
       letter = THING_SPLIT_LETTER;
       color1 = 'blue';
+      color2 = 'gray';
+      break;
+    case 'fireball':
+      letter = THING_FIREBALL_LETTER;
+      color1 = 'red';
       color2 = 'gray';
       break;
     default:
