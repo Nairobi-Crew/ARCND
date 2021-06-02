@@ -60,7 +60,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setPhone(auth.user.phone);
     setAvatarField(auth.user.avatar || '');
     const sw = auth.user.theme === 'white';
-    changeSwitcherHandler(sw)
+    setTheme(sw);
   };
 
   const changeSwitcherHandler = (value:boolean) => {
