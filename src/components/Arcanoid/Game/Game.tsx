@@ -402,6 +402,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       balls.forEach((ball) => (ball.object as Ball).setFireball());
     };
 
+    const onRocketMax = () => {
+      rocket.setMax();
+    };
+
     const onSplitBall = () => {
       const splitBall = (ball: Ball) => {
         for (let i = 0; i < SPLIT_QTY; i += 1) {
@@ -455,6 +459,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.BRICK_CRASH, onBlockShoot);
     globalBus.on(EVENTS.SPLIT, onSplitBall);
     globalBus.on(EVENTS.FIREBALL, onFireball);
+    globalBus.on(EVENTS.ROCKETMAX, onRocketMax);
     gameObjects.data = [];
     if (isClient()) {
       loop(); // запуск игрового цикла
@@ -473,6 +478,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       globalBus.off(EVENTS.BRICK_CRASH, onBlockShoot);
       globalBus.off(EVENTS.SPLIT, onSplitBall);
       globalBus.off(EVENTS.FIREBALL, onFireball);
+      globalBus.off(EVENTS.ROCKETMAX, onRocketMax);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
