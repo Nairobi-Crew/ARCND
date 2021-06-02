@@ -76,10 +76,12 @@ export const THING_EXPAND_LETTER = 'Ш';
 export const THING_COMPRESS_LETTER = 'У';
 export const THING_SPLIT_LETTER = 'Т';
 export const THING_FIREBALL_LETTER = 'Ф';
+export const THING_ROCKETMAX_LETTER = 'М';
 export const THING_TYPE_CLEAR: 'yes' | 'no' | 'random' | 'if_random' = 'random';
 export const SPLIT_ALL_BALLS = true;
 export const SPLIT_QTY = 3;
 export const FIREBALL_TIME = 10000;
+export const ROCKETMAX_TIME = 10000;
 
 // выстрелы
 export const SHOOT_INTERVAL = 150; // минимальный интервал между выстрелами, мс
@@ -107,5 +109,6 @@ export enum EVENTS {
   FIREBALL = 'take:fireball',
   EXPAND = 'expand:a:rocket',
   COMPRESS = 'compress:a:rocket',
-  BRICK_CRASH = 'yeah:brick-level'
+  BRICK_CRASH = 'yeah:brick-level',
+  ROCKETMAX = 'take:rocket_max',
 }
