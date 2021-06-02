@@ -16,6 +16,7 @@ import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GamePropert
 import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { randomRange } from 'Components/Arcanoid/util/random';
 import isClient from 'Util/isClient';
+import { EXT_STORAGE } from 'Config/config';
 
 // синглтон объектов игры
 export default class GameFieldObjects {
@@ -38,7 +39,7 @@ export default class GameFieldObjects {
     if (isClient()) {
       this.audio = new AudioContext();
       for (let i = 1; i < 10; i += 1) {
-        fetch(`/sounds/0${i}.mp3`, { method: 'GET' }).then(async (response) => {
+        fetch(`${EXT_STORAGE}0${i}.mp3`, { method: 'GET', mode: 'no-cors' }).then(async (response) => {
           const buffer = await response.arrayBuffer();
           const audioBuffer = await this.audio.decodeAudioData(buffer);
           this.sounds.push(audioBuffer);
