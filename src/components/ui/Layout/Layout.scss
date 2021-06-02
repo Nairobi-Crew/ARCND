@@ -76,7 +76,7 @@
   &__link {
     font-weight: bold;
     font-size: 1.5em;
-    color: $link-color;
+    @include link-color;
     text-decoration: none;
     transition: font-size 0.2s ease-in-out;
     box-sizing: border-box;

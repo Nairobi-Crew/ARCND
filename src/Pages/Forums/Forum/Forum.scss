@@ -8,6 +8,7 @@
   padding: 1em;
   flex-direction: column;
   overflow: auto;
+  @include font-color;
   font-family: sans-serif;
 
   &_tools {

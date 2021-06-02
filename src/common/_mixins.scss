@@ -157,6 +157,17 @@ $tablet: 1200px;
   }
 }
 
+@mixin link-color {
+  & {
+    color: $link-color
+  }
+
+  .root_theme_white &,
+  &.root_theme_white{
+    color: $link-color-white;
+  }
+}
+
 @mixin shadow {
   & {
     box-shadow: $shadow;
