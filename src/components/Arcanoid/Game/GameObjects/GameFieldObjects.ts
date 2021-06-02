@@ -126,6 +126,9 @@ export default class GameFieldObjects {
               case 'fireball':
                 e = EVENTS.FIREBALL;
                 break;
+              case 'rocket_max':
+                e = EVENTS.ROCKETMAX;
+                break;
               default:
                 break;
             }
@@ -292,6 +295,9 @@ export default class GameFieldObjects {
         break;
       case 7:
         thingType = 'fireball';
+        break;
+      case 8:
+        thingType = 'rocket_max';
         break;
       default:
     }

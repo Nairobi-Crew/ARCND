@@ -6,7 +6,7 @@ import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GamePropert
 /**
  * Тип бонуса Клей, Пушка, Расширение/сжатие ракетки
  */
-export type ThingType = 'glue' | 'gun' | 'expand' | 'compress' | 'none' | 'split' | 'fireball';
+export type ThingType = 'glue' | 'gun' | 'expand' | 'compress' | 'none' | 'split' | 'fireball' | 'rocket_max';
 export interface IThingProps extends IBaseObjectProps {
   thingType: ThingType
   x: number

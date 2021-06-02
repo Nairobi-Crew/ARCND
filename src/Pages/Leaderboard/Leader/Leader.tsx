@@ -10,7 +10,7 @@ const Leader: LeaderProps = ({
       <span className="leader__index">{index}</span>
       {
         avatar
-          ? <img src={avatar} alt={name || 'UNKNOWN'} className="leader__avatar" />
+          ? <img src={`/api/v2/avatar${avatar}`} alt={name || 'UNKNOWN'} className="leader__avatar" />
           : <p>&nbsp;No avatar&nbsp;</p>
       }
       <h3 className="leader__name">{name}</h3>

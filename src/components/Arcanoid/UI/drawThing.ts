@@ -3,7 +3,7 @@ import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import {
   THING_COMPRESS_LETTER, THING_EXPAND_LETTER, THING_FIREBALL_LETTER,
   THING_FONT, THING_GLUE_LETTER, THING_GUN_LETTER,
-  THING_HEIGHT,
+  THING_HEIGHT, THING_ROCKETMAX_LETTER,
   THING_SPLIT_LETTER,
   THING_WIDTH,
 } from 'Components/Arcanoid/settings';
@@ -67,6 +67,11 @@ const drawThing = (
     case 'fireball':
       letter = THING_FIREBALL_LETTER;
       color1 = 'red';
+      color2 = 'gray';
+      break;
+    case 'rocket_max':
+      letter = THING_ROCKETMAX_LETTER;
+      color1 = 'lime';
       color2 = 'gray';
       break;
     default:

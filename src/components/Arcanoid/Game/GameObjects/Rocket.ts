@@ -3,7 +3,7 @@ import {
   EVENTS, GLUE_QTY,
   ROCKET_HEIGHT,
   ROCKET_MOVE_STEP,
-  ROCKET_WIDTH, SHOOT_QTY,
+  ROCKET_WIDTH, ROCKETMAX_TIME, SHOOT_QTY,
 } from 'Components/Arcanoid/settings';
 import drawRocket from 'Components/Arcanoid/UI/drawRocket';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
@@ -33,6 +33,12 @@ export class Rocket extends BaseObject {
   gun = -1; // выстрелов у пушки
 
   glue = 0; // количество клея
+
+  maxTime = 0;
+
+  saveWidth = 0;
+
+  saveX = 0;
 
   constructor(props: IRocketProps) {
     super(props);
@@ -85,6 +91,40 @@ export class Rocket extends BaseObject {
     });
   }
 
+  setMax() {
+    const { gameWindow } = gameProperties;
+    if (!gameWindow) {
+      return;
+    }
+    this.maxTime = Date.now() + ROCKETMAX_TIME;
+    this.saveState();
+    this.x = 0;
+    this.width = gameWindow.width;
+  }
+
+  saveState() {
+    this.saveWidth = this.width;
+    this.saveX = this.x;
+  }
+
+  restoreState() {
+    if (this.saveX === 0 || this.saveWidth === 0) {
+      return;
+    }
+    this.x = this.saveX;
+    this.width = this.saveWidth;
+  }
+
+  checkMax() {
+    if (this.maxTime === 0) {
+      return;
+    }
+    if (Date.now() > this.maxTime) {
+      this.restoreState();
+      this.maxTime = 0;
+    }
+  }
+
   /**
    * изменение ширины ракетки
    * @param {number} q - коеффициент
@@ -98,7 +138,7 @@ export class Rocket extends BaseObject {
    */
   render(): void {
     super.render();
-    super.render();
+    this.checkMax();
     const { ctx, gameWindow } = gameProperties;
     if (!ctx || !gameWindow) {
       return;
