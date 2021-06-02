@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SwitchProps } from 'UI/Switcher/types';
 import './Switcher.scss';
 
@@ -6,14 +6,9 @@ const Switcher: SwitchProps = ({
   firstValue, secondValue, name = '', onValueChanged, value = false,
   classes = [],
 }) => {
-  const [inputValue, setInputValue] = useState(value);
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
   const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     if (e.target) {
       const v = (e.target as HTMLInputElement).checked as boolean;
-      setInputValue(v);
       if (onValueChanged) {
         onValueChanged(v);
       }
@@ -27,7 +22,7 @@ const Switcher: SwitchProps = ({
           className="switch__input"
           type="checkbox"
           name={name}
-          checked={inputValue}
+          checked={value}
           onChange={onInputHandler}
         />
         <span className="switch__switcher" />
