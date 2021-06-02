@@ -18,12 +18,12 @@ const drawLevel = (w: GameWindowProps) => {
   ctx.textAlign = 'center';
   ctx.font = LEVEL_FONT;
   ctx.strokeText(
-    `${LEVEL_TEXT}${gameProperties.level}`,
+    `${LEVEL_TEXT}${gameProperties.level - 1}`,
     Math.round((w.left + w.width) / 2),
     Math.round(w.top / 2 + 2),
   );
   ctx.fillText(
-    `${LEVEL_TEXT}${gameProperties.level}`,
+    `${LEVEL_TEXT}${gameProperties.level - 1}`,
     Math.round((w.left + w.width) / 2),
     Math.round(w.top / 2 + 2),
   );

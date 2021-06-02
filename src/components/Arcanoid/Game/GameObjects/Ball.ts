@@ -1,7 +1,7 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import {
   BALL_SPEED_LIMIT,
-  EVENTS,
+  EVENTS, FIREBALL_TIME,
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
   ROCKET_PART_SPEED_MULT,
@@ -29,6 +29,10 @@ export class Ball extends BaseObject {
 
   speedY = 0;
 
+  fireball: boolean = false;
+
+  fireballFinish: number = 0;
+
   constructor(props: IBallProps, single = false) {
     super(props);
     if (single && Ball.instance) {
@@ -45,11 +49,28 @@ export class Ball extends BaseObject {
 
   render() { // отрисовка
     super.render();
+    this.checkFireball();
     const { ctx, gameWindow } = gameProperties;
     if (!ctx || !gameWindow) {
       return;
     }
-    drawBall(ctx, gameWindow, this.x, this.y, this.radius);
+    drawBall(ctx, gameWindow, this.x, this.y, this.radius, this.fireball);
+  }
+
+  checkFireball() {
+    if (this.fireballFinish === 0) {
+      return;
+    }
+    const now = Date.now();
+    if (now > this.fireballFinish) {
+      this.fireball = false;
+      this.fireballFinish = 0;
+    }
+  }
+
+  setFireball() {
+    this.fireballFinish = Date.now() + FIREBALL_TIME;
+    this.fireball = true;
   }
 
   changeXSpeed(speed: number, fromCurrent = false): void { // изменение скорости по оси Х

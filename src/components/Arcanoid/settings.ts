@@ -59,7 +59,7 @@ export const LEVEL_FILL_STYLE = '#ff0'; // стили, текст и шрифт 
 export const LEVEL_STROKE_STYLE = 'rgba(255, 255, 255, 0.5)';
 export const LEVEL_TEXT = 'Уровень:';
 export const LEVEL_FONT = '20px Arial';
-export const LEVEL_STRING_LENGTH = 80; // максимальная длина обрабатываемой строки
+export const LEVEL_STRING_LENGTH = 180; // максимальная длина обрабатываемой строки
 export const LEVEL_BLOCKS_WIDTH = 5; // % ширина блока
 export const LEVEL_BLOCKS_HEIGHT = 5; // % высота блока
 export const LEVEL_BLOCK_SPACE = 0.25; // расстояние меду блоками: 0,25 1/4 ширины блока
@@ -75,9 +75,11 @@ export const THING_GLUE_LETTER = 'К';
 export const THING_EXPAND_LETTER = 'Ш';
 export const THING_COMPRESS_LETTER = 'У';
 export const THING_SPLIT_LETTER = 'Т';
+export const THING_FIREBALL_LETTER = 'Ф';
 export const THING_TYPE_CLEAR: 'yes' | 'no' | 'random' | 'if_random' = 'random';
 export const SPLIT_ALL_BALLS = true;
 export const SPLIT_QTY = 3;
+export const FIREBALL_TIME = 10000;
 
 // выстрелы
 export const SHOOT_INTERVAL = 150; // минимальный интервал между выстрелами, мс
@@ -102,6 +104,7 @@ export enum EVENTS {
   GUN = 'take:a:gun',
   GLUE = 'take:a:glue',
   SPLIT = 'take:3balls',
+  FIREBALL = 'take:fireball',
   EXPAND = 'expand:a:rocket',
   COMPRESS = 'compress:a:rocket',
   BRICK_CRASH = 'yeah:brick-level'

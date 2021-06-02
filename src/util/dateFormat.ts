@@ -11,20 +11,37 @@ const dateFormat = (
     d = date as Date;
   }
   try {
-    const timeZone: number = d.getTimezoneOffset() / 60;
+    const formatter = Intl.DateTimeFormat('ru', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false,
+      // timeZone: 'UTC',
+    });
+    const parts = formatter.formatToParts(d);
+
+    const getPart = (part: string) => {
+      const found = parts.find(({ type }) => type === part);
+      return found ? found.value : '';
+    };
+
     // дни, начиная с 0, дополняем справа '0'
-    const day: string = (`0${d.getDate()}`).slice(-2);
+    const day: string = (`0${getPart('day')}`).slice(-2);
     // месяцы, начиная с 0, дополняем справа '0'
-    const month: string = (`0${d.getMonth() + 1}`).slice(-2);
+    const month: string = (`0${getPart('month')}`).slice(-2);
     // годы, дополняем справа '0'
-    const fullYear: string = (`0000${d.getFullYear()}`).slice(-4);
-    const year: string = (`00${d.getFullYear()}`).slice(-2);
+    const fullYear: string = (`0000${getPart('year')}`).slice(-4);
+    const year: string = (`00${getPart('year')}`).slice(-2);
     // часы, дополняем справа '0'
-    const hours: string = (`0${d.getHours() + timeZone}`).slice(-2);
+    const hours: string = (`0${getPart('hour')}`).slice(-2);
     // минуты, дополняем справа '0'
-    const minutes: string = (`0${d.getMinutes()}`).slice(-2);
+    const minutes: string = (`0${getPart('minute')}`).slice(-2);
     // секунды, дополняем справа '0'
-    const seconds: string = (`0${d.getSeconds()}`).slice(-2);
+    const seconds: string = (`0${getPart('second')}`).slice(-2);
     let result: string = format;
     // меняем форматную строку - dd  на дни
     result = replaceAll(result, 'dd', day);

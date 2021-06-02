@@ -3,7 +3,7 @@ import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { globalBus } from 'Util/EventBus';
-import { EVENTS } from 'Components/Arcanoid/settings';
+import { EVENTS, SCORES_BLOCK } from 'Components/Arcanoid/settings';
 
 export interface IBrickProps extends IBaseObjectProps {
   width: number
@@ -55,31 +55,56 @@ export class Brick extends BaseObject {
       return;
     }
 
+    const fireball = () => {
+      const incScore = SCORES_BLOCK * this.level;
+      gameProperties.score += incScore; // увеличение счета
+      this.level = 0; // уменьшение уровня блока
+      globalBus.emit(EVENTS.BLOCK, incScore, this);
+    };
+
     if (ball.speedX < 0) { // если шарик летит влево
       if (Math.abs(this.x + this.width - ball.x) < ball.radius) { // удар по грани
-        ball.invertXDirection(); // инвертирование направления
-        this.level -= 1; // уменьшение уровня блока
-        gameProperties.score += 2; // увеличение счета
-        globalBus.emit(EVENTS.BLOCK, 2, this);
+        if (ball.fireball) {
+          fireball();
+        } else {
+          ball.invertXDirection(); // инвертирование направления
+          this.level -= 1; // уменьшение уровня блока
+          gameProperties.score += SCORES_BLOCK; // увеличение счета
+          globalBus.emit(EVENTS.BLOCK, SCORES_BLOCK, this);
+        }
         return;
       }
     } else if (Math.abs(this.x - ball.x) < ball.radius) { // летит враво и удар по грани
-      ball.invertXDirection();
-      this.level -= 1;
-      gameProperties.score += 2;
-      globalBus.emit(EVENTS.BLOCK, 2, this);
+      if (ball.fireball) {
+        fireball();
+      } else {
+        ball.invertXDirection();
+        this.level -= 1;
+        gameProperties.score += SCORES_BLOCK;
+        globalBus.emit(EVENTS.BLOCK, SCORES_BLOCK, this);
+      }
       return;
     }
     if (ball.speedY < 0) { // летит вверх
       if (Math.abs(this.y + this.height - ball.y) < ball.radius) { // удар по грани
-        this.level -= 1;
-        globalBus.emit(EVENTS.BLOCK, 2, this);
-        ball.invertYDirection();
+        if (ball.fireball) {
+          fireball();
+        } else {
+          this.level -= 1;
+          gameProperties.score += SCORES_BLOCK;
+          globalBus.emit(EVENTS.BLOCK, SCORES_BLOCK, this);
+          ball.invertYDirection();
+        }
       }
-    } else if (Math.abs(this.y - ball.y) < ball.radius) { // вниз и удар по грания
-      this.level -= 1;
-      ball.invertYDirection();
-      globalBus.emit(EVENTS.BLOCK, 2, this);
+    } else if (Math.abs(this.y - ball.y) < ball.radius) { // вниз и удар по грани
+      if (ball.fireball) {
+        fireball();
+      } else {
+        this.level -= 1;
+        gameProperties.score += SCORES_BLOCK;
+        ball.invertYDirection();
+        globalBus.emit(EVENTS.BLOCK, SCORES_BLOCK, this);
+      }
     }
   }
 }

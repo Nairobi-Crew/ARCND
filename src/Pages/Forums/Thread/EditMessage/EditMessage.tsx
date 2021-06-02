@@ -88,12 +88,16 @@ const EditMessage: FC<EditMessageProps> = (
   const checkFields = (): boolean => {
     let isEmpty = false;
     if (header.trim() === '') {
-      setHeaderErrorMessage('Поле должно быть заполенео');
+      setHeaderErrorMessage('Поле должно быть заполнено');
       isEmpty = true;
+    } else {
+      setHeaderErrorMessage('');
     }
     if (message.trim() === '') {
-      setMessageErrorMessage('Поле должно быть заполенео');
+      setMessageErrorMessage('Поле должно быть заполнено');
       isEmpty = true;
+    } else {
+      setMessageErrorMessage('');
     }
     return !isEmpty;
   };
