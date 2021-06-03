@@ -23,9 +23,8 @@ import Theme from 'Server/routes/Theme';
 import { EAuthState } from 'Reducers/auth/types';
 import path from 'path';
 import Routes from 'Server/routes/Routes';
-import * as fs from 'fs';
-import { getFileByExt } from 'Server/utils';
 import Comment from 'Server/routes/Comment';
+import errorHandler from 'Server/middlewares/errorHandler';
 import { isDev } from '../../env.variables';
 import clientConfig from '../../webpack.client.js';
 
@@ -55,8 +54,8 @@ if (isDev) {
     log: console.log,
   }));
 }
-// const distPath = path.join(__dirname, './');
-// app.use(express.static(distPath));
+
+app.use(errorHandler);
 
 const routes: Routes[] = [];
 
@@ -110,16 +109,16 @@ app.get('*', async (req: Request, res: Response) => {
     </Provider>,
   );
 
-  let css = 'main.css';
-  let js = 'main.js';
-  const manifestFile = path.join(__dirname, '/', 'resources-manifest.json');
-  try {
-    const sw = JSON.parse(fs.readFileSync(manifestFile) as unknown as string);
-    js = getFileByExt(sw.TO_CACHE, '.js');
-    css = getFileByExt(sw.TO_CACHE, '.css');
-  } catch (e) {
-    console.log(`Cannot read manifest file ${manifestFile}`);
-  }
+  const css = 'main.css';
+  const js = 'main.js';
+  // const manifestFile = path.join(__dirname, '/', 'resources-manifest.json');
+  // try {
+  //   const sw = JSON.parse(fs.readFileSync(manifestFile) as unknown as string);
+  //   js = getFileByExt(sw.TO_CACHE, '.js');
+  //   css = getFileByExt(sw.TO_CACHE, '.css');
+  // } catch (e) {
+  //   console.log(`Cannot read manifest file ${manifestFile}`);
+  // }
 
   res.send(renderTemplate(
     {

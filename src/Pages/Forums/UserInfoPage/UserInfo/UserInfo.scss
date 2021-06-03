@@ -1,15 +1,9 @@
-@import "src/common/_vars";
+@import "src/common/common";
 
 .user_info {
   display: flex;
   flex-direction: column;
-  .link {
-    color: $link-color;
-  }
   &_field {
-    .link {
-      color: $link-color;
-    }
     display: flex;
     flex-direction: row;
     margin: 0.5em;
@@ -17,11 +11,11 @@
       flex: 2;
       margin: 0.5em;
       & a {
-        color: #bbf;
+        @include link-color;
         font-weight: bold;
 
         &:visited {
-          color: #bbf;
+          @include link-color;
         }
       }
     }
@@ -29,11 +23,11 @@
       margin: 0.5em;
       flex: 4;
       & a {
-        color: #bbf;
+        @include link-color;
         font-weight: bold;
 
         &:visited {
-          color: #bbf;
+          @include link-color;
         }
       }
     }

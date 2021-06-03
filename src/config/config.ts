@@ -22,3 +22,4 @@ export const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
 export const LEADER_URL = `${API_PATH}${LEADER_PATH}`;
 export const LEADER_SERVER_URL = `${SERVER_API_URL}${LEADER_PATH}`;
 export const EXT_STORAGE = 'https://storage.yandexcloud.net/arcnd/';
+export const AVATAR_MAX_SIZE = 0.2 * 1024 * 1024; // 2mb max upload size for avatar

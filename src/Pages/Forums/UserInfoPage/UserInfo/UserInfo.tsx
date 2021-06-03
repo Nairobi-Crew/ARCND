@@ -1,11 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import { UserInfoProps, TUserInfo } from 'Pages/Forums/UserInfoPage/UserInfo/types';
 import { FORUM_URL } from 'Config/config';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import './UserInfo.scss';
 
 const UserInfo: FC<UserInfoProps> = ({ id }) => {
   const [userInfo, setUserInfo] = useState<TUserInfo | undefined>(undefined);
+  const hist = useHistory();
 
   const fetchUserInfo = () => {
     fetch(`${FORUM_URL}/userinfo/${id}`, {
@@ -13,7 +14,11 @@ const UserInfo: FC<UserInfoProps> = ({ id }) => {
     }).then(async (response) => {
       const answer = await response.json();
       setUserInfo(answer);
-    }).catch(() => {
+    }).catch((e) => {
+      if (e.errorCode === 500) {
+        hist.push('/500');
+        return;
+      }
       setUserInfo({ user: undefined, topics: [], count: 0 });
     });
   };

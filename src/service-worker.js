@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals,no-console */
-const VERSION = 5000;
+const VERSION = 5002;
 const APP_NAME = 'Arcanoid-Game';
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 const CACHE_PREFER = [
@@ -39,6 +39,9 @@ const NETWORK_ONLY = [
   '/api/v2/user/profile/avatar',
   '/api/v2/leaderboard',
   '/api/v2/leaderboard/all',
+  '/api/v2/forum',
+  '/api/v2/forum/thread',
+  '/api/v2/forum/userinfo',
 ];
 self.addEventListener('install', async () => {
   try {

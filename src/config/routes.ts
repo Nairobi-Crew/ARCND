@@ -14,6 +14,7 @@ import Thread from 'Pages/Forums/Thread/index';
 import OAuth from 'Pages/OAuth/index';
 import { OAUTH_REDIRECT_PATH } from 'Config/config';
 import UserInfoPage from 'Pages/Forums/UserInfoPage/index';
+import Page500 from 'Pages/500/500';
 
 export interface ILink {
   title: string
@@ -123,6 +124,14 @@ const routes: ILink[] = [
     path: '/userinfo/:id',
     key: 'userinfo',
     component: UserInfoPage,
+  },
+  {
+    visibility: 'never',
+    exact: false,
+    title: '',
+    path: '/500',
+    component: Page500,
+    key: '503_found',
   },
   {
     visibility: 'always',

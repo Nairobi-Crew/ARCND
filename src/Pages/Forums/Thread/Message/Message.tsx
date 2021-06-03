@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 const Message: React.FC<MessageProps> = ({ message }) => {
   const auth = useAuthReselect();
   const [formReplyVisible, setFormReplyVisible] = useState(false);
+
   const onSaveHandler = () => {
     setFormReplyVisible(false);
   };
