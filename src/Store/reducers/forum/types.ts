@@ -10,6 +10,7 @@ export interface ITopicsItem {
   lastMessage?: string
   lastTitle?: string
   lastAuthor?: string
+  lastAuthorId?: number
   lastDate?: number
 }
 
@@ -36,17 +37,10 @@ export interface IForumReducer {
   messagesLoaded: number
 }
 
-export interface IMessageInfo {
-  id: number
-  date: string
-  title: string
-  author: string
-}
-
 export interface ITopicInfo {
   id: number
   title: string
-  messages: IMessageInfo[]
+  count: number
 }
 
 export enum EForumState {

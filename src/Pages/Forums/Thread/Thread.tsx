@@ -51,7 +51,7 @@ const Thread: React.FC = () => {
     <div className="thread" key={`${threadId}-${Date.now()}`}>
       <div className="thread_title">
         <div className="align-left">
-          <Button onClick={() => history.goBack()}>На форумы</Button>
+          <Button onClick={() => history.push('/forum')}>На форумы</Button>
         </div>
         <div className="align-right">
           <Button onClick={() => history.push('/')}>На главную</Button>

@@ -46,7 +46,7 @@ export const getUserData = (): ThunkAction<void, IAppState, unknown, Action<stri
     dispatch({
       type: EAuthAction.AUTH_LOGIN_ERROR,
       payload: {
-        reason: json?.reason || '',
+        reason: '',
         status: EAuthState.LOGIN_ERROR,
       },
     });
