@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { GameFieldObjectType, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
@@ -18,6 +19,11 @@ import { randomRange } from 'Components/Arcanoid/util/random';
 import isClient from 'Util/isClient';
 
 // синглтон объектов игры
+
+type SoundItem = {
+  audioBuffer: AudioBuffer
+  file: string
+}
 export default class GameFieldObjects {
   private static instance: GameFieldObjects;
 
@@ -27,7 +33,7 @@ export default class GameFieldObjects {
 
   audio: AudioContext;
 
-  sounds: AudioBuffer[] = [];
+  sounds: SoundItem[] = [];
 
   constructor() {
     if (GameFieldObjects.instance) {
@@ -35,15 +41,30 @@ export default class GameFieldObjects {
     }
 
     GameFieldObjects.instance = this;
-    if (isClient()) {
-      this.audio = new AudioContext();
-      for (let i = 1; i < 10; i += 1) {
-        fetch(`/sounds/0${i}.mp3`, { method: 'GET' }).then(async (response) => {
-          const buffer = await response.arrayBuffer();
-          const audioBuffer = await this.audio.decodeAudioData(buffer);
-          this.sounds.push(audioBuffer);
+    this.prepareSounds();
+  }
+
+  prepareSounds() {
+    if (!isClient()) {
+      return;
+    }
+    this.audio = new AudioContext();
+    for (let i = 1; i < 10; i += 1) {
+      const mp3 = `/sounds/0${i}.mp3`;
+      fetch(mp3, { method: 'GET', mode: 'no-cors', headers: { 'Content-type': 'audio/mp3' } }).then(async (response) => {
+        const file = response.url.split('/').pop() as string;
+        response.arrayBuffer().then((buffer) => {
+          this.audio.decodeAudioData(buffer).then((audioBuffer) => {
+            this.sounds.push({ audioBuffer, file });
+          }).catch((error) => {
+            console.log('Error decode audio', error);
+          });
+        }).catch((error) => {
+          console.log('Error get array buffer', error);
         });
-      }
+      }).catch((error) => {
+        console.log('Error fetch mp3', { mp3, error });
+      });
     }
   }
 
@@ -51,11 +72,13 @@ export default class GameFieldObjects {
     if (n < 0 || n > 9) {
       return;
     }
-    if (this.sounds[n]) {
-      const sound = this.sounds[n];
+    const file = `0${n}.mp3`;
+    const found = this.sounds.find((item) => item.file === file);
+    if (found) {
+      const sound = found;
       const player = this.audio.createBufferSource();
       player.connect(this.audio.destination);
-      player.buffer = sound;
+      player.buffer = sound.audioBuffer;
       player.start();
     }
   }

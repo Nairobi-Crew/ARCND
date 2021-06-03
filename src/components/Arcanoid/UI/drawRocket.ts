@@ -1,5 +1,6 @@
 import { GUN_HEIGHT, GUN_WIDTH, ROCKET_HEIGHT } from 'Components/Arcanoid/settings';
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
+import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 
 /**
  * Рисование ракетки
@@ -56,6 +57,12 @@ const drawRocket = (
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1;
     ctx.strokeRect(startGunX, startGunY, GUN_WIDTH, GUN_HEIGHT);
+  }
+  if (rocket.maxTime !== 0) {
+    const seconds = (Date.now() - rocket.maxTime) / 1000;
+    const text = seconds.toFixed(1);
+    ctx.textAlign = 'center';
+    ctx.fillText(text, rocket.x + Math.round(width / 2), rocket.y);
   }
   ctx.closePath();
 };

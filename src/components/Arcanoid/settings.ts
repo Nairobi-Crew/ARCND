@@ -6,6 +6,9 @@ export const NO_SHADOWS = false;
 // отступы на канвас
 
 export const BALL_SPEED_LIMIT = 2;
+export const BALL_MIN_SPEED = 4;
+export const BALL_MAX_SPEED = 20;
+export const IDLE_TIME = 5000;
 
 export const MARGIN_LEFT = 2;
 export const MARGIN_RIGHT = 2;
@@ -25,12 +28,12 @@ export const HELP_TEXT = 'Стрелки влево-вправо - переме�
 export const HELP_FONT = '18px Arial';
 
 export const SOUND_SPLIT = 9;
-export const SOUND_BLOCK = 1;
-export const SOUND_WALL = 6;
-export const SOUND_ROCKET = 3;
+export const SOUND_BLOCK = 3;
+export const SOUND_WALL = 7;
+export const SOUND_ROCKET = 6;
 export const SOUND_SHOOT = 2;
 export const SOUND_LIVES = 5;
-export const SOUND_GOAL = 7;
+export const SOUND_GOAL = 1;
 export const SOUND_GAME_OVER = 6;
 export const SOUND_BLOCK_SHOOT = 2;
 

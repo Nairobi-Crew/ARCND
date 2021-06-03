@@ -1,9 +1,10 @@
 import { GameWindowProps } from 'Components/Arcanoid/Game/types';
 import isClient from 'Util/isClient';
-import { NO_SHADOWS, ROCKET_WIDTH } from 'Components/Arcanoid/settings';
+import { IDLE_TIME, NO_SHADOWS, ROCKET_WIDTH } from 'Components/Arcanoid/settings';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import levels from 'Components/Arcanoid/levels/levelData';
+import { isDev } from '../../../../../env.variables';
 
 export interface IGameProperties {
   moved: boolean
@@ -47,6 +48,10 @@ export class GameProperties {
 
   debug: string = '';
 
+  lastEvent = 0;
+
+  showDebug: boolean = isDev;
+
   constructor(props: IGameProperties) {
     if (GameProperties.instance) {
       return GameProperties.instance;
@@ -69,6 +74,17 @@ export class GameProperties {
         this.useShadows = !isFirefox;
       }
     }
+  }
+
+  setLastEvent() {
+    this.lastEvent = Date.now();
+  }
+
+  isIdle(): boolean {
+    if (this.lastEvent === 0) {
+      return false;
+    }
+    return (Date.now() - this.lastEvent) > IDLE_TIME;
   }
 
   newLevel(level: number): Promise<void> {
