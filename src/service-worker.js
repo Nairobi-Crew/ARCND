@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals,no-console */
-const VERSION = 5000;
+const VERSION = 5001;
 const APP_NAME = 'Arcanoid-Game';
 const CACHE_NAME = `${APP_NAME}-${VERSION}`;
 const BUILD_FOLDER = '';
