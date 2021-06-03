@@ -9,14 +9,15 @@ import {
 import { UserModel } from 'Server/db/models/user';
 import { cloneObject } from 'Util/cloneObject';
 import { EHttpStatusCodes } from 'Server/types';
-import { IMessagesItem, ITopicsItem } from 'Reducers/forum/types';
+import { IMessagesItem, ITopicInfo, ITopicsItem } from 'Reducers/forum/types';
 import { getDisplayName } from 'Store/util';
 import { bodyChecker } from 'Server/middlewares/bodyChecker';
 import { escapedString } from 'Util/escapedString';
 import Auth from 'Server/routes/Auth';
 import { IUser } from 'Store/types';
 import { toNumber } from 'Util/toNumber';
-import { TUserInfo } from 'Pages/Forums/UserInfo/types';
+import { TUserInfo } from 'Pages/Forums/UserInfoPage/UserInfo/types';
+import { Sequelize } from 'sequelize-typescript';
 
 export default class Forum extends Routes {
   constructor(app: express.Application) {
@@ -181,6 +182,9 @@ export default class Forum extends Routes {
       },
     );
 
+    /**
+     * Получение информации о пользователе и сообщениях
+     */
     this.app.get(
       `${FORUM_URL}/userinfo/:id`,
       [
@@ -191,6 +195,7 @@ export default class Forum extends Routes {
         const userInfo: TUserInfo = {
           user: undefined,
           topics: [],
+          count: 0,
         };
 
         const returnRes = () => {
@@ -232,27 +237,36 @@ export default class Forum extends Routes {
 
         userInfo.user = user;
         try {
-          const topicsModel = MessageModel.findAll({
+          const messagesModel = await MessageModel.findAll({
+            attributes: [[Sequelize.fn('count', Sequelize.col('topic.id')), 'count']],
+            group: ['topic.id', 'topic.title'],
+            raw: true,
             where: {
               userId: id,
             },
-            include: {
-              model: TopicModel,
-              required: false,
-            },
+            include: [
+              {
+                model: TopicModel,
+                attributes: ['title', 'id'],
+              },
+            ],
           });
-          if (topicsModel) {
-            const topics = cloneObject(topicsModel);
-            topics.forEach((topic: { id: number; title: string; }) => {
-              userInfo.topics.push({
-                id: topic.id,
-                title: topic.title,
-                messages: [],
-              });
+          if (messagesModel) {
+            const messages = cloneObject(messagesModel);
+            console.log('Messages', messages);
+            let count = 0;
+            const msg: ITopicInfo[] = [];
+            messages.forEach((message: { [x: string]: any; count: any; }) => {
+              count += Number(message.count);
+              const title = message['topic.title'];
+              msg.push({ id: Number(message['topic.id']), title, count: Number(message.count) });
             });
+            userInfo.count = count;
+            userInfo.topics = msg;
           }
         } catch (e) {
           //
+          console.log('Error m', e);
         }
         returnRes();
       },

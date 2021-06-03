@@ -1,0 +1,20 @@
+@import "src/common/vars";
+
+.user_info {
+  display: flex;
+  flex-direction: column;
+  &_field {
+    display: flex;
+    flex-direction: row;
+    &_name {
+      flex: 2;
+    }
+    &_value {
+      flex: 4;
+    }
+  }
+  &_list {
+    display: flex;
+    flex-direction: row;
+  }
+}
