@@ -7,6 +7,7 @@ import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect } from 'Store/hooks';
 import EditMessage from 'Pages/Forums/Thread/EditMessage/index';
 import Emoji from 'UI/Emoji';
+import { Link } from 'react-router-dom';
 
 const Message: React.FC<MessageProps> = ({ message }) => {
   const auth = useAuthReselect();
@@ -25,7 +26,9 @@ const Message: React.FC<MessageProps> = ({ message }) => {
           {message.header}
         </div>
         <div className="message__header_author">
-          {message.author}
+          <Link to={`/userinfo/${message.authorId}`}>
+            {message.author}
+          </Link>
         </div>
         <div className="message__header_time">
           {dateFormat(message.time)}
