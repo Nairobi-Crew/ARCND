@@ -96,8 +96,10 @@ export class Rocket extends BaseObject {
     if (!gameWindow) {
       return;
     }
+    if (this.maxTime === 0) {
+      this.saveState();
+    }
     this.maxTime = Date.now() + ROCKETMAX_TIME;
-    this.saveState();
     this.x = 0;
     this.width = gameWindow.width;
   }
@@ -111,8 +113,15 @@ export class Rocket extends BaseObject {
     if (this.saveX === 0 || this.saveWidth === 0) {
       return;
     }
-    this.x = this.saveX;
+
+    const balls = gameObjects.getList('ball');
     this.width = this.saveWidth;
+    if (balls && balls[0]) {
+      const ball = balls[0];
+      this.x = ball.object.x - Math.round(this.width / 2);
+    } else {
+      this.x = this.saveX;
+    }
   }
 
   checkMax() {

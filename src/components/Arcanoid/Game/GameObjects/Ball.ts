@@ -1,5 +1,7 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import {
+  BALL_MAX_SPEED,
+  BALL_MIN_SPEED,
   BALL_SPEED_LIMIT,
   EVENTS, FIREBALL_TIME,
   ROCKET_HEIGHT,
@@ -50,11 +52,16 @@ export class Ball extends BaseObject {
   render() { // отрисовка
     super.render();
     this.checkFireball();
+    this.checkMinSpeed();
     const { ctx, gameWindow } = gameProperties;
     if (!ctx || !gameWindow) {
       return;
     }
-    drawBall(ctx, gameWindow, this.x, this.y, this.radius, this.fireball);
+    drawBall(ctx, gameWindow, this.x, this.y, this.radius, this.fireball, this.speed());
+  }
+
+  speed(): number {
+    return Math.max(Math.abs(this.speedX), Math.abs(this.speedY));
   }
 
   checkFireball() {
@@ -65,6 +72,23 @@ export class Ball extends BaseObject {
     if (now > this.fireballFinish) {
       this.fireball = false;
       this.fireballFinish = 0;
+    }
+  }
+
+  checkMinSpeed() {
+    const absX = Math.abs(this.speedX);
+    const absY = Math.abs(this.speedY);
+    const min = Math.min(absX, absY);
+    if (min < BALL_MIN_SPEED) {
+      this.doubleSpeed();
+    }
+  }
+
+  doubleSpeed() {
+    const k = 1.2;
+    if (this.speed() * k <= BALL_MAX_SPEED) {
+      this.speedX *= k;
+      this.speedY *= k;
     }
   }
 

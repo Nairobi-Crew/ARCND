@@ -10,6 +10,7 @@ import { EAuthState } from 'Reducers/auth/types';
 import { LayoutProps } from 'UI/Layout/types';
 import sendComment from 'Util/sendComment';
 import Textarea from 'UI/Textarea';
+import OAuth from 'Pages/OAuth/index';
 
 const Layout: LayoutProps = ({ children }) => {
   const auth = useAuthReselect();
@@ -36,6 +37,7 @@ const Layout: LayoutProps = ({ children }) => {
   // TODO: поправить цвета ссылок в светлой теме
   return (
     <div className={`layout${path.pathname === '/game' ? ' layout_fullscreen' : ''} root${theme && ` root_theme_${theme.theme.color}`}`}>
+      <OAuth />
       <div className="layout__main-content">
         <nav className={`layout__nav${navOpened ? ' layout__nav_opened' : ''}`}>
           {
