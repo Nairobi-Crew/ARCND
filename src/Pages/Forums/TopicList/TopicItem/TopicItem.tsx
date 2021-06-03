@@ -6,11 +6,12 @@ import './TopicItem.scss';
 
 const TopicItem: TopicProps = ({ topic }) => {
   const topicLink = `/thread/${topic.id}`;
+  const userLink = `/userinfo/${topic.authorId}`;
   return (
     <div className="topic__item">
       <div className="topic__item_header">
         <div className="topic__item_header_description"><Link to={topicLink}>{topic.description}</Link></div>
-        <div className="topic__item_header_created"><Link to={topicLink}>{topic.author}</Link></div>
+        <div className="topic__item_header_created"><Link to={userLink}>{topic.author}</Link></div>
         <div className="topic__item_header_time"><Link to={topicLink}>{dateFormat(topic.createTime)}</Link></div>
         <div className="topic__item_header_count"><Link to={topicLink}>{topic.messageCount}</Link></div>
       </div>
@@ -18,22 +19,28 @@ const TopicItem: TopicProps = ({ topic }) => {
         {
           topic.messageCount > 0
             ? (
-              <Link to={topicLink}>
-                {dateFormat(topic.lastDate as number)}
-                {' '}
-                <b>
-                  {topic.lastAuthor}
-                </b>
+              <>
+                <Link to={topicLink}>
+                  {dateFormat(topic.lastDate as number)}
+                  {' '}
+                </Link>
+                <Link to={topic.lastAuthorId?.toString() || '0'}>
+                  <b>
+                    {topic.lastAuthor}
+                  </b>
+                </Link>
                 {' '}
                 написал:
                 {' '}
-                <i>
-                  {topic.lastTitle}
-                  ,
-                  {' '}
-                  {topic.lastMessage}
-                </i>
-              </Link>
+                <Link to={topicLink}>
+                  <i>
+                    {topic.lastTitle}
+                    ,
+                    {' '}
+                    {topic.lastMessage}
+                  </i>
+                </Link>
+              </>
             )
             : null
         }

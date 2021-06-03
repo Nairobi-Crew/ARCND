@@ -13,7 +13,7 @@ import NewTopic from 'Pages/Forums/NewTopic/index';
 import Thread from 'Pages/Forums/Thread/index';
 import OAuth from 'Pages/OAuth/index';
 import { OAUTH_REDIRECT_PATH } from 'Config/config';
-import UserInfo from 'Pages/Forums/UserInfo/index';
+import UserInfoPage from 'Pages/Forums/UserInfoPage/index';
 
 export interface ILink {
   title: string
@@ -120,9 +120,9 @@ const routes: ILink[] = [
     visibility: 'never',
     exact: false,
     title: '',
-    path: 'userinfo/:id',
+    path: '/userinfo/:id',
     key: 'userinfo',
-    component: UserInfo,
+    component: UserInfoPage,
   },
   {
     visibility: 'always',
