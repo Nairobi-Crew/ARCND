@@ -2,7 +2,7 @@
 
 html,
 body, {
-  //@include font-color;
+  @include font-color;
   //@include background-color;
   min-width: 360px;
   box-sizing: border-box;
@@ -11,7 +11,6 @@ body, {
 *,
 ::after,
 ::before {
-  //@include font-color;
   list-style: none;
   box-sizing: inherit;
   margin: 0;
