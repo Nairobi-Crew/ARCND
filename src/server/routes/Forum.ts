@@ -16,6 +16,7 @@ import { escapedString } from 'Util/escapedString';
 import Auth from 'Server/routes/Auth';
 import { IUser } from 'Store/types';
 import { toNumber } from 'Util/toNumber';
+import { TUserInfo } from 'Pages/Forums/UserInfo/types';
 
 export default class Forum extends Routes {
   constructor(app: express.Application) {
@@ -177,6 +178,83 @@ export default class Forum extends Routes {
         } catch (e) {
           res.status(EHttpStatusCodes.BAD_REQUEST).send({ state: 0, messages: [], error: e });
         }
+      },
+    );
+
+    this.app.get(
+      `${FORUM_URL}/userinfo/:id`,
+      [
+        logger({ needParams: true }),
+        isLogged(),
+      ],
+      async (req: Request, res: Response) => {
+        const userInfo: TUserInfo = {
+          user: undefined,
+          topics: [],
+        };
+
+        const returnRes = () => {
+          res.status(EHttpStatusCodes.OK).send(JSON.stringify(userInfo));
+        };
+
+        let id;
+        try {
+          id = parseInt(req.params.id, 10);
+        } catch (_e) {
+          id = 0;
+        }
+        res.set({
+          'Content-type': 'application/json',
+        });
+        if (id === 0) {
+          returnRes();
+          return;
+        }
+
+        let user;
+        try {
+          const userModel = await UserModel.findOne({
+            where: {
+              id,
+            },
+          });
+          if (userModel) {
+            user = cloneObject(userModel) as IUser;
+          }
+        } catch (e) {
+          //
+        }
+
+        if (!user) {
+          returnRes();
+          return;
+        }
+
+        userInfo.user = user;
+        try {
+          const topicsModel = MessageModel.findAll({
+            where: {
+              userId: id,
+            },
+            include: {
+              model: TopicModel,
+              required: false,
+            },
+          });
+          if (topicsModel) {
+            const topics = cloneObject(topicsModel);
+            topics.forEach((topic: { id: number; title: string; }) => {
+              userInfo.topics.push({
+                id: topic.id,
+                title: topic.title,
+                messages: [],
+              });
+            });
+          }
+        } catch (e) {
+          //
+        }
+        returnRes();
       },
     );
 

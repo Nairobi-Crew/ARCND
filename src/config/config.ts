@@ -21,3 +21,4 @@ export const USER_SERVER_URL = `${SERVER_API_URL}${USER_PATH}`;
 export const FORUM_URL = `${API_PATH}${FORUM_PATH}`;
 export const LEADER_URL = `${API_PATH}${LEADER_PATH}`;
 export const LEADER_SERVER_URL = `${SERVER_API_URL}${LEADER_PATH}`;
+export const EXT_STORAGE = 'https://storage.yandexcloud.net/arcnd/';

@@ -1,5 +1,4 @@
 import { generateCsp } from 'Server/csp/csp';
-import { isDev } from '../../env.variables';
 
 interface TemplateParams {
   cssPath: string;
@@ -11,7 +10,7 @@ interface TemplateParams {
 function renderTemplate({
   cssPath, jsPath, content = '', data = '',
 }: TemplateParams) {
-  const sw = isDev ? '' : `        <script>
+  const sw = `        <script>
         function startServiceWorker() {
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
