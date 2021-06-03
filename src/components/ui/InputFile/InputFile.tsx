@@ -11,7 +11,7 @@ const InputFile: InputFileProps = ({
       <input
         className="input__input"
         type="file"
-        accept="images/png"
+        accept=".png"
         onChange={(e) => {
           if (onChange) {
             onChange(e);

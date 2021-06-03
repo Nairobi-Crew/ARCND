@@ -5,13 +5,16 @@ import Button from 'UI/Button/index';
 import Form from 'UI/Form/index';
 import { IUser } from 'Store/types';
 import { useDispatch } from 'react-redux';
-import { changeProfile } from 'Reducers/user/actions';
+import { changeProfile, clearLastAction } from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
-import {useAuthReselect, useThemeReselect} from 'Store/hooks';
+import { useAuthReselect, useThemeReselect, useUserReselect } from 'Store/hooks';
 import Switcher from 'UI/Switcher';
 import { setUserTheme } from 'Reducers/theme/actions';
 import InputFile from 'UI/InputFile';
+import { EUserAction } from 'Reducers/user/types';
+import { useHistory } from 'react-router-dom';
+import { AVATAR_MAX_SIZE } from 'Config/config';
 import emailIsValid from '../../util/emailValidator';
 import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
@@ -32,7 +35,10 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
   const [avatar, setAvatar] = useState<File>();
+  const [avatarMessage, setAvatatMessage] = useState('');
   const auth = useAuthReselect();
+  const hist = useHistory();
+  const userState = useUserReselect();
   const dispatch = useDispatch();
 
   const saveProfileButtonHandler = () => {
@@ -70,7 +76,11 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   const changeAvatarHandler = (files: FileList | null) => {
     if (files && files[0]) {
-      setAvatar(files[0]);
+      if (files[0].size > AVATAR_MAX_SIZE) {
+        setAvatatMessage(`Огромный аватар. Нельзя больше {${Math.round(AVATAR_MAX_SIZE / 1024)} кб`);
+      } else {
+        setAvatar(files[0]);
+      }
     }
   };
 
@@ -80,8 +90,8 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   }, [auth]);
 
   useEffect(() => {
-    setTheme(theme?.theme.color === 'white')
-  },[theme])
+    setTheme(theme?.theme.color === 'white');
+  }, [theme]);
 
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);
@@ -93,6 +103,14 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (userState.state === EUserAction.USER_CHANGE_PROFILE) {
+      dispatch(clearLastAction());
+      hist.push('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userState]);
 
   // TODO: не работает свитч на тему при старте. Всегда встает на темную тему
   return (
@@ -170,6 +188,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
           label="Avatar"
           onChange={(e) => changeAvatarHandler(e.target?.files)}
         />
+        {avatarMessage}
         <Button onClick={saveProfileButtonHandler} disabled={!formValid}>Сохранить</Button>
       </Form>
     </>

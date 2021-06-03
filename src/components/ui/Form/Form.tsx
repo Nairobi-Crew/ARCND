@@ -36,8 +36,10 @@ const Form: FormProps = ({
       for (let i = 0; i < elems.length; i++) {
         if (elems[i].tagName === 'INPUT') {
           const elem = elems[i] as HTMLInputElement;
-          const value = inputs?.find((input) => input.name === elem.name)?.value ?? '';
-          setNativeInputValue(elem, value);
+          if (elem.type !== 'file') {
+            const value = inputs?.find((input) => input.name === elem.name)?.value ?? '';
+            setNativeInputValue(elem, value);
+          }
         }
       }
     }
