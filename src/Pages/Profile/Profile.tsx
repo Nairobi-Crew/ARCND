@@ -65,8 +65,8 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
 
   const changeSwitcherHandler = (value:boolean) => {
     const userTheme = value ? 'white' : 'dark';
-    dispatch(setUserTheme(userTheme));
     setTheme(value);
+    dispatch(setUserTheme(userTheme));
   };
 
   const changeAvatarHandler = (files: FileList | null) => {
@@ -101,6 +101,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
         name="profile"
       >
         <Switcher
+          name="theme"
           firstValue="Темная тема"
           secondValue="Светлая тема"
           onValueChanged={changeSwitcherHandler}
