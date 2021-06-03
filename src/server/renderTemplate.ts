@@ -1,4 +1,5 @@
 import { generateCsp } from 'Server/csp/csp';
+import { APP_TITLE } from 'Config/config';
 
 interface TemplateParams {
   cssPath: string;
@@ -45,7 +46,7 @@ startServiceWorker();
         ${useCSP}
         <link rel="stylesheet" href="/${cssPath}" />
 
-        <title>Sprint 7</title>
+        <title>${APP_TITLE}</title>
       </head>
       <body>
         <noscript>

@@ -1,20 +1,49 @@
-@import "src/common/vars";
+@import "src/common/_vars";
 
 .user_info {
   display: flex;
   flex-direction: column;
+  .link {
+    color: $link-color;
+  }
   &_field {
+    .link {
+      color: $link-color;
+    }
     display: flex;
     flex-direction: row;
+    margin: 0.5em;
     &_name {
       flex: 2;
+      margin: 0.5em;
+      & a {
+        color: #bbf;
+        font-weight: bold;
+
+        &:visited {
+          color: #bbf;
+        }
+      }
     }
     &_value {
+      margin: 0.5em;
       flex: 4;
+      & a {
+        color: #bbf;
+        font-weight: bold;
+
+        &:visited {
+          color: #bbf;
+        }
+      }
     }
   }
   &_list {
     display: flex;
     flex-direction: row;
   }
+}
+
+.center {
+  text-align: center;
 }

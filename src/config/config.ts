@@ -1,5 +1,5 @@
 // import { isDev } from '../../env.variables';
-
+export const APP_TITLE = 'ARCND';
 export const SITE_URL = 'https://arcnd.ovb-tech.com';
 // export const OAUTH_REDIRECT = isDev ? 'http://localhost:3000' : SITE_URL;
 export const OAUTH_REDIRECT_PATH = '';
