@@ -36,6 +36,19 @@ export interface IForumReducer {
   messagesLoaded: number
 }
 
+export interface IMessageInfo {
+  id: number
+  date: string
+  title: string
+  author: string
+}
+
+export interface ITopicInfo {
+  id: number
+  title: string
+  messages: IMessageInfo[]
+}
+
 export enum EForumState {
   UNKNOWN = 'FORUM:UNKNOWN',
   FETCH_START = 'FORUM:FETCH_START',

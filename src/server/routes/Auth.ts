@@ -73,7 +73,7 @@ export default class Auth extends Routes {
     this.app.get(`${AUTH_URL}${user}`, [logger({})], async (req: Request, res: Response) => {
       try {
         // eslint-disable-next-line no-shadow
-        const user = await Auth.getUser(req);
+        const user = await Auth.getUser(req, res);
         // const Cookie = Cookies.getCookies(req);
         // const answer = await Fetch.get(`${AUTH_SERVER_URL}${user}`, { headers: { Cookie } });
         // const result = await answer.json();
@@ -114,13 +114,19 @@ export default class Auth extends Routes {
     });
   }
 
-  static async getUser(req: Request): Promise<IUser | null> {
+  static async getUser(req: Request, res: Response | undefined = undefined): Promise<IUser | null> {
     const Cookie = Cookies.getCookies(req);
     let user: IUser;
     try {
       const answer = await Fetch.get(`${AUTH_SERVER_URL}/user`, { headers: { Cookie } });
       user = await answer.json() as IUser;
     } catch (e) {
+      if (res) {
+        // eslint-disable-next-line no-console
+        console.error('Error get user. Cookie clear');
+        res.clearCookie('authCookie');
+        res.clearCookie('uuid');
+      }
       return null;
     }
     try {

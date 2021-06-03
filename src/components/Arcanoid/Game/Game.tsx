@@ -95,7 +95,11 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       if (!canvas) {
         return false;
       }
-      canvas.onclick = () => canvas.requestPointerLock();
+      canvas.onclick = () => {
+        // gameObjects.audio = new AudioContext();
+        // gameObjects.prepareSounds();
+        canvas.requestPointerLock();
+      };
       const { width, height } = canvas;
       const firstRender = ((width || 300) + (height || 150)) === 450;
       canvas.width = window.innerWidth;
@@ -255,6 +259,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       return;
     }
 
+    if (!gameProperties.gameStarted) {
+      gameProperties.lastEvent = 0;
+    }
+
     // функция проверки шарика на столкновение с кирпичами
     // и уменьшение уровня кирпича на 1 при столкновении
     const bricks = gameObjects.getList('brick');
@@ -373,6 +381,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       } else {
         gameObjects.playSound(SOUND_GOAL);
       }
+      gameProperties.setLastEvent();
     };
 
     const onBallReturn = () => { // если шарик отбит ракеткой
@@ -389,21 +398,25 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       dispatch(incScore(score));
       gameObjects.crashBlock(block);
       gameObjects.playSound(SOUND_BLOCK);
+      gameProperties.setLastEvent();
     };
 
     const onBlockShoot = () => {
       gameProperties.score += SCORES_BLOCK;
       dispatch(incScore(SCORES_BLOCK));
       gameObjects.playSound(SOUND_BLOCK_SHOOT);
+      gameProperties.setLastEvent();
     };
 
     const onFireball = () => {
       const balls = gameObjects.getList('ball');
       balls.forEach((ball) => (ball.object as Ball).setFireball());
+      gameProperties.setLastEvent();
     };
 
     const onRocketMax = () => {
       rocket.setMax();
+      gameProperties.setLastEvent();
     };
 
     const onSplitBall = () => {
@@ -438,6 +451,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       } else {
         splitBall(balls[0].object as Ball);
       }
+      gameProperties.setLastEvent();
     };
     dispatch(getUserData());
 

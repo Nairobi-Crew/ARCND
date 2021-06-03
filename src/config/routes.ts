@@ -13,6 +13,7 @@ import NewTopic from 'Pages/Forums/NewTopic/index';
 import Thread from 'Pages/Forums/Thread/index';
 import OAuth from 'Pages/OAuth/index';
 import { OAUTH_REDIRECT_PATH } from 'Config/config';
+import UserInfo from 'Pages/Forums/UserInfo/index';
 
 export interface ILink {
   title: string
@@ -114,6 +115,14 @@ const routes: ILink[] = [
     path: '/thread/:threadId',
     key: 'thread',
     component: Thread,
+  },
+  {
+    visibility: 'never',
+    exact: false,
+    title: '',
+    path: 'userinfo/:id',
+    key: 'userinfo',
+    component: UserInfo,
   },
   {
     visibility: 'always',
