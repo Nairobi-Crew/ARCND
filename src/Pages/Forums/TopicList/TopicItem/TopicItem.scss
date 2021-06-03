@@ -1,14 +1,11 @@
-@import "src/common/vars";
+@import "src/common/common";
 
-$background: #433b6a;
-$background-even: #433b6a;
-$background-odd: #4d4574;
 
 .topic__item {
   font-family: sans-serif;
 
   &:nth-child(odd) {
-    background-color: $background-odd;
+    @include background-odd;
   }
 
   width: 100%;
@@ -17,11 +14,11 @@ $background-odd: #4d4574;
   font-size: 1em;
 
   & a {
-    color: #bbf;
+    @include link-color;
     font-weight: bold;
 
     &:visited {
-      color: #bbf;
+      @include link-color;
     }
   }
 

@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { changeProfile } from 'Reducers/user/actions';
 import { EAuthState } from 'Reducers/auth/types';
 import { getUserData } from 'Reducers/auth/actions';
-import { useAuthReselect } from 'Store/hooks';
+import {useAuthReselect, useThemeReselect} from 'Store/hooks';
 import Switcher from 'UI/Switcher';
 import { setUserTheme } from 'Reducers/theme/actions';
 import InputFile from 'UI/InputFile';
@@ -17,6 +17,7 @@ import phoneIsValid from '../../util/phoneValidator';
 import loginIsValid from '../../util/loginValidator';
 
 const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
+  const theme = useThemeReselect();
   const [firstNameField, setFirstName] = useState('');
   const [secondNameField, setSecondName] = useState('');
   const [displayNameField, setDisplayName] = useState('');
@@ -59,8 +60,6 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     setEmail(auth.user.email);
     setPhone(auth.user.phone);
     setAvatarField(auth.user.avatar || '');
-    const sw = auth.user.theme === 'white';
-    setTheme(sw);
   };
 
   const changeSwitcherHandler = (value:boolean) => {
@@ -79,6 +78,10 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     getUserInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
+
+  useEffect(() => {
+    setTheme(theme?.theme.color === 'white')
+  },[theme])
 
   useEffect(() => {
     setFormValid(`${emailMessage}${phoneMessage}${loginMessage}${firstNameMessage}`.length === 0);

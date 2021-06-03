@@ -189,3 +189,23 @@ $tablet: 1200px;
     box-shadow: $shadow-small-white;
   }
 }
+
+@mixin background {
+  & {
+    background: #433b6a
+  }
+  .root_theme_white &,
+  &.root_theme_white{
+    background: rgba(200, 200, 255, 1);
+  }
+}
+
+@mixin background-odd {
+  & {
+    background: #4d4574
+  }
+  .root_theme_white &,
+  &.root_theme_white{
+    background: #b2a2f5;
+  }
+}

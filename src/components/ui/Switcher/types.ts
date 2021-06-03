@@ -4,7 +4,7 @@ export type TonValueChanged = (value: boolean) => void;
 
 export type OwnSwitchProps = {
   name?: string
-  value?: boolean
+  checked?: boolean
   firstValue? : string
   secondValue?: string
   classes?: string[]
