@@ -76,7 +76,7 @@ routes.push(oauthRoute);
 routes.push(commentRoute);
 routes.push(themeRoute);
 
-app.get('*.(js|css|json|png)$', (req, res) => {
+app.get('*.(js|css|json|png|mp3)$', (req, res) => {
   res.sendFile(path.join(__dirname, req.path));
 });
 
