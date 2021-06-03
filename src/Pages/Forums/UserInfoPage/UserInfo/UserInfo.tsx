@@ -19,10 +19,6 @@ const UserInfo: FC<UserInfoProps> = ({ id }) => {
   };
 
   useEffect(() => {
-
-  }, [userInfo]);
-
-  useEffect(() => {
     if (id !== 0) {
       fetchUserInfo();
     }
@@ -64,36 +60,38 @@ const UserInfo: FC<UserInfoProps> = ({ id }) => {
         </div>
       </div>
       <div className="user_info_field">
-        <div className="user_info_field_name">
-          E-mail
-        </div>
+        <div className="user_info_field_name">E-mail</div>
         <div className="user_info_field_value">
           {userInfo?.user ? userInfo.user.email : null}
         </div>
       </div>
-      <div>&nbsp;</div>
+      <hr />
       <div className="user_info_field">
-        <div className="user_info_field_name">
+        <div className="user_info_field_name center">
           Сообщений
         </div>
-        <div className="user_info_field_value">
+        <div className="user_info_field_value center">
           В топике
         </div>
       </div>
       {
-          userInfo ? userInfo.topics.map((info) => (
-            <div className="user_info_field">
-              <Link to={`/thread/${info.id}`}>
-                <div className="user_info_field_name">{info.count}</div>
-              </Link>
-              <Link to={`/thread/${info.id}`}>
-                <div className="user_info_field_value">{info.title}</div>
-              </Link>
-            </div>
-          ))
+          userInfo
+            ? userInfo.topics.map((info) => (
+              <div className="user_info_field" key={info.id}>
+                <div className="user_info_field_name center">
+                  <Link to={`/thread/${info.id}`}>
+                    {info.count}
+                  </Link>
+                </div>
+                <div className="user_info_field_value">
+                  <Link to={`/thread/${info.id}`}>
+                    {info.title}
+                  </Link>
+                </div>
+              </div>
+            ))
             : null
         }
-
     </div>
   );
 };

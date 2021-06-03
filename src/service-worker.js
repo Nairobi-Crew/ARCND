@@ -93,9 +93,7 @@ const respondHandler = (e) => {
   const { request } = e;
   const url = new URL(request.url);
   const match = (u) => (p) => u.includes(p);
-  console.log('Url', url);
   if (url.origin === location.origin && url.search.includes('code')) {
-    console.log('Code - from network');
     return fromNetwork(request);
   }
 
