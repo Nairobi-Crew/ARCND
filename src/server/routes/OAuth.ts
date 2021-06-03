@@ -36,17 +36,18 @@ export default class OAuth extends Routes {
     });
 
     this.app.post(`${OAUTH}`, [logger({ needBody: true })], async (req: Request, res: Response) => {
-      const Cookie = Cookies.getCookies(req);
+      // const Cookie = Cookies.getCookies(req);
       Fetch.post(
         `${SERVER_API_URL}${OAUTH_PATH}`,
         {
           data: req.body,
-          headers: {
-            Cookie,
-          },
+          // headers: {
+          //   Cookie,
+          // },
         },
       ).then(async (answer) => {
         Cookies.setCookies(answer, res);
+        console.log('OAUTH answer', answer);
         res.status(EHttpStatusCodes.OK).send(await answer.text());
       }).catch(async (error) => {
         // eslint-disable-next-line no-console
