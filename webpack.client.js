@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
+// const ResourcesManifestPlugin = require('resources-manifest-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const { isDev } = require('./env.variables');
@@ -95,16 +95,19 @@ module.exports = {
         {
           from: './static', to: './',
         },
+        {
+          from: './src/service-worker.js', to: './',
+        },
       ],
     }),
-    new ResourcesManifestPlugin(
-      {
-        match: {
-          TO_CACHE: /.+.(js|css|png|jpe?g|gif|svg|webp)$/,
-        },
-        swPath: 'src/service-worker.js',
-      },
-    ),
+    // new ResourcesManifestPlugin(
+    //   {
+    //     match: {
+    //       TO_CACHE: /.+.(js|css|png|jpe?g|gif|svg|webp)$/,
+    //     },
+    //     swPath: 'src/service-worker.js',
+    //   },
+    // ),
     isDev ? new webpack.HotModuleReplacementPlugin() : '',
   ].filter(Boolean),
 };

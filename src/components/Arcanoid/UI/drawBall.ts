@@ -9,11 +9,12 @@ import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GamePropert
  * @param {number} y - отновительные координаты
  * @param {number} radius - радиус шарика
  * @param fireball
+ * @param speed
  */
 const drawGradientBall = (
   ctx: CanvasRenderingContext2D,
   gameWindow: GameWindowProps,
-  x: number, y: number, radius: number, fireball: boolean,
+  x: number, y: number, radius: number, fireball: boolean, speed: number = 0,
 ) => {
   const centerX = x + gameWindow.left; // абсолютные координаты центра шарика
   const centerY = y + gameWindow.top;
@@ -59,17 +60,29 @@ const drawGradientBall = (
     );
     ctx.stroke();
   }
+  if (gameProperties.showDebug) {
+    ctx.textAlign = 'center';
+    ctx.font = 'Arial 12px';
+    ctx.strokeText(speed.toFixed(0), centerX, centerY);
+  }
 };
 
 const drawBall = (
   ctx: CanvasRenderingContext2D, // сонтекст канваса
   gameWindow: GameWindowProps, // размеры игрового поля и его отступы
   x: number, y: number, radius: number, // координаты шара и радиус
-  fireball: boolean,
+  fireball: boolean, speed: number,
 ) => {
-  ctx.beginPath();
-  drawGradientBall(ctx, gameWindow, x, y, radius, fireball);
-  ctx.closePath();
+  if (!ctx) {
+    return;
+  }
+  if (y > ctx.canvas.height) {
+    //
+  } else {
+    ctx.beginPath();
+    drawGradientBall(ctx, gameWindow, x, y, radius, fireball, speed);
+    ctx.closePath();
+  }
 };
 
 export default drawBall;
