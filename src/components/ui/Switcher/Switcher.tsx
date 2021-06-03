@@ -3,7 +3,7 @@ import { SwitchProps } from 'UI/Switcher/types';
 import './Switcher.scss';
 
 const Switcher: SwitchProps = ({
-  firstValue, secondValue, name = '', onValueChanged, value = false,
+  firstValue, secondValue, name = '', onValueChanged, checked = false,
   classes = [],
 }) => {
   const onInputHandler = (e: React.FormEvent<HTMLInputElement>): void => {
@@ -22,7 +22,7 @@ const Switcher: SwitchProps = ({
           className="switch__input"
           type="checkbox"
           name={name}
-          checked={value}
+          checked={checked}
           onChange={onInputHandler}
         />
         <span className="switch__switcher" />
