@@ -1,28 +1,4 @@
 @import "src/common/utils";
-$background: #433b6a;
-$background-even: #433b6a;
-$background-odd: #4d4574;
-
-@mixin background {
-  & {
-    background: #433b6a
-  }
-  .root_theme_white &,
-  &.root_theme_white{
-    background: rgba(200, 200, 255, 1);
-  }
-}
-
-@mixin background-odd {
-  & {
-    background: #4d4574
-  }
-  .root_theme_white &,
-  &.root_theme_white{
-    background: #b2a2f5;
-  }
-}
-
 
 .message {
   width: 100%;
