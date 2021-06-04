@@ -22,10 +22,10 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 
 <hr>
 
-## **Игра Арканоид** *классический*
-####Выполнена без использования растровой графики
+## **Игра Арканоид классический**
+###***Выполнена без использования растровой графики***
 
-##Об игре
+###Об игре
 Отбивая шарик ракеткой разбить все блоки<br>
 На прохождение игры есть 3 "**жизни**"<br>
 Блоки бывают [1-9] уровней. В текущем конфиге - 5. Для добавления нужно в массив со стилями [brickColors](src/components/Arcanoid/settings.ts) добавить элементы или же блоки выше N-го уровня будут использовать один и тот же стиль, что и блоки 5-го уровня.
@@ -46,7 +46,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 
 <hr>
 
-##Использованное Web API:
+###Использованное Web API:
 1. [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 2. [Console API ;)](https://developer.mozilla.org/en-US/docs/Web/API/Console_API)
 3. [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
@@ -61,7 +61,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 
 <hr>
 
-##**Форум**
+###**Форум**
 В списке топиков видны следующие атрибуты:
 - Тема
 - Автор
@@ -74,8 +74,8 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 <hr>
 
 ###В проекте настроено [CI](.github/workflows/CI.yml)/[CD](.github/workflows/CD.yml) при помощи [Github Actions](https://github.com/features/actions)
-##Тестирование компонент: [Jest](https://jestjs.io)/[Enzyme](https://enzymejs.github.io/enzyme)
-##Доска в [Trello](https://trello.com/b/NVMJzxq2/the-game)
+###Тестирование компонент: [Jest](https://jestjs.io)/[Enzyme](https://enzymejs.github.io/enzyme)
+###Доска в [Trello](https://trello.com/b/NVMJzxq2/the-game)
 Работа тестировалась на актуальных версиях браузеров:
 1. Chrome
 2. Firefox (Убрана отрисовка теней объектов из-за падения производительности в 50 раз :( )
@@ -85,15 +85,15 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 Все сообщения по обратной связи отправляются в [телеграмм-канал](https://t.me/nairobi_arcnd_m4)
 
 
-##Управление
-###Ракетка влево-вправо:
-###Клавиатура - стрелками
-###Геймпад - любой осью
-###Для устройств с тачскрином - тач на левой-правой половине экрана
-###Выстрел/сброс шарика
-####Клавиатура - пробел
-####Геймпад - любая кнопка
-####Тачскрин - свайп вверх
+###**Управление**
+###**Ракетка влево-вправо:**
+###***Клавиатура - стрелками***
+###***Геймпад - любой осью***
+###***Для устройств с тачскрином - тач на левой-правой половине экрана***
+###**Выстрел/сброс шарика**
+###***Клавиатура - пробел***
+###***Геймпад - любая кнопка***
+###***Тачскрин - свайп вверх***
 
 
 ### :floppy_disk:INSTALLATION:
