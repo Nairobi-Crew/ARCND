@@ -2,6 +2,8 @@
 
 ## **Study game project**
 Powered by  :sparkles:__NAIROBI CREW__:sparkles:
+<hr>
+
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 [![Github all releases](https://img.shields.io/github/downloads/Naereen/StrapDown.js/total.svg)](https://github.com/Nairobi-Crew/ARCND)
 [![GitHub forks](https://img.shields.io/github/forks/Nairobi-Crew/ARCND.svg?style=social&label=Fork&maxAge=2592000)](https://github.com/Nairobi-Crew/ARCND)
