@@ -9,6 +9,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/issues?q=is%3Aissue+is%3Aclosed)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/pull/)
 [![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/pull/)
+[![](https://david-dm.org/Nairobi-Crew/ARCND.svg)](https://david-dm.org/Nairobi-Crew/ARCND.svg)
 
 ![CI](https://github.com/Nairobi-Crew/ARCND/actions/workflows/CI.yml/badge.svg?branch=develop)
 ![CD](https://github.com/Nairobi-Crew/ARCND/actions/workflows/CD.yml/badge.svg?branch=deploy)
@@ -142,3 +143,5 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 
 ```
 
+[![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com)
