@@ -7,6 +7,8 @@ import { ELeaderState } from 'Reducers/leader/types';
 import { useDispatch } from 'react-redux';
 import { getLeaders } from 'Reducers/leader/actions';
 import { ILeaderUser } from 'Reducers/leader/leader';
+import Button from "UI/Button";
+import {useHistory} from "react-router-dom";
 
 const Leaderboard: LeaderboardProps = () => {
   const [sortParam, setSortParam] = useState('level');
@@ -14,8 +16,7 @@ const Leaderboard: LeaderboardProps = () => {
   const [leaders, setLeaders] = useState<ILeaderUser[]>([]);
   const leaderboard = useLeaderReselect();
   const dispatch = useDispatch();
-
-
+  const history = useHistory<any>();
   const sortParams = (params:'level'|'score_arcnd') => {
     const sortedLeader = [...leaders].customSort((first:ILeaderUser,second:ILeaderUser) => {
       return first[params] > second[params]
@@ -38,6 +39,21 @@ const Leaderboard: LeaderboardProps = () => {
   return (
     <div className="leaderboard">
       <div className="leader">
+
+        {history?.location?.state?.score ? (
+          <>
+            <div className="align-left">
+              <Button onClick={() => history.push('/game')}>Еще раз</Button>
+            </div>
+            <p style={{
+              margin: "auto",
+            }}>Ваш счет: {history.location.state.score}</p>
+          <div className="align-right">
+            <Button onClick={() => history.push('/')}>На главную</Button>
+          </div>
+          </>
+        ) : ''}
+
         <span className="leader__index">№</span>
 
         <p className="leader__avatar">&nbsp;</p>

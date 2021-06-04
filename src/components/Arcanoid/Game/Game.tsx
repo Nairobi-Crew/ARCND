@@ -126,7 +126,10 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     }));
     dispatch(endGame());
     gameObjects.playSound(SOUND_GAME_OVER);
-    history.push('/leaderboard');
+    history.push({
+      pathname:'/leaderboard',
+      state: { score }
+    });
   };
 
   const drawGame = () => { // отрисовка кадра игры
