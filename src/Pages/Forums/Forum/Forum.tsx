@@ -6,7 +6,6 @@ import './Forum.scss';
 import { EAuthState } from 'Reducers/auth/types';
 import { useAuthReselect, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
-// import { getUserData } from 'Reducers/auth/actions';
 import { useHistory } from 'react-router-dom';
 import { clearState, fetchTopicsAction } from 'Reducers/forum/actions';
 

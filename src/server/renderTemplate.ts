@@ -16,10 +16,8 @@ function renderTemplate({
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
             navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-              // eslint-disable-next-line no-console
               console.log('ServiceWorker registration successful with scope: ', registration.scope);
             }).catch((error) => {
-              // eslint-disable-next-line no-console
               console.log('Client ServiceWorker registration failed: ', error);
             });
           });

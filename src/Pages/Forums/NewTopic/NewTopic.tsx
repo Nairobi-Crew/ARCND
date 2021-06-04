@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useAuthReselect, useForumTopics } from 'Store/hooks';
-// import { EAuthState } from 'Reducers/auth/types';
 import { useDispatch } from 'react-redux';
-// import { getUserData } from 'Reducers/auth/actions';
 import Button from 'UI/Button/index';
 import Input from 'UI/Input/index';
 import { addTopic } from 'Reducers/forum/actions';
@@ -47,8 +45,10 @@ const NewTopic: FC = () => {
       {
         auth.state === EAuthState.LOGGED
           ? (
-            <Form caption="Новая тема"
-                  name="newTheme">
+            <Form
+              caption="Новая тема"
+              name="newTheme"
+            >
               <Input
                 label="Тема"
                 name="newTheme"

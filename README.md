@@ -4,16 +4,22 @@
 Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 <hr>
 
-[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 [![Github all releases](https://img.shields.io/github/downloads/Naereen/StrapDown.js/total.svg)](https://github.com/Nairobi-Crew/ARCND)
-[![GitHub forks](https://img.shields.io/github/forks/Nairobi-Crew/ARCND.svg?style=social&label=Fork&maxAge=2592000)](https://github.com/Nairobi-Crew/ARCND)
-[![GitHub stars](https://img.shields.io/github/stars/Nairobi-Crew/ARCND.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/Nairobi-Crew/ARCND/stargazers/)
-[![GitHub watchers](https://img.shields.io/github/watchers/Nairobi-Crew/ARCND.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/Nairobi-Crew/ARCND/watchers/)
-[![GitHub followers](https://img.shields.io/github/followers/Nairobi-Crew.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/Nairobi-Crew?tab=followers)
 [![GitHub issues](https://img.shields.io/github/issues/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/issues/)
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/issues?q=is%3Aissue+is%3Aclosed)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/pull/)
 [![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/Nairobi-Crew/ARCND.svg)](https://GitHub.com/Nairobi-Crew/ARCND/pull/)
+[![](https://david-dm.org/Nairobi-Crew/ARCND.svg)](https://david-dm.org/Nairobi-Crew/ARCND.svg)
+
+![CI](https://github.com/Nairobi-Crew/ARCND/actions/workflows/CI.yml/badge.svg?branch=develop)
+![CD](https://github.com/Nairobi-Crew/ARCND/actions/workflows/CD.yml/badge.svg?branch=deploy)
+
+
+[![GitHub forks](https://img.shields.io/github/forks/Nairobi-Crew/ARCND.svg?style=social&label=Fork&maxAge=2592000)](https://github.com/Nairobi-Crew/ARCND)
+[![GitHub stars](https://img.shields.io/github/stars/Nairobi-Crew/ARCND.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/Nairobi-Crew/ARCND/stargazers/)
+[![GitHub watchers](https://img.shields.io/github/watchers/Nairobi-Crew/ARCND.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/Nairobi-Crew/ARCND/watchers/)
+[![GitHub followers](https://img.shields.io/github/followers/Nairobi-Crew.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/Nairobi-Crew?tab=followers)
+
 ### :zap:DEVS:
 * Николай Сидоров
 * Олег Белоновский
@@ -137,3 +143,5 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 
 ```
 
+[![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)](https://forthebadge.com)

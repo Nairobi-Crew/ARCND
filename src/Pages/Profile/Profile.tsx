@@ -35,7 +35,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const [firstNameMessage, setFirstNameMessage] = useState('');
   const [formValid, setFormValid] = useState(true);
   const [avatar, setAvatar] = useState<File>();
-  const [avatarMessage, setAvatatMessage] = useState('');
+  const [avatarMessage, setAvatarMessage] = useState('');
   const auth = useAuthReselect();
   const hist = useHistory();
   const userState = useUserReselect();
@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
   const changeAvatarHandler = (files: FileList | null) => {
     if (files && files[0]) {
       if (files[0].size > AVATAR_MAX_SIZE) {
-        setAvatatMessage(`Огромный аватар. Нельзя больше {${Math.round(AVATAR_MAX_SIZE / 1024)} кб`);
+        setAvatarMessage(`Огромный аватар. Нельзя больше {${Math.round(AVATAR_MAX_SIZE / 1024)} кб`);
       } else {
         setAvatar(files[0]);
       }
@@ -112,7 +112,6 @@ const Profile: React.FC<ProfileProps> = ({ caption }: ProfileProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userState]);
 
-  // TODO: не работает свитч на тему при старте. Всегда встает на темную тему
   return (
     <>
       <Form
