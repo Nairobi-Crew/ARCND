@@ -111,14 +111,6 @@ app.get('*', async (req: Request, res: Response) => {
 
   const css = 'main.css';
   const js = 'main.js';
-  // const manifestFile = path.join(__dirname, '/', 'resources-manifest.json');
-  // try {
-  //   const sw = JSON.parse(fs.readFileSync(manifestFile) as unknown as string);
-  //   js = getFileByExt(sw.TO_CACHE, '.js');
-  //   css = getFileByExt(sw.TO_CACHE, '.css');
-  // } catch (e) {
-  //   console.log(`Cannot read manifest file ${manifestFile}`);
-  // }
 
   res.send(renderTemplate(
     {
@@ -130,10 +122,7 @@ app.get('*', async (req: Request, res: Response) => {
   ));
 });
 
-// const server =
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
-  // server.timeout = 100;
-  // server.keepAliveTimeout = 0;
   routes.forEach((route) => console.log('Register route', route.getName()));
 });

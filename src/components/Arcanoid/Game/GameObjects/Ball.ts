@@ -3,7 +3,7 @@ import {
   BALL_MAX_SPEED,
   BALL_MIN_SPEED,
   BALL_SPEED_LIMIT,
-  EVENTS, FIREBALL_TIME,
+  FIREBALL_TIME,
   ROCKET_HEIGHT,
   ROCKET_PART_SPEED_CHANGER,
   ROCKET_PART_SPEED_MULT,
@@ -14,6 +14,7 @@ import { globalBus } from 'Util/EventBus';
 import drawBall from 'Components/Arcanoid/UI/drawBall';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
+import { EVENTS } from 'Components/Arcanoid/Game/types';
 
 export interface IBallProps extends IBaseObjectProps {
   radius: number

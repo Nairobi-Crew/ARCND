@@ -3,7 +3,8 @@ import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import drawBrick from 'Components/Arcanoid/UI/drawBrick';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
 import { globalBus } from 'Util/EventBus';
-import { EVENTS, SCORES_BLOCK } from 'Components/Arcanoid/settings';
+import { SCORES_BLOCK } from 'Components/Arcanoid/settings';
+import { EVENTS } from 'Components/Arcanoid/Game/types';
 
 export interface IBrickProps extends IBaseObjectProps {
   width: number
