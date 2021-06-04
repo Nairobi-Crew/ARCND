@@ -70,7 +70,7 @@ const stylesByLevelType = (level: number, type = 0): brickStyle => {
  * @param {number} level - уровень
  * @param {number} type - тип бонуса
  */
-const drawBall = (
+const drawBrick = (
   ctx: CanvasRenderingContext2D, // сонтекст канваса
   gameWindow: GameWindowProps, // размеры игрового поля и его отступы
   x: number,
@@ -135,4 +135,4 @@ const drawBall = (
   // ctx.fill(); // заливаем
 };
 
-export default drawBall;
+export default drawBrick;

@@ -1,6 +1,6 @@
 import BaseObject, { IBaseObjectProps } from 'Components/Arcanoid/Game/GameObjects/BaseObject';
 import {
-  EVENTS, GLUE_QTY,
+  GLUE_QTY,
   ROCKET_HEIGHT,
   ROCKET_MOVE_STEP,
   ROCKET_WIDTH, ROCKETMAX_TIME, SHOOT_QTY,
@@ -10,6 +10,7 @@ import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GamePropert
 import { globalBus } from 'Util/EventBus';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
+import { EVENTS } from 'Components/Arcanoid/Game/types';
 
 export interface IRocketProps extends IBaseObjectProps {
   width: number,

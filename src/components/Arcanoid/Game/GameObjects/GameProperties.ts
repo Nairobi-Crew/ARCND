@@ -28,6 +28,8 @@ export class GameProperties {
 
   gameStarted = false; // игра началась
 
+  neverStarted = true;
+
   onRocket = true; // шарик на рокетке
 
   score = 0; // счет
@@ -65,6 +67,7 @@ export class GameProperties {
     this.score = props.score;
     this.onRocket = props.onRocket;
     this.gameWindow = props.gameWindow;
+    this.neverStarted = true;
     GameProperties.instance = this;
     if (isClient()) {
       if (NO_SHADOWS) {
@@ -118,6 +121,7 @@ export class GameProperties {
       this.onRocket = true;
       this.score = 0;
       this.level = 1;
+      this.neverStarted = true;
       gameObjects.generateLevel(levels[this.level - 1]); // генерация уровня
       resolve({ score, level });
     });

@@ -27,6 +27,12 @@ export const HELP_STROKE_STYLE = 'rgba(255, 255, 255, 0.5)';
 export const HELP_TEXT = 'Стрелки влево-вправо - перемещение рокетки, ENTER - полноэкранный режим, SPACE - старт игры/выстрел, ESC - выход';
 export const HELP_FONT = '18px Arial';
 
+export const START_MESSAGE1 = 'Для начала игры';
+export const START_MESSAGE2 = 'ПРОБЕЛ / Кнопку на GamePad';
+export const START_MESSAGE3 = 'SWIPE-UP на тач-устройстве';
+export const START_MESSAGE_WIDTH = 30;
+export const START_MESSAGE_HEIGHT = 30;
+
 export const SOUND_SPLIT = 9;
 export const SOUND_BLOCK = 3;
 export const SOUND_WALL = 7;
@@ -100,18 +106,3 @@ export const GUN_HEIGHT = 20; // высота
 export const GUN_WIDTH = 10; // ширина
 
 export const LIVES_BALL_RADIUS = 10; // радиус шаров "жизни"
-// eslint-disable-next-line no-shadow
-export enum EVENTS {
-  GOAL = 'too:bad-goal',
-  BALL_RETURN = 'good:ball-return',
-  GAME_OVER = 'sorry:game-over',
-  BLOCK = 'block:crash',
-  GUN = 'take:a:gun',
-  GLUE = 'take:a:glue',
-  SPLIT = 'take:3balls',
-  FIREBALL = 'take:fireball',
-  EXPAND = 'expand:a:rocket',
-  COMPRESS = 'compress:a:rocket',
-  BRICK_CRASH = 'yeah:brick-level',
-  ROCKETMAX = 'take:rocket_max',
-}

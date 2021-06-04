@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-import { GameFieldObjectType, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
+import { EVENTS, GameFieldObjectType, IGameFieldObjectProps } from 'Components/Arcanoid/Game/types';
 import padString from 'Components/Arcanoid/util/padString';
 import {
-  EVENTS,
   LEVEL_BLOCK_SPACE,
   LEVEL_BLOCKS_HEIGHT,
   LEVEL_BLOCKS_WIDTH,

@@ -1,32 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { gameProperties } from 'Components/Arcanoid/Game/GameObjects/GameProperties';
-import { GameProps } from 'Components/Arcanoid/Game/types';
+import { EVENTS, GameProps } from 'Components/Arcanoid/Game/types';
 import { Ball } from 'Components/Arcanoid/Game/GameObjects/Ball';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { Brick } from 'Components/Arcanoid/Game/GameObjects/Brick';
 import { globalBus } from 'Util/EventBus';
 import {
-  EVENTS,
   FPS,
   GAME_CANVAS_ID,
-  GUN_HEIGHT,
-  ROCKET_WIDTH,
-  SCORES_BLOCK,
-  SCORES_ROCKET,
-  SHOOT_HEIGHT,
-  SHOOT_INTERVAL,
-  SHOOT_WIDTH,
-  SOUND_BLOCK,
-  SOUND_BLOCK_SHOOT,
   SOUND_GAME_OVER,
-  SOUND_GOAL,
-  SOUND_LIVES,
-  SOUND_ROCKET,
-  SOUND_SHOOT,
-  SOUND_SPLIT,
-  SPLIT_ALL_BALLS,
-  SPLIT_QTY,
 } from 'Components/Arcanoid/settings';
 import drawFrame from 'Components/Arcanoid/UI/drawFrame';
 import drawHelp from 'Components/Arcanoid/UI/drawHelp';
@@ -40,8 +23,6 @@ import { useDispatch } from 'react-redux';
 import {
   decLive, endGame, go, incLevel, incScore,
 } from 'Reducers/game/actions';
-import { randomRange } from 'Components/Arcanoid/util/random';
-import Shoot from 'Components/Arcanoid/Game/GameObjects/Shoot';
 import isClient from 'Util/isClient';
 import { addLeader } from 'Reducers/leader/actions';
 import { useAuthReselect } from 'Store/hooks';
@@ -51,7 +32,22 @@ import { getGameContext, getHeight, getWidth } from 'Components/Arcanoid/util/ca
 import GamePad from 'Components/Arcanoid/Game/GamePad';
 import Touch from 'Components/Arcanoid/Game/Touch';
 import drawDebugInfo from 'Components/Arcanoid/UI/drawDebugInfo';
-import { TouchDirection, TouchPoint } from 'Components/Arcanoid/Game/Touch/types';
+import {
+  onBallReturn,
+  onBlockCrash,
+  onBlockShoot,
+  onFireball, onGoal,
+  onRocketMax, onShootOrStart, onSplitBall,
+} from 'Components/Arcanoid/Game/Events';
+import {
+  onGamepadChange,
+  onKeyDown,
+  onKeyUp,
+  onTouchCancel,
+  onTouchMove,
+  onTouchStart,
+} from 'Components/Arcanoid/Game/Control';
+import drawStartMessage from 'Components/Arcanoid/UI/drawStart';
 
 const Game: React.FC<GameProps> = ({ ctx }) => {
   let prevTick = 0;
@@ -96,8 +92,6 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
         return false;
       }
       canvas.onclick = () => {
-        // gameObjects.audio = new AudioContext();
-        // gameObjects.prepareSounds();
         canvas.requestPointerLock();
       };
       const { width, height } = canvas;
@@ -121,7 +115,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     level: number
   }
 
-  const gameOver = (params: GameOverProperties) => {
+  const onGameOver = (params: GameOverProperties) => {
     const { level, score } = params;
     navigator.vibrate([200, 100, 200, 200, 200]);
     dispatch(addLeader({
@@ -133,125 +127,6 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     dispatch(endGame());
     gameObjects.playSound(SOUND_GAME_OVER);
     history.push('/leaderboard');
-  };
-
-  const shootOrStart = () => {
-    if (!gameProperties.gameStarted) { // если игра на паузе
-      gameProperties.gameStarted = true; // снимаем с паузы
-      dispatch(go());
-      gameProperties.onRocket = false; // отвязка шарика от рокетки
-      const balls = gameObjects.getList('ball');
-      balls.forEach((item) => {
-        const ball = item.object as Ball;
-        if (ball.speedY > 0) { // если шарик летит вниз, то меняем направление
-          ball.invertYDirection();
-        }
-      });
-    } else {
-      gameProperties.onRocket = false;
-      if (rocket.glue) {
-        rocket.glue -= 1;
-      }
-      const shot = gameProperties.lastShoot || 0;
-      if (rocket.gun) {
-        rocket.gun -= 1;
-        if (Date.now() - shot > SHOOT_INTERVAL) {
-          if (gameProperties && gameProperties.gameWindow) {
-            gameProperties.lastShoot = Date.now();
-            const x = rocket.x + Math.round(rocket.width / 2 - SHOOT_WIDTH / 2);
-            const y = gameProperties.gameWindow.bottom
-              - SHOOT_HEIGHT - rocket.height - gameProperties.gameWindow.top
-              - GUN_HEIGHT * 2;
-            const object = new Shoot({ x, y });
-            gameObjects.add({ object, type: 'shoot' });
-            gameObjects.playSound(SOUND_SHOOT);
-          }
-        }
-      }
-    }
-  };
-
-  const goLeft = () => {
-    if (gameProperties.menuMode) { // не режим меню
-      return;
-    }
-    rocket.movedLeft = true; // перемещать ракетку влево
-    rocket.movedRight = false; // остановить перемещение ракетки вправо
-  };
-
-  const goRight = () => {
-    if (gameProperties.menuMode) { // не режим меню
-      return;
-    }
-    rocket.movedRight = true; // перемещать ракетку вправо
-    rocket.movedLeft = false; // остановить перемещение влево
-  };
-
-  const stop = () => {
-    if (gameProperties.menuMode) { // не режим меню
-      return;
-    }
-    rocket.movedRight = false; // остановить перемещение ракетки вправо
-    rocket.movedLeft = false; // остановить перемещение влево
-  };
-
-  const onGamepadChange = (list: Gamepad[]) => {
-    if (list.length <= 0) {
-      return;
-    }
-    if (list[0]) {
-      const pad = list[0];
-      const buttonPressed = pad.buttons.find((button) => button.pressed);
-      if (buttonPressed) {
-        shootOrStart();
-      }
-      const axes = pad.axes.find((axe) => axe !== 0);
-      if (axes !== undefined) {
-        if (axes < -0.3) {
-          goLeft();
-        } else if (axes > 0.3) {
-          goRight();
-        } else {
-          stop();
-        }
-      } else {
-        stop();
-      }
-    }
-  };
-
-  const onTouchMove = (direction: TouchDirection) => {
-    switch (direction) {
-      case 'up':
-        shootOrStart();
-        break;
-      case 'left':
-        // goLeft();
-        break;
-      case 'right':
-        // goRight();
-        break;
-      default:
-        // stop();
-    }
-  };
-
-  const onTouchCancel = () => {
-    stop();
-  };
-
-  const onTouchStart = (_e: TouchEvent, point: TouchPoint) => {
-    if (!point) {
-      return;
-    }
-    if (gameProperties?.gameWindow?.width) {
-      const half = gameProperties.gameWindow.width / 2;
-      if (point.x < half) {
-        goLeft();
-      } else {
-        goRight();
-      }
-    }
   };
 
   const drawGame = () => { // отрисовка кадра игры
@@ -315,6 +190,7 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       drawMenu(gameContext); // то меню рисуем
     }
     drawDebugInfo();
+    drawStartMessage();
   };
 
   function loop() { // обработка отрисовки кадра анимации
@@ -327,133 +203,23 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
   }
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => { // обработчик нажатия клавиши
-      const { key, keyCode } = e;
-      if (keyCode === 13) { // Энтер - переключение полноэкранного режима
-        toggleFullScreen().then(() => {});
-      }
-
-      if (keyCode === 27) { // ESC переключение режима меню
-        gameProperties.gameStarted = !gameProperties.gameStarted; // переключение режима паузы
-        gameProperties.menuMode = !gameProperties.menuMode; // переключение режима меню
-      }
-      if (key === ' ') { // пробел
-        shootOrStart();
-      } else if (key === 'y' || key === 'Y' || key === 'д' || key === 'Д') { // если нажат Y или Д
-        if (gameProperties.menuMode) { // если режим меню
-          gameProperties.resetParams().then(({ level, score }) => gameOver({ level, score }));
-        }
-      } else if (key === 'ArrowLeft') { // если стрелка ВЛЕВО
-        goLeft();
-      } else if (key === 'ArrowRight') { // если стрелка ВПРАВО
-        goRight();
-      }
-    };
-
-    const onKeyUp = (e: KeyboardEvent) => { // обработчик отпускания клавиши
-      const { key } = e;
-      if (key === 'ArrowLeft') { // срелка влево
-        rocket.movedLeft = false; // останавливаем перемещение
-      } else if (key === 'ArrowRight') { // стрелка вправо
-        rocket.movedRight = false; // отсанавливаем перемещение
-      }
-    };
-
-    const onGoal = (ball: Ball) => { // Обработка события ГОЛ
-      const balls = gameObjects.getList('ball');
-      rocket.gun = 0;
-      rocket.glue = 0;
-      rocket.width = ROCKET_WIDTH;
-      gameObjects.removeBall(ball);
-      if (balls.length <= 1) {
-        navigator.vibrate(500);
-        gameObjects.removeThings(true);
-        gameObjects.removeShoots();
-        if (gameProperties.lives === 1) { // если жизнь последняя
-          // эмит события КОНЕЦ ИГРЫ, передача очков и уровня
-          gameProperties.resetParams().then(({ score, level }) => gameOver({ score, level }));
-        } else { // если не последняя
-          dispatch(decLive());
-          gameProperties.lives -= 1; // уменьшаем количество жизней
-          gameObjects.addBall(true);
-          gameObjects.playSound(SOUND_LIVES);
-        }
-      } else {
-        gameObjects.playSound(SOUND_GOAL);
-      }
-      gameProperties.setLastEvent();
-    };
-
-    const onBallReturn = () => { // если шарик отбит ракеткой
-      gameProperties.score += SCORES_ROCKET; // счет увеличивается
-      if (rocket.glue) {
-        gameProperties.onRocket = true;
-      }
-      gameObjects.playSound(SOUND_ROCKET);
-      dispatch(incScore(SCORES_ROCKET));
-    };
-
-    const onBlockCrash = (score: number, block: Brick) => {
-      navigator.vibrate(100);
-      dispatch(incScore(score));
-      gameObjects.crashBlock(block);
-      gameObjects.playSound(SOUND_BLOCK);
-      gameProperties.setLastEvent();
-    };
-
-    const onBlockShoot = () => {
-      gameProperties.score += SCORES_BLOCK;
-      dispatch(incScore(SCORES_BLOCK));
-      gameObjects.playSound(SOUND_BLOCK_SHOOT);
-      gameProperties.setLastEvent();
-    };
-
-    const onFireball = () => {
-      const balls = gameObjects.getList('ball');
-      balls.forEach((ball) => (ball.object as Ball).setFireball());
-      gameProperties.setLastEvent();
-    };
-
-    const onRocketMax = () => {
-      rocket.setMax();
-      gameProperties.setLastEvent();
-    };
-
-    const onSplitBall = () => {
-      const splitBall = (ball: Ball) => {
-        for (let i = 0; i < SPLIT_QTY; i += 1) {
-          let speedX = randomRange(-5, 5);
-          if (speedX === 0) {
-            speedX += 1;
-          }
-          let speedY = randomRange(-5, 5);
-          if (speedY === 0) {
-            speedY += 1;
-          }
-          speedX *= 2;
-          speedY *= 2;
-          gameObjects.add({
-            object: new Ball({
-              x: ball.x,
-              y: ball.y,
-              radius: ball.radius,
-              speedX,
-              speedY,
-            }),
-            type: 'ball',
-          });
-        }
-      };
-      const balls = gameObjects.getList('ball');
-      gameObjects.playSound(SOUND_SPLIT);
-      if (SPLIT_ALL_BALLS) {
-        balls.forEach((ball) => splitBall(ball.object as Ball));
-      } else {
-        splitBall(balls[0].object as Ball);
-      }
-      gameProperties.setLastEvent();
-    };
     dispatch(getUserData());
+
+    const onIncScore = (inc: number) => {
+      dispatch(incScore(inc));
+    };
+
+    const onDecLives = () => {
+      dispatch(decLive());
+    };
+
+    const onToggleFullScreen = async () => {
+      await toggleFullScreen();
+    };
+
+    const onGameStart = () => {
+      dispatch(go());
+    };
 
     // генерируем уровень
     gameProperties.level = -1;
@@ -474,6 +240,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
     globalBus.on(EVENTS.SPLIT, onSplitBall);
     globalBus.on(EVENTS.FIREBALL, onFireball);
     globalBus.on(EVENTS.ROCKETMAX, onRocketMax);
+    globalBus.on(EVENTS.INC_SCORE, onIncScore);
+    globalBus.on(EVENTS.TOGGLE_FULL_SCREEN, onToggleFullScreen);
+    globalBus.on(EVENTS.DEC_LIVE, onDecLives);
+    globalBus.on(EVENTS.GAME_OVER, onGameOver);
+    globalBus.on(EVENTS.SHOOT_START, onShootOrStart);
+    globalBus.on(EVENTS.START, onGameStart);
     gameObjects.data = [];
     if (isClient()) {
       loop(); // запуск игрового цикла
@@ -493,6 +265,12 @@ const Game: React.FC<GameProps> = ({ ctx }) => {
       globalBus.off(EVENTS.SPLIT, onSplitBall);
       globalBus.off(EVENTS.FIREBALL, onFireball);
       globalBus.off(EVENTS.ROCKETMAX, onRocketMax);
+      globalBus.off(EVENTS.INC_SCORE, onIncScore);
+      globalBus.off(EVENTS.TOGGLE_FULL_SCREEN, onToggleFullScreen);
+      globalBus.off(EVENTS.DEC_LIVE, onDecLives);
+      globalBus.off(EVENTS.GAME_OVER, onGameOver);
+      globalBus.off(EVENTS.SHOOT_START, onShootOrStart);
+      globalBus.off(EVENTS.START, onGameStart);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
