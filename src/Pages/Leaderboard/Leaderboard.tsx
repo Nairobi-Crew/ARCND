@@ -38,21 +38,22 @@ const Leaderboard: LeaderboardProps = () => {
 
   return (
     <div className="leaderboard">
-      <div className="leader">
 
-        {history?.location?.state?.score ? (
-          <>
-            <div className="align-left">
-              <Button onClick={() => history.push('/game')}>Еще раз</Button>
-            </div>
-            <p style={{
-              margin: "auto",
-            }}>Ваш счет: {history.location.state.score}</p>
+      {history?.location?.state?.score ? (
+        <>
+          <div className="align-left">
+            <Button onClick={() => history.push('/game')}>Еще раз</Button>
+          </div>
+          <p style={{
+            margin: "auto",
+          }}>Ваш счет: {history.location.state.score}</p>
           <div className="align-right">
             <Button onClick={() => history.push('/')}>На главную</Button>
           </div>
-          </>
-        ) : ''}
+        </>
+      ) : ''}
+
+      <div className="leader">
 
         <span className="leader__index">№</span>
 
