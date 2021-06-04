@@ -9,52 +9,20 @@ import { getLeaders } from 'Reducers/leader/actions';
 import { ILeaderUser } from 'Reducers/leader/leader';
 
 const Leaderboard: LeaderboardProps = () => {
-  // const leaders = [
-  //   {
-  //     name: 'name1',
-  //     index: '1',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //
-  //   {
-  //     name: 'name2',
-  //     index: '2',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //
-  //   {
-  //     name: 'name3',
-  //     index: '3',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //
-  //   {
-  //     name: 'name4',
-  //     index: '4',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //   {
-  //     name: 'name5',
-  //     index: '5',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //   {
-  //     name: 'name6',
-  //     index: '6',
-  //     avatar: 'https://i.ytimg.com/vi/nXiAosV4zpU/sddefault.jpg',
-  //     score: '1000',
-  //   },
-  //
-  // ];
+  const [sortParam, setSortParam] = useState('level');
 
   const [leaders, setLeaders] = useState<ILeaderUser[]>([]);
   const leaderboard = useLeaderReselect();
   const dispatch = useDispatch();
+
+
+  const sortParams = (params:'level'|'score_arcnd') => {
+    const sortedLeader = [...leaders].customSort((first:ILeaderUser,second:ILeaderUser) => {
+      return first[params] > second[params]
+    })
+    setSortParam(params)
+    setLeaders(sortedLeader)
+  }
 
   useEffect(() => {
     if (leaderboard.state === ELeaderState.READY) {
@@ -68,20 +36,32 @@ const Leaderboard: LeaderboardProps = () => {
   }, []);
 
   return (
-    <ul className="leaderboard">
-      {leaders.map(({
-        name, avatar, score_arcnd,
-      }, index) => (
-        <Leader
-          key={`${name}-${score_arcnd}`}
-          name={name}
-          index={(index + 1).toString()}
-          avatar={avatar}
-          score={score_arcnd}
-        />
-      ))}
+    <div className="leaderboard">
+      <div className="leader">
+        <span className="leader__index">№</span>
 
-    </ul>
+        <p className="leader__avatar">&nbsp;</p>
+
+        <h3 className="leader__name">Имя</h3>
+        <span className={`leader__level ${sortParam==="level" ? 'active' : ''}`} onClick={()=>sortParams('level')}>Уровень</span>
+        <span className={`leader__score  ${sortParam==="score_arcnd" ? 'active' : ''}`} onClick={()=>sortParams('score_arcnd')}>Очки</span>
+      </div>
+      <ul className="leaderboard__list">
+        {leaders.map(({
+          name, avatar, score_arcnd,level
+        }, index) => (
+          <Leader
+            key={`${name}-${score_arcnd}`}
+            name={name}
+            index={(index + 1).toString()}
+            avatar={avatar}
+            score={score_arcnd}
+            level={level}
+          />
+        ))}
+
+      </ul>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {init} from '../common/common'
 import { hydrate } from 'react-dom';
 import '../common/common.scss';
 import configureStore from 'Store/store';
@@ -12,15 +13,18 @@ import { isDev } from '../../env.variables';
 
 const store = configureStore(restoreData());
 
-const Root = () => (
-  <Provider store={store}>
-    <BrowserRouter>
-      <Switch>
-        {renderApp()}
-      </Switch>
-    </BrowserRouter>
-  </Provider>
-);
+const Root = () => {
+  init()
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Switch>
+          {renderApp()}
+        </Switch>
+      </BrowserRouter>
+    </Provider>
+  )
+};
 
 const HotRoot = hot(Root);
 
