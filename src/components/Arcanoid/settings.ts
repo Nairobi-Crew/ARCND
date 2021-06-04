@@ -4,7 +4,6 @@ export const FPS = 50; // максимум кадров/с
 export const NO_SHADOWS = false;
 
 // отступы на канвас
-
 export const BALL_SPEED_LIMIT = 2;
 export const BALL_MIN_SPEED = 4;
 export const BALL_MAX_SPEED = 20;
@@ -88,7 +87,7 @@ export const THING_FIREBALL_LETTER = 'Ф';
 export const THING_ROCKETMAX_LETTER = 'М';
 export const THING_TYPE_CLEAR: 'yes' | 'no' | 'random' | 'if_random' = 'random';
 export const SPLIT_ALL_BALLS = true;
-export const SPLIT_QTY = 3;
+export const SPLIT_QTY = 5;
 export const FIREBALL_TIME = 10000;
 export const ROCKETMAX_TIME = 10000;
 

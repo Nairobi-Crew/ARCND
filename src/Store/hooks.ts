@@ -57,7 +57,7 @@ export const useForumMessages = () => {
 
 export const useThemeReselect = () => {
   const themeSelector = createSelector((state: IAppState) => state.theme, (theme) => ({
-    theme
+    theme,
   }));
   return useSelector((state: IAppState) => themeSelector(state));
 };

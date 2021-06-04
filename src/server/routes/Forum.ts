@@ -253,7 +253,6 @@ export default class Forum extends Routes {
           });
           if (messagesModel) {
             const messages = cloneObject(messagesModel);
-            console.log('Messages', messages);
             let count = 0;
             const msg: ITopicInfo[] = [];
             messages.forEach((message: { [x: string]: any; count: any; }) => {
@@ -265,8 +264,8 @@ export default class Forum extends Routes {
             userInfo.topics = msg;
           }
         } catch (e) {
-          //
-          console.log('Error m', e);
+          // eslint-disable-next-line no-console
+          console.log('Error get messages', e);
         }
         returnRes();
       },
