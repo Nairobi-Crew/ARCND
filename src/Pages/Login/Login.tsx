@@ -12,6 +12,7 @@ import { useAuthReselect, useOAuthReselect } from 'Store/hooks';
 import isClient from 'Util/isClient';
 import { serviceIdAction } from 'Reducers/oauth/actions';
 import { OAUTH_REDIRECT_PATH } from 'Config/config';
+import ErrorBoundary from "Components/ErrorBoundary/ErrorBoundary";
 
 const Login: React.FC<LoginProps> = ({ caption }) => {
   const [login, setLogin] = useState('');
@@ -67,7 +68,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
   }, [auth]);
 
   return (
-    <>
+    <ErrorBoundary>
       <Form
         caption={caption || 'SING IN'}
         visible
@@ -98,7 +99,7 @@ const Login: React.FC<LoginProps> = ({ caption }) => {
         {auth.state === EAuthState.LOGGED ? <Button className="logout_button" onClick={logoutButtonHandle} buttonType="round">logout</Button> : null}
         <Link className="login__link" to="/signup">Sign up</Link>
       </Form>
-    </>
+    </ErrorBoundary>
   );
 };
 
