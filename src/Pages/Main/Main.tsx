@@ -1,8 +1,9 @@
 import React from 'react';
 import './Main.scss';
+import ErrorBoundary from "Components/ErrorBoundary/ErrorBoundary";
 
 const Main: React.FC = () => (
-  <>
+  <ErrorBoundary>
     <div className="team">
       <h1>
         <b>
@@ -17,6 +18,6 @@ const Main: React.FC = () => (
         <i>Арканоид</i>
       </h2>
     </div>
-  </>
+  </ErrorBoundary>
 );
 export default Main;

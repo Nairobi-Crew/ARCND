@@ -9,6 +9,7 @@ import { getLeaders } from 'Reducers/leader/actions';
 import { ILeaderUser } from 'Reducers/leader/leader';
 import Button from "UI/Button";
 import {useHistory} from "react-router-dom";
+import ErrorBoundary from 'Components/ErrorBoundary/ErrorBoundary';
 
 const Leaderboard: LeaderboardProps = () => {
   const [sortParam, setSortParam] = useState('level');
@@ -37,6 +38,7 @@ const Leaderboard: LeaderboardProps = () => {
   }, []);
 
   return (
+    <ErrorBoundary>
     <div className="leaderboard">
 
       {history?.location?.state?.score ? (
@@ -79,6 +81,7 @@ const Leaderboard: LeaderboardProps = () => {
 
       </ul>
     </div>
+    </ErrorBoundary>
   );
 };
 

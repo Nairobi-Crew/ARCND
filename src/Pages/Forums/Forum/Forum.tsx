@@ -8,6 +8,7 @@ import { useAuthReselect, useForumTopics } from 'Store/hooks';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { clearState, fetchTopicsAction } from 'Reducers/forum/actions';
+import ErrorBoundary from 'Components/ErrorBoundary/ErrorBoundary';
 
 const Forum: React.FC<ForumProps> = ({ caption }) => {
   const auth = useAuthReselect();
@@ -26,6 +27,7 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
   };
 
   return (
+    <ErrorBoundary>
     <div className="forum">
       <div className="forum_tools">
         <div className="forum_tools_item">
@@ -46,6 +48,7 @@ const Forum: React.FC<ForumProps> = ({ caption }) => {
       <div className="forum__header">{caption}</div>
       <TopicList topics={data.topics} />
     </div>
+    </ErrorBoundary>
   );
 };
 
