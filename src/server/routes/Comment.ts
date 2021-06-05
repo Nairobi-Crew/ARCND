@@ -13,7 +13,8 @@ export default class Comment extends Routes {
 
   configRoutes() {
     this.app.post('/comment', [logger({ needBody: true }), bodyChecker()], (req: Request, res: Response) => {
-      Fetch.post(`https://api.telegram.org/${tg_bot_token}/sendMessage`, {
+      // console.log('Token', tg_bot_token);
+      Fetch.post(`https://api.telegram.org/bot${tg_bot_token}/sendMessage`, {
         method: 'POST',
         headers: {
           'Content-type': 'Application/json',
@@ -27,6 +28,8 @@ export default class Comment extends Routes {
           res.status(EHttpStatusCodes.OK).send({ reason: 'OK' });
         })
         .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.log('Error bot', e);
           res.status(EHttpStatusCodes.BAD_REQUEST).send({ reason: e.errorText });
         });
     });

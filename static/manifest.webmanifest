@@ -1,0 +1,15 @@
+{
+  "background_color": "purple",
+  "description": "Nairobi Crew Arcanoid Game, Yandex Praktikum M4",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "32x32",
+      "type": "image/ico"
+    }
+  ],
+  "name": "Arcanoid",
+  "short_name": "ARCND",
+  "start_url": "/"
+}
