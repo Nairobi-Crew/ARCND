@@ -49,7 +49,7 @@ self.addEventListener('install', async () => {
     await cache.addAll(CACHE_PREFER);
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('Error install service worker', e);
+    // console.error('Error install service worker', e);
   }
 });
 
@@ -66,7 +66,7 @@ const fromNetwork = async (request) => {
   try {
     return await fetch(request);
   } catch (e) {
-    console.error('Error network request from service worker', e);
+    // console.error('Error network request from service worker', e);
     return Promise.reject();
   }
 };
