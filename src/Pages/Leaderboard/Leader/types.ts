@@ -5,6 +5,7 @@ export type OwnLeaderProps = {
   name?: string;
   score?: number;
   index?: string;
+  level?: number;
 }
 
 export type LeaderProps = FC<OwnLeaderProps>;

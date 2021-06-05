@@ -3,14 +3,20 @@
 .leader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 96px;
   border-radius: 96px;
   padding: 0 24px;
+  margin-bottom: 36px;
   @include shadow-small;
 
   @include brakepoint(tablet) {
     height: 64px;
     border-radius: 64px;
+  }
+
+  & > .active {
+    font-weight: bold;
   }
 
   &__index {
@@ -21,6 +27,12 @@
   }
 
   &__score {
+    @include f-norm(m);
+  }
+
+
+  &__level {
+    margin-right: 2%;
     @include f-norm(m);
   }
 
