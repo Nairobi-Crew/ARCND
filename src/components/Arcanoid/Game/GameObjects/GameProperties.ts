@@ -4,6 +4,7 @@ import { IDLE_TIME, NO_SHADOWS, ROCKET_WIDTH } from 'Components/Arcanoid/setting
 import { gameObjects } from 'Components/Arcanoid/Game/GameObjects/GameFieldObjects';
 import { rocket } from 'Components/Arcanoid/Game/GameObjects/Rocket';
 import levels from 'Components/Arcanoid/levels/levelData';
+import { isMobile } from 'react-device-detect';
 import { isDev } from '../../../../../env.variables';
 
 export interface IGameProperties {
@@ -70,7 +71,7 @@ export class GameProperties {
     this.neverStarted = true;
     GameProperties.instance = this;
     if (isClient()) {
-      if (NO_SHADOWS) {
+      if (NO_SHADOWS || isMobile) {
         this.useShadows = false;
       } else {
         const isFirefox = typeof (global as any).InstallTrigger !== 'undefined';
