@@ -4,23 +4,6 @@ import { isEqual } from 'Util/objectsIsEqual';
 
 const GamePad: GamePadProps = ({ children, onChange }) => {
   const frame = useRef<number>(0);
-  let pads: Gamepad[] = [];
-
-  const onConnect = (e: GamepadEvent) => {
-    const { gamepad } = e;
-    const found = pads.find((item) => item.id === gamepad.id);
-    if (found) {
-      return;
-    }
-
-    pads.push(gamepad);
-  };
-
-  const onDisconnect = (e: GamepadEvent) => {
-    const { gamepad } = e;
-    pads = pads.filter((item) => item !== gamepad);
-  };
-
   const gamepadList = () => {
     const list: Gamepad[] = [];
     try {
@@ -36,6 +19,23 @@ const GamePad: GamePadProps = ({ children, onChange }) => {
       //
     }
     return list;
+  };
+
+  let pads: Gamepad[] = gamepadList();
+
+  const onConnect = (e: GamepadEvent) => {
+    const { gamepad } = e;
+    const found = pads.find((item) => item.id === gamepad.id);
+    if (found) {
+      return;
+    }
+
+    pads.push(gamepad);
+  };
+
+  const onDisconnect = (e: GamepadEvent) => {
+    const { gamepad } = e;
+    pads = pads.filter((item) => item !== gamepad);
   };
 
   function updateStatus() {

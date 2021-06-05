@@ -68,6 +68,10 @@ const Touch: TouchProps = ({
   };
 
   useEffect(() => {
+    if (id && isClient()) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      el = document.getElementById(id);
+    }
     if (el) {
       el.addEventListener('touchmove', onTouchMoveHandler);
       el.addEventListener('touchcancel', onTouchCancelHandler);
