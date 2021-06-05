@@ -11,6 +11,7 @@ import { LayoutProps } from 'UI/Layout/types';
 import sendComment from 'Util/sendComment';
 import Textarea from 'UI/Textarea';
 import OAuth from 'Pages/OAuth/index';
+import ErrorBoundary from "Components/ErrorBoundary/ErrorBoundary";
 
 const Layout: LayoutProps = ({ children }) => {
   const auth = useAuthReselect();
@@ -90,6 +91,7 @@ const Layout: LayoutProps = ({ children }) => {
         >
           x
         </Button>
+        <ErrorBoundary>
         <Form
           className="layout__form"
           caption="Обратная связь"
@@ -109,6 +111,7 @@ const Layout: LayoutProps = ({ children }) => {
             Отправить
           </Button>
         </Form>
+        </ErrorBoundary>
       </div>
     </div>
   );
