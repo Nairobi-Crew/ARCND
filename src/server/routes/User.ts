@@ -47,8 +47,8 @@ export default class User extends Routes {
       const { file } = req;
       const form: any = new FormData();
       let av;
-      form.append('avatar', file.buffer, {
-        filename: file.originalname,
+      form.append('avatar', file?.buffer, {
+        filename: file?.originalname,
       });
       Fetch.put(`${USER_SERVER_URL}${avatar}`, {
         method: 'PUT',
