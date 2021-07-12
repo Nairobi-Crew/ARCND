@@ -26,7 +26,7 @@ Powered by  :sparkles:__NAIROBI CREW__:sparkles:
 <hr>
 
 ### URL's:
-* [ARCND](https://nairobi-arcnd-4.ya-praktikum.tech/) [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://nairobi-arcnd-4.ya-praktikum.tech/)
+* [ARCND](https://arcnd.ovb-tech.com/) [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://nairobi-arcnd-4.ya-praktikum.tech/)
 
 <hr>
 
